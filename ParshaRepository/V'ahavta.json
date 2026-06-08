@@ -1,0 +1,142 @@
+{
+  "name": "V'ahavta",
+  "description": "V'ahavta prayer trope sequence",
+  "lines": [
+    {
+      "lineName": "Line_1",
+      "tropes": [
+        "Munach*",
+        "Katon",
+        "Tipchah",
+        "Munach",
+        "EtNachTah"
+      ]
+    },
+    {
+      "lineName": "Line_2",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "Line_3",
+      "tropes": [
+        "Gershayim",
+        "Munach",
+        "Rvi'i"
+      ]
+    },
+    {
+      "lineName": "Line_4",
+      "tropes": [
+        "Kadma",
+        "Darga",
+        "Tvir",
+        "Tipchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "Line_5",
+      "tropes": [
+        "Munach",
+        "Katon",
+        "Tipchah",
+        "EtNachTah"
+      ]
+    },
+    {
+      "lineName": "Line_6",
+      "tropes": [
+        "Mapach",
+        "PashTa",
+        "Munach",
+        "Katon"
+      ]
+    },
+    {
+      "lineName": "Line_7",
+      "tropes": [
+        "Tipchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "Line_8",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "EtNachTah"
+      ]
+    },
+    {
+      "lineName": "Line_9",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "Line_10",
+      "tropes": [
+        "Tvir",
+        "Merchah",
+        "Tipchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "Line_11",
+      "tropes": [
+         "Munach",
+        "Katon",
+        "Tipchah",
+        "EtNachTah"
+      ]
+    },
+    {
+      "lineName": "Line_12",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "Line_13",
+      "tropes": [
+        "Gershayim",
+        "Munach",
+        "Katon"
+      ]
+    },
+    {
+      "lineName": "Line_14",
+      "tropes": [
+        "Kadma",
+        "Mapach",
+        "PashTa",
+        "Munach",
+        "Katon"
+      ]
+    },
+    {
+      "lineName": "Line_15",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "EtNachTah"
+      ]
+    },
+    {
+      "lineName": "Line_16",
+      "tropes": [
+        "SofAliyah2"
+      ]
+    }
+  ]
+}

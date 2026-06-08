@@ -1,0 +1,108 @@
+[
+  {
+    "lineName": "Line_1",
+    "tropes": [
+      "ZakefGadol",
+      "Tvir",
+      "Merchah",
+      "Tipchah",
+      "EtNachTah"
+    ]
+  },
+
+  {
+    "lineName": "Line_2",
+    "tropes": [
+      "Tipchah",
+      "Merchah",
+      "SofPaSuk"
+    ]
+  },
+
+  {
+    "lineName": "Line_3",
+    "tropes": [
+      "Kadma",
+      "V'azlah",
+      "Rvi'i",
+      "Mapach",
+      "PashTa",
+      "Munach-Katon"
+    ]
+  },
+
+  {
+    "lineName": "Line_4",
+    "tropes": [
+      "Tipchah",
+      "Munach",
+      "EtNachTah"
+    ]
+  },
+
+  {
+    "lineName": "Line_5",
+    "tropes": [
+      "Merchah",
+      "Tipchah",
+      "SofPaSuk"
+    ]
+  },
+
+  {
+    "lineName": "Line_6",
+    "tropes": [
+      "Pazer",
+      "Munach",
+      "Munach",
+      "Munach-l'garmeih"
+    ]
+  },
+
+  {
+    "lineName": "Line_7",
+    "tropes": [
+      "T'LishaGadola",
+      "Kadma",
+      "V'azlah",
+      "Rvi'i"
+    ]
+  },
+
+  {
+    "lineName": "Line_8",
+    "tropes": [
+      "PashTa",
+      "Munach",
+      "T'LishaGadola"
+    ]
+  },
+
+  {
+    "lineName": "Line_9",
+    "tropes": [
+      "Kadma",
+      "Mapach",
+      "PashTa",
+      "Katon"
+    ]
+  },
+
+  {
+    "lineName": "Line_10",
+    "tropes": [
+      "PashTa",
+      "Munach-Katon",
+      "Tipchah",
+      "EtNachTah"
+    ]
+  },
+
+  {
+    "lineName": "Line_11",
+    "tropes": [
+      "Tipchah",
+      "SofPaSuk"
+    ]
+  }
+]

@@ -1,0 +1,103 @@
+{
+  "title": "Zachor Maftir",
+  "lines": [
+    {
+      "line": 1,
+      "words": [
+        { "hebrew": "זָכ֕וֹר", "translit": "Zachor" },
+        { "hebrew": "אֵ֛ת", "translit": "et" },
+        { "hebrew": "אֲשֶׁר־עָשָׂ֥ה", "translit": "asher-asah" },
+        { "hebrew": "לְךָ֖", "translit": "l’cha" },
+        { "hebrew": "עֲמָלֵ֑ק", "translit": "Amalek" }
+      ]
+    },
+    {
+      "line": 2,
+      "words": [
+        { "hebrew": "בַּדֶּ֖רֶךְ", "translit": "baderech" },
+        { "hebrew": "בְּצֵאתְכֶ֥ם", "translit": "b’tzeitchem" },
+        { "hebrew": "מִמִּצְרָֽיִם׃", "translit": "miMitzrayim" }
+      ]
+    },
+    {
+      "line": 3,
+      "words": [
+        { "hebrew": "אֲשֶׁ֨ר", "translit": "asher" },
+        { "hebrew": "קָרְךָ֨", "translit": "karcha" },
+        { "hebrew": "בַּדֶּ֗רֶךְ", "translit": "baderech" },
+        { "hebrew": "וַיְזַנֵּ֤ב", "translit": "vay’zaneiv" },
+        { "hebrew": "בְּךָ֙", "translit": "b’cha" },
+        { "hebrew": "כָּל־הַנֶּחֱשָׁלִ֣ים", "translit": "kol-hanecheshalim" },
+        { "hebrew": "אַחֲרֶ֔יךָ", "translit": "acharecha" }
+      ]
+    },
+    {
+      "line": 4,
+      "words": [
+        { "hebrew": "וְאַתָּ֖ה", "translit": "v’atah" },
+        { "hebrew": "עָיֵ֣ף", "translit": "ayeif" },
+        { "hebrew": "וְיָגֵ֑עַ", "translit": "v’yagei’a" }
+      ]
+    },
+    {
+      "line": 5,
+      "words": [
+        { "hebrew": "וְלֹ֥א", "translit": "v’lo" },
+        { "hebrew": "יָרֵ֖א", "translit": "yarei" },
+        { "hebrew": "אֱלֹהִֽים׃", "translit": "Elohim" }
+      ]
+    },
+    {
+      "line": 6,
+      "words": [
+        { "hebrew": "וְהָיָ֡ה", "translit": "v’hayah" },
+        { "hebrew": "בְּהָנִ֣יחַ", "translit": "b’haniach" },
+        { "hebrew": "יְיָ֣", "translit": "Adonai" },
+        { "hebrew": "אֱלֹהֶ֣יךָ ׀", "translit": "Elohecha" }
+      ]
+    },
+   {
+  "line": 7,
+  "words": [
+    { "hebrew": "לְךָ֠", "translit": "l’cha" },
+    { "hebrew": "מִכָּל־אֹ֨יְבֶ֜יךָ", "translit": "mikol-oyvecha" },
+    { "hebrew": "מִסָּבִ֗יב", "translit": "misaviv" }
+  ]
+},
+{
+  "line": 8,
+  "words": [
+    { "hebrew": "בָּאָ֗רֶץ", "translit": "ba’aretz" },
+    { "hebrew": "אֲשֶׁר֙", "translit": "asher" },
+    { "hebrew": "יְיָ֣", "translit": "Adonai" },
+    { "hebrew": "אֱלֹהֶ֠יךָ", "translit": "Elohecha" }
+  ]
+},
+    {
+      "line": 9,
+      "words": [
+        { "hebrew": "נֹתֵ֨ן", "translit": "notein" },
+        { "hebrew": "לְךָ֤", "translit": "l’cha" },
+        { "hebrew": "נַחֲלָה֙", "translit": "nachalah" },
+        { "hebrew": "לְרִשְׁתָּ֔הּ", "translit": "l’rishtah" }
+      ]
+    },
+    {
+      "line": 10,
+      "words": [
+        { "hebrew": "תִּמְחֶה֙", "translit": "timcheh" },
+        { "hebrew": "אֶת־זֵ֣כֶר", "translit": "et-zeicher" },
+        { "hebrew": "עֲמָלֵ֔ק", "translit": "Amalek" },
+        { "hebrew": "מִתַּ֖חַת", "translit": "mitachat" },
+        { "hebrew": "הַשָּׁמָ֑יִם", "translit": "hashamayim" }
+      ]
+    },
+    {
+      "line": 11,
+      "words": [
+        { "hebrew": "לֹ֖א", "translit": "lo" },
+        { "hebrew": "תִּשְׁכָּֽח׃", "translit": "tishkach" }
+      ]
+    }
+  ]
+}

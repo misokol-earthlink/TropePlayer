@@ -1,0 +1,328 @@
+{
+  "title": "V'ahavta",
+  "lines": [
+    {
+      "line": 1,
+      "words": [
+        {
+          "hebrew": "וְאָהַבְתָּ֣֔",
+          "translit": "V’ahavta"
+        },
+        {
+          "hebrew": "אֵ֖ת",
+          "translit": "et"
+        },
+        {
+          "hebrew": "יְיָ֣",
+          "translit": "Adonai"
+        },
+        {
+          "hebrew": "אֱלֹהֶ֑יךָ",
+          "translit": "Elohecha"
+        }
+      ]
+    },
+
+    {
+      "line": 2,
+      "words": [
+        {
+          "hebrew": "בְּכָל־לְבָבְךָ֖",
+          "translit": "B’chol-l’vavcha"
+        },
+        {
+          "hebrew": "וּבְכָל־נַפְשְׁךָ֑",
+          "translit": "uv’chol-nafsh’cha"
+        },
+        {
+          "hebrew": "וּבְכָל־מְאֹדֶֽךָ׃",
+          "translit": "uv’chol-me’odecha"
+        }
+      ]
+    },
+
+    {
+      "line": 3,
+      "words": [
+        {
+          "hebrew": "וְהָי֞וּ",
+          "translit": "V’hayu"
+        },
+        {
+          "hebrew": "הַדְּבָרִ֣ים",
+          "translit": "had’varim"
+        },
+        {
+          "hebrew": "הָאֵ֗לֶּה",
+          "translit": "ha’eileh"
+        }
+      ]
+    },
+
+    {
+      "line": 4,
+      "words": [
+        {
+          "hebrew": "אֲשֶׁ֨ר",
+          "translit": "Asher"
+        },
+        {
+          "hebrew": "אָנֹכִ֧י",
+          "translit": "anochi"
+        },
+        {
+          "hebrew": "מְצַוְּךָ֛",
+          "translit": "m’tzavcha"
+        },
+        {
+          "hebrew": "הַיּ֖וֹם",
+          "translit": "hayom"
+        },
+        {
+          "hebrew": "עַל־לְבָבֶֽךָ׃",
+          "translit": "al-l’vavecha"
+        }
+      ]
+    },
+
+    {
+      "line": 5,
+      "words": [
+        {
+          "hebrew": "וְשִׁנַּנְתָּ֣ם",
+          "translit": "V’shinantam"
+        },
+        {
+          "hebrew": "לְבָנֶ֔יךָ",
+          "translit": "l’vanecha"
+        },
+        {
+          "hebrew": "וְדִבַּרְתָּ֖",
+          "translit": "v’dibarta"
+        },
+        {
+          "hebrew": "בָּ֑ם",
+          "translit": "bam"
+        }
+      ]
+    },
+
+    {
+      "line": 6,
+      "words": [
+        {
+          "hebrew": "בְּשִׁבְתְּךָ֤",
+          "translit": "B’shivt’cha"
+        },
+        {
+          "hebrew": "בְּבֵיתֶ֙ךָ֙",
+          "translit": "b’veitecha"
+        },
+        {
+          "hebrew": "וּבְלֶכְתְּךָ֣",
+          "translit": "uv’lecht’cha"
+        },
+        {
+          "hebrew": "בַדֶּ֔רֶךְ",
+          "translit": "vaderech"
+        }
+      ]
+    },
+
+    {
+      "line": 7,
+      "words": [
+        {
+          "hebrew": "וּבְשָׁכְבְּךָ֖",
+          "translit": "Uv’shochb’cha"
+        },
+        {
+          "hebrew": "וּבְקוּמֶֽךָ׃",
+          "translit": "uv’kumecha"
+        }
+      ]
+    },
+
+    {
+      "line": 8,
+      "words": [
+        {
+          "hebrew": "וּקְשַׁרְתָּ֥ם",
+          "translit": "Uk’shartam"
+        },
+        {
+          "hebrew": "לְא֖וֹת",
+          "translit": "l’ot"
+        },
+        {
+          "hebrew": "עַל־יָדֶ֑ךָ",
+          "translit": "al-yadecha"
+        }
+      ]
+    },
+
+    {
+      "line": 9,
+      "words": [
+        {
+          "hebrew": "וְהָי֥וּ",
+          "translit": "V’hayu"
+        },
+        {
+          "hebrew": "לְטֹטָפֹ֖ת",
+          "translit": "l’totafot"
+        },
+        {
+          "hebrew": "בֵּ֥ין",
+          "translit": "bein"
+        },
+        {
+          "hebrew": "עֵינֶֽיךָ׃",
+          "translit": "einecha"
+        }
+      ]
+    },
+
+    {
+      "line": 10,
+      "words": [
+        {
+          "hebrew": "וּכְתַבְתָּ֛ם",
+          "translit": "U’chtavtam"
+        },
+        {
+          "hebrew": "עַל־מְזוּזֹ֥ת",
+          "translit": "al-m’zuzot"
+        },
+        {
+          "hebrew": "בֵּיתֶ֖ךָ",
+          "translit": "beitecha"
+        },
+        {
+          "hebrew": "וּבִשְׁעָרֶֽיךָ׃",
+          "translit": "uvish’arecha"
+        }
+      ]
+    },
+
+    {
+      "line": 11,
+      "words": [
+        {
+          "hebrew": "לְמַ֣עַן",
+          "translit": "L’ma’an"
+        },
+        {
+          "hebrew": "תִּזְכְּר֗וּ",
+          "translit": "tizk’ru"
+        },
+        {
+          "hebrew": "וַעֲשִׂיתֶם֙",
+          "translit": "va’asitem"
+        },
+        {
+          "hebrew": "אֶת־כָּל־מִצְוֺתַ֔י",
+          "translit": "et-kol-mitzvotai"
+        }
+      ]
+    },
+
+    {
+      "line": 12,
+      "words": [
+        {
+          "hebrew": "וִהְיִיתֶ֥ם",
+          "translit": "Vih’yitem"
+        },
+        {
+          "hebrew": "קְדֹשִׁ֖ים",
+          "translit": "k’doshim"
+        },
+        {
+          "hebrew": "לֵאלֹהֵיכֶֽם׃",
+          "translit": "l’Eloheichem"
+        }
+      ]
+    },
+
+    {
+      "line": 13,
+      "words": [
+        {
+          "hebrew": "אֲנִ֞י",
+          "translit": "Ani"
+        },
+        {
+          "hebrew": "יְיָ֤",
+          "translit": "Adonai"
+        },
+        {
+          "hebrew": "אֱלֹהֵיכֶם֙",
+          "translit": "Eloheichem"
+        }
+      ]
+    },
+
+    {
+      "line": 14,
+      "words": [
+        {
+          "hebrew": "אֲשֶׁ֨ר",
+          "translit": "Asher"
+        },
+        {
+          "hebrew": "הוֹצֵ֤אתִי",
+          "translit": "hotzeiti"
+        },
+        {
+          "hebrew": "אֶתְכֶם֙",
+          "translit": "etchem"
+        },
+        {
+          "hebrew": "מֵאֶ֣רֶץ",
+          "translit": "me’eretz"
+        },
+        {
+          "hebrew": "מִצְרַ֔יִם",
+          "translit": "Mitzrayim"
+        }
+      ]
+    },
+
+    {
+      "line": 15,
+      "words": [
+        {
+          "hebrew": "לִהְי֥וֹת",
+          "translit": "Lih’yot"
+        },
+        {
+          "hebrew": "לָכֶ֖ם",
+          "translit": "lachem"
+        },
+        {
+          "hebrew": "לֵאלֹהִ֑ים",
+          "translit": "l’Elohim"
+        }
+      ]
+    },
+
+    {
+      "line": 16,
+      "words": [
+        {
+          "hebrew": "אֲנִ֖י",
+          "translit": "Ani"
+        },
+        {
+          "hebrew": "יְיָ֥",
+          "translit": "Adonai"
+        },
+        {
+          "hebrew": "אֱלֹהֵיכֶֽם׃",
+          "translit": "Eloheichem"
+        }
+      ]
+    }
+  ]
+}
