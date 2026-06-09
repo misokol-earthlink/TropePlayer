@@ -6,7 +6,7 @@
 </head>
 <body>
 <div style="background:red;color:white;font-size:24px;font-weight:bold;">
-VERSION 20260609-C
+VERSION 20260609-D
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -446,6 +446,10 @@ document.getElementById("ipadDebugBox").innerHTML +=
   padding: 1px 4px;
   border-radius: 5px;
   cursor: help;
+
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .lyrics-hebrew-word:hover {
