@@ -2387,7 +2387,9 @@ if (touchModeActive) {
         document.getElementById("tropeHoverBox");
 
       hoverBox.textContent =
-        wordItem.translit || "";
+  "Hebrew=" + (wordItem.hebrew || "") +
+  " Transliteration=" + (wordItem.translit || "");
+
 hoverBox.style.left =
   (touch.clientX + 12) + "px";
 
