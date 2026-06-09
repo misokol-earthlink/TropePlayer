@@ -917,7 +917,22 @@ if (fileNameIsIPad) {
 
 }
 
+const touchAnswer = prompt(
+  "Are you viewing this application on a touch device? Enter Y or N",
+  "N"
+);
+
+isTouchDevice = false;
+
+if (
+  touchAnswer &&
+  touchAnswer.trim().toUpperCase() === "Y"
+) {
+  isTouchDevice = true;
+}
+
 const touchModeActive = isTouchDevice;
+
 
 console.log("currentFileName =", currentFileName);
 console.log("fileNameIsIPad =", fileNameIsIPad);
