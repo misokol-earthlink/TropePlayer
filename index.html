@@ -6,7 +6,7 @@
 </head>
 <body>
 <div style="background:red;color:white;font-size:24px;font-weight:bold;">
-VERSION 20260609-E
+VERSION 20260609-F
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -2388,7 +2388,7 @@ if (touchModeActive) {
     const touch = event.touches[0];
 
     lyricsTouchTimer = setTimeout(function() {
-
+alert("Touch timer fired");
       const hoverBox =
         document.getElementById("tropeHoverBox");
 
@@ -2401,7 +2401,7 @@ hoverBox.style.top = "120px";
 hoverBox.style.transform =
   "translateX(-50%)";
 hoverBox.style.display = "block";
-    }, 650);
+    }, 300);
 
   });
 
