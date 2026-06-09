@@ -6,7 +6,7 @@
 </head>
 <body>
 <div style="background:red;color:white;font-size:24px;font-weight:bold;">
-VERSION 20260609-G
+VERSION 20260609-H
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -1474,10 +1474,18 @@ infoGlyph.onclick = function(event) {
   return;
 }
 
-  hoverBox.textContent = hoverText;
-  hoverBox.style.left = (event.clientX + 12) + "px";
-  hoverBox.style.top = (event.clientY + 12) + "px";
-  hoverBox.style.display = "block";
+ hoverBox.style.display = "block";
+hoverBox.style.position = "fixed";
+hoverBox.style.left =
+  (touch.clientX - 80) + "px";
+
+hoverBox.style.top =
+  (touch.clientY - 60) + "px";
+
+hoverBox.style.transform = "";
+hoverBox.style.zIndex = "300000";
+hoverBox.style.pointerEvents = "auto";
+
 };  tropeCell.appendChild(infoGlyph);
 }
 
