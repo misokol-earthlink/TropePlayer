@@ -2373,6 +2373,34 @@ if (activeLyricsLines[lineNumber]) {
 
     wordSpan.dataset.wordIndex = wordIndex;
 
+if (touchModeActive) {
+
+  let lyricsTouchTimer = null;
+
+  wordSpan.addEventListener("touchstart", function(event) {
+
+    const touch = event.touches[0];
+
+    lyricsTouchTimer = setTimeout(function() {
+
+      const hoverBox =
+        document.getElementById("tropeHoverBox");
+
+      hoverBox.textContent =
+        wordItem.translit || "";
+hoverBox.style.left =
+  (touch.clientX + 12) + "px";
+
+hoverBox.style.top =
+  (touch.clientY + 12) + "px";
+
+hoverBox.style.display = "block";
+    }, 650);
+
+  });
+
+}
+
     lyricsBox.appendChild(wordSpan);
 
     if (wordIndex < activeLyricsLines[lineNumber].length - 1) {
