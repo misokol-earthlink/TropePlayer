@@ -6,7 +6,7 @@
 </head>
 <body>
 <div style="background:red;color:white;font-size:24px;font-weight:bold;">
-VERSION 20260609-F
+VERSION 20260609-G
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -2388,19 +2388,21 @@ if (touchModeActive) {
     const touch = event.touches[0];
 
     lyricsTouchTimer = setTimeout(function() {
-alert("Touch timer fired");
-      const hoverBox =
-        document.getElementById("tropeHoverBox");
+    //alert("Touch timer fired");
 
-      hoverBox.textContent =
-  "Hebrew=" + (wordItem.hebrew || "") +
-  " Transliteration=" + (wordItem.translit || "");
+ const hoverBox =
+ document.getElementById("tropeHoverBox");
 
+ hoverBox.textContent =
+  "Translit: " + (wordItem.translit || "[blank]");
+
+hoverBox.style.display = "block";
+hoverBox.style.position = "fixed";
 hoverBox.style.left = "50%";
 hoverBox.style.top = "120px";
-hoverBox.style.transform =
-  "translateX(-50%)";
-hoverBox.style.display = "block";
+hoverBox.style.transform = "translateX(-50%)";
+hoverBox.style.zIndex = "300000";
+hoverBox.style.pointerEvents = "auto";
     }, 300);
 
   });
