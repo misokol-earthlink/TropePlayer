@@ -5,18 +5,49 @@
   <title>Trope Audio</title>
 </head>
 <body>
-<!--
-<div id="ipadDebugBox"
-     style="background:#fff3cd; color:#000; padding:8px; font-size:14px; border:1px solid #999; font-family:Arial, sans-serif;">
-  iPad debug:<br>
-</div>
--->
+
 <div id="ipadDebugBox" style="display:none;"></div>
 
+<div id="startupModeBox">
+
+  <span style="font-weight:bold; margin-right:20px;">
+    Select Display Mode
+  </span>
+
+  <button
+    id="desktopModeBtn"
+    type="button"
+    style="
+      background:green;
+      color:white;
+      font-weight:bold;
+      margin-right:20px;
+      padding:6px 14px;
+      border:1px solid black;
+      cursor:pointer;
+    ">
+    Desktop / Mouse
+  </button>
+
+  <button
+    id="touchModeBtn"
+    type="button"
+    style="
+      background:red;
+      color:white;
+      font-weight:bold;
+      padding:6px 14px;
+      border:1px solid black;
+      cursor:pointer;
+    ">
+    Touch Device
+  </button>
+<div style="height:20px;"></div>
+</div>
 <script>
-document.getElementById("ipadDebugBox").innerHTML += "Inline body script ran<br>";
-</script>
-<div
+document.getElementById("ipadDebugBox").innerHTML +=
+  "Inline body script ran<br>";
+</script><div
   style="
     display:flex;
     align-items:center;
@@ -892,8 +923,8 @@ const actualTouchDevice =
   ("ontouchstart" in window) ||
   (navigator.maxTouchPoints > 0);
 
-let isTouchDevice;
-
+let isTouchDevice = false;
+let touchModeActive = false;
 if (fileNameIsIPad) {
 
   // Real iPad/IPAD-named version always wins.
@@ -916,22 +947,6 @@ if (fileNameIsIPad) {
   isTouchDevice = actualTouchDevice;
 
 }
-
-const touchAnswer = prompt(
-  "Are you viewing this application on a touch device? Enter Y or N",
-  "N"
-);
-
-isTouchDevice = false;
-
-if (
-  touchAnswer &&
-  touchAnswer.trim().toUpperCase() === "Y"
-) {
-  isTouchDevice = true;
-}
-
-const touchModeActive = isTouchDevice;
 
 
 console.log("currentFileName =", currentFileName);
@@ -1414,8 +1429,7 @@ const FAMILY_GLYPHS = {
 
 const table = document.getElementById("tropeTable");
 const player = document.getElementById("player");
-
-tropeNames.forEach((name, index) => {
+function buildTropeTable() {tropeNames.forEach((name, index) => {
   const row = document.createElement("tr");
 
   /* Index column */
@@ -1522,6 +1536,7 @@ if (!touchModeActive) {
   table.appendChild(row);
 });
 
+}
 
 function buildFamilyGlyphString(tropeName) {
   const familyMap = tropeFamilyMap[tropeName];
@@ -3014,7 +3029,37 @@ function ipadTrace(msg) {
   if (box) box.innerHTML += msg + "<br>";
   console.log(msg);
 }
+document.getElementById("desktopModeBtn").onclick =
+  function() {
 
+    isTouchDevice = false;
+    touchModeActive = false;
+buildTropeTable();
+    document.getElementById("startupModeBox").style.display =
+      "none";
+
+   console.log(
+  "Desktop selected:",
+  isTouchDevice,
+  touchModeActive
+);
+};
+
+document.getElementById("touchModeBtn").onclick =
+  function() {
+
+    isTouchDevice = true;
+    touchModeActive = true;
+buildTropeTable();
+    document.getElementById("startupModeBox").style.display =
+      "none";
+
+   console.log(
+  "Touch selected:",
+  isTouchDevice,
+  touchModeActive
+);
+};
 </script>
 </body>
 </html>
