@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="buildVersionBanner" style="background:red;color:white; ...">
-  BUILD 20260610-A
+    BUILD 20260610-C
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -895,7 +895,8 @@ window.addEventListener("unhandledrejection", function(event) {
 });
 
 ipadLog("Script started");
-
+let buildTableOpen = false;
+let activeBuildLineIndex = 0;
 const comboTropeNames = [
   "SofAliyah",
   "SofAliyah2",
@@ -1443,6 +1444,14 @@ function buildTropeTable() {tropeNames.forEach((name, index) => {
   const indexCell = document.createElement("td");
   indexCell.textContent = index + 1;
 
+indexCell.onclick = function(event) {
+  event.stopPropagation();
+  if (!buildTableOpen) {
+    return;
+  }
+
+  addTropeToCurrentBuildLine(name);
+};
   /* Trope column */
   const tropeCell = document.createElement("td");
 //  tropeCell.textContent = name;
@@ -1891,6 +1900,7 @@ function saveBluePanelData() {
     return;
   }
 
+downloadBluePanelData();
   console.log(
     "Transmitting dataset to structural repository database:",
     JSON.stringify(lineItems)
@@ -1910,29 +1920,70 @@ function togglePanelMode() {
 
   if (buildMode) {
     showBluePanel();
+buildTableOpen = true;
   } else {
     hideBluePanel();
+buildTableOpen = false;
   }
 
   return buildMode;
 }
+function downloadBluePanelData() {
 
+  const fileBaseName = prompt(
+    "Enter repository name for this trope file:",
+    "NewTropeFile"
+  );
+
+  if (!fileBaseName) {
+    alert("Save canceled: no file name entered.");
+    return;
+  }
+
+  const repositoryData = {
+    name: fileBaseName,
+    description: "Description",
+    lines: lineItems.map(function(item, index) {
+      return {
+        lineName: "Line-" + (index + 1),
+        tropes: item.tropes
+      };
+    })
+  };
+
+  const jsonText =
+    JSON.stringify(repositoryData, null, 2);
+
+  const blob = new Blob(
+    [jsonText],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileBaseName + ".json";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}
 function setBuildMode(newMode) {
   buildMode = newMode === true;
 
   if (buildMode) {
     showBluePanel();
+    buildTableOpen = true;
   } else {
     hideBluePanel();
+    buildTableOpen = false;
   }
 
   return buildMode;
 }
-
-function isBuildModeActive() {
-  return buildMode;
-}
-
 function showBluePanel() {
   renderBluePanel();
   bluePanel.classList.remove("hidden");
@@ -3130,6 +3181,17 @@ buildTropeTable();
   touchModeActive
 );
 };
+function addTropeToCurrentBuildLine(tropeName) {
+
+  if (lineItems.length === 0) {
+    return;
+  }
+
+  lineItems[activeBuildLineIndex].tropes.push(tropeName);
+
+  renderBluePanel();
+}
+
 </script>
 </body>
 </html>
