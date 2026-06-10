@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="buildVersionBanner" style="background:red;color:white; ...">
-  BUILD 20260609-M
+  BUILD 20260610-A
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -445,7 +445,7 @@ document.getElementById("ipadDebugBox").innerHTML +=
   display: inline-block;
   padding: 1px 4px;
   border-radius: 5px;
-  cursor: help;
+  cursor: pointer;
 
   -webkit-user-select: none;
   user-select: none;
@@ -455,6 +455,7 @@ document.getElementById("ipadDebugBox").innerHTML +=
 .lyrics-hebrew-word:hover {
   background: rgba(65, 105, 225, 0.14);
 }
+
 .active-file-line-box {
   flex: 1;
   background: white;
@@ -2378,11 +2379,36 @@ if (activeLyricsLines[lineNumber]) {
     wordSpan.textContent =
       wordItem.hebrew || "";
 
-    wordSpan.title =
+    wordSpan.dataset.translit =
       wordItem.translit || "";
 
-    wordSpan.dataset.wordIndex = wordIndex;
+    wordSpan.dataset.wordIndex = wordIndex;if (!touchModeActive) {
 
+wordSpan.onmouseenter = function(event) {
+  const hoverBox = document.getElementById("tropeHoverBox");
+  const rect = wordSpan.getBoundingClientRect();
+
+  hoverBox.textContent =
+    wordItem.translit || "[no transliteration]";
+
+  hoverBox.style.position = "fixed";
+  hoverBox.style.left =
+    (rect.left + rect.width / 2) + "px";
+  hoverBox.style.top =
+    (rect.bottom + 8) + "px";
+
+  hoverBox.style.transform = "translateX(-50%)";
+  hoverBox.style.zIndex = "300000";
+  hoverBox.style.display = "block";
+};
+
+wordSpan.onmousemove = function(event) {
+  // Do nothing. Position stays centered under the word.
+};
+
+wordSpan.onmouseleave = function() {
+  document.getElementById("tropeHoverBox").style.display = "none";
+};}
 if (touchModeActive) {
 
   let lyricsTouchTimer = null;
