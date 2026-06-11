@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="buildVersionBanner" style="background:red;color:white; ...">
-    BUILD 20260611-A
+    BUILD 20260611-B
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -136,7 +136,37 @@ document.getElementById("ipadDebugBox").innerHTML +=
     <span class="playHint">Click on notes to listen to trope</span>
 
     <br><br>
-    <button id="modalCloseButton">CLOSE FORM</button>
+
+<div style="
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:12px;
+">
+
+  <button id="modalCloseButton">
+    CLOSE FORM
+  </button>
+
+  <button id="modalSizeButton"
+          type="button"
+          style="
+            width:38px;
+            height:38px;
+            border-radius:50%;
+            background:maroon;
+            color:white;
+            border:1px solid black;
+            cursor:pointer;
+            font-size:22px;
+            font-weight:bold;
+            padding:0;
+            line-height:1;
+          ">
+    ⊕
+  </button>
+
+</div>
 <div id="comboNoteMessage"
      style="
        display:none;
@@ -354,6 +384,12 @@ document.getElementById("ipadDebugBox").innerHTML +=
   box-shadow: 0 0 8px gray;
   pointer-events: auto;
 }
+.tropeModalBox.modalExpanded {
+  transform: scale(1.3);
+  transform-origin: top center;
+}
+
+
 .active-file-viewer-box {
   position: relative;
   width: 850px;
@@ -1501,6 +1537,7 @@ hoverBox.style.pointerEvents = "auto";
 
   tropeCell.style.cursor = "pointer";
 tropeCell.style.fontWeight = "bold";
+
 tropeCell.onclick = function () {
   if (buildMode === false) {
     openTropeModal(name);
@@ -1696,7 +1733,16 @@ if (comboTropeNames.includes(tropeName)) {
   comboMessage.style.display = "none";
 
 }
+
+
+document.querySelector(".tropeModalBox")
+  .classList.remove("modalExpanded");
+
+document.getElementById("modalSizeButton")
+  .textContent = "⊕";
+
 document.getElementById("tropeModal").style.display = "block";
+
 const noteImageFile =
   imagePath +
   encodeURIComponent(noteImageName);
@@ -2158,6 +2204,25 @@ document.addEventListener("DOMContentLoaded", function() {
   buildMunachChoiceButtons();
   initializeBluePanel();
   initializeTropeHoverBoxClickClose();
+const modalSizeButton =
+  document.getElementById("modalSizeButton");
+
+if (modalSizeButton) {
+
+  modalSizeButton.onclick = function() {
+
+    const modalBox =
+      document.querySelector(".tropeModalBox");
+
+    modalBox.classList.toggle("modalExpanded");
+
+    this.textContent =
+      modalBox.classList.contains("modalExpanded")
+        ? "⊖"
+        : "⊕";
+  };
+
+}
 const activeFileTitleBox =
   document.getElementById("activeFileViewerTitle");
 
