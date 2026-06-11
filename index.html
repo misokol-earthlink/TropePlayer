@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="buildVersionBanner" style="background:red;color:white; ...">
-    BUILD 20260610-C
+    BUILD 20260611-A
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -454,8 +454,12 @@ document.getElementById("ipadDebugBox").innerHTML +=
 
 .lyrics-hebrew-word:hover {
   background: rgba(65, 105, 225, 0.14);
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+  transform: scale(1.4, 1.8);
+  transform-origin: center center;
 }
-
 .active-file-line-box {
   flex: 1;
   background: white;
