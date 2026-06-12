@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="buildVersionBanner" style="background:red;color:white; ...">
-    BUILD 20260611-B
+    BUILD 20260612-A
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -942,6 +942,7 @@ document.getElementById("ipadDebugBox").innerHTML +=
 </style>
 
 <script>
+let startupModeSelected = false;
 let dummyvar ;
 //alert("SCRIPT START");
 function ipadLog(msg) {
@@ -1992,6 +1993,9 @@ addNewBluePanelLine();
 /* Mode and panel visibility */
 
 function togglePanelMode() {
+if (!startupModeSelected) {
+return;
+}
   buildMode = !buildMode;
 
   if (buildMode) {
@@ -2321,6 +2325,10 @@ ipadTrace("ABOUT TO parse index.json");
   }
 }
 async function openActiveFilesSelector() {
+if (!startupModeSelected) {
+return;
+}
+
 ipadTrace("ENTER openActiveFilesSelector");
   await loadParshaRepositoryIndex();
 
@@ -3276,7 +3284,7 @@ function ipadTrace(msg) {
 }
 document.getElementById("desktopModeBtn").onclick =
   function() {
-
+  startupModeSelected = true;
     isTouchDevice = false;
     touchModeActive = false;
 buildTropeTable();
