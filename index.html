@@ -148,6 +148,24 @@ document.getElementById("ipadDebugBox").innerHTML +=
     CLOSE FORM
   </button>
 
+  <button id="tropeNoteInfoButton"
+          type="button"
+          style="
+            width:34px;
+            height:34px;
+            border-radius:50%;
+            background:darkblue;
+            color:white;
+            border:1px solid black;
+            cursor:pointer;
+            font-size:20px;
+            font-weight:bold;
+            padding:0;
+            line-height:1;
+          ">
+    i
+  </button>
+
   <button id="modalSizeButton"
           type="button"
           style="
@@ -166,8 +184,7 @@ document.getElementById("ipadDebugBox").innerHTML +=
     ⊕
   </button>
 
-</div>
-<div id="comboNoteMessage"
+</div><div id="comboNoteMessage"
      style="
        display:none;
        margin-top:14px;
@@ -301,6 +318,16 @@ document.getElementById("ipadDebugBox").innerHTML +=
     </div>
 
     <div id="activeFileLinesContainer"></div>
+
+
+
+    <div style="text-align:center; margin-top:18px;">
+      <button onclick="closeActiveFileViewer()">CLOSE</button>
+    </div>
+
+  </div>
+
+</div>
 <div id="activeFileInfoPopup" class="active-file-info-popup">
   <div class="active-file-info-textbox">
     <div style="font-weight:bold; color:maroon; margin-bottom:10px;">
@@ -315,13 +342,6 @@ document.getElementById("ipadDebugBox").innerHTML +=
       <button onclick="closeActiveFileInfoPopup()">CLOSE INFO</button>
     </div>
   </div>
-</div>
-    <div style="text-align:center; margin-top:18px;">
-      <button onclick="closeActiveFileViewer()">CLOSE</button>
-    </div>
-
-  </div>
-
 </div>
 
 <div id="hebrewLinePopup"
@@ -369,6 +389,10 @@ document.getElementById("ipadDebugBox").innerHTML +=
   z-index: 99999;
   background: rgba(0,0,0,0.30);
 }
+#activeFileInfoText {
+  white-space: pre-wrap;
+}
+
 #tropeHoverBox {
   display: none;
   position: fixed;
@@ -389,7 +413,9 @@ document.getElementById("ipadDebugBox").innerHTML +=
   transform-origin: top center;
 }
 
-
+#activeFileInfoPopup {
+  z-index: 400000;
+}
 .active-file-viewer-box {
   position: relative;
   width: 850px;
@@ -445,8 +471,8 @@ document.getElementById("ipadDebugBox").innerHTML +=
 
   transform: translate(-50%, -50%);
 
-  width: 80%;
-  height: 80%;
+ width: min(650px, 80vw);
+ height: 70vh;
 
   z-index: 100001;
 
@@ -2223,7 +2249,34 @@ if (modalSizeButton) {
   };
 
 }
-const activeFileTitleBox =
+
+const tropeNoteInfoButton =
+  document.getElementById("tropeNoteInfoButton");
+
+if (tropeNoteInfoButton) {
+
+  tropeNoteInfoButton.onclick =
+    async function(event) {
+
+      event.stopPropagation();
+
+    await openInfoPopupFromJson(
+  "TropeNoteInfo.json"
+);
+
+const popup =
+  document.getElementById("activeFileInfoPopup");
+
+popup.style.display = "block";
+popup.style.zIndex = "400000";
+popup.style.background = "yellow";
+
+      document.getElementById("activeFileInfoPopup")
+        .style.zIndex = "300000";
+
+    };
+
+}const activeFileTitleBox =
   document.getElementById("activeFileViewerTitle");
 
  // loadParshaRepositoryIndex();
@@ -3104,11 +3157,12 @@ function buildInfoIconSvg() {
     </svg>
   `;
 }
-function openActiveFileInfoPopup() {
+async function openActiveFileInfoPopup() {
+await loadInfoPopupText(
+  "TropeLyricsInfo.json"
+);
   document.getElementById("activeFileInfoPopup").style.display = "block";
 }
-
-
 function closeActiveFileInfoPopup() {
   document.getElementById("activeFileInfoPopup").style.display = "none";
 }
@@ -3261,6 +3315,74 @@ function addTropeToCurrentBuildLine(tropeName) {
   renderBluePanel();
 }
 
+async function loadInfoPopupText(jsonFileName) {
+
+  const target =
+    document.getElementById("activeFileInfoText");
+
+  if (!target) {
+    console.error(
+      "activeFileInfoText element not found."
+    );
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      jsonFileName + "?v=" + Date.now(),
+      { cache: "no-store" }
+    );
+
+    console.log(
+      "Info popup response:",
+      response.status,
+      response.ok
+    );
+
+    if (!response.ok) {
+
+      target.textContent =
+        "Information Content will be added here.";
+
+      return;
+    }
+
+    const data =
+      await response.json();
+
+    console.log(
+      "Info popup JSON:",
+      data
+    );
+
+    target.textContent =
+      data.text ||
+      "Information Content will be added here.";
+
+  } catch (err) {
+
+    console.error(
+      "Info popup load error:",
+      err
+    );
+
+    target.textContent =
+      "Information Content will be added here.";
+  }
+}
+
+async function openInfoPopupFromJson(jsonFileName) {
+
+  await loadInfoPopupText(jsonFileName);
+
+  const popup =
+    document.getElementById("activeFileInfoPopup");
+
+  popup.style.display = "block";
+  popup.style.zIndex = "400000";
+
+}
 </script>
 </body>
 </html>
