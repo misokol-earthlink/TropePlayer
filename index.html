@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="buildVersionBanner" style="background:red;color:white; ...">
-    BUILD 20260612-A
+    BUILD 20260613-B
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -1772,7 +1772,9 @@ document.getElementById("tropeModal").style.display = "block";
 
 const noteImageFile =
   imagePath +
-  encodeURIComponent(noteImageName);
+  encodeURIComponent(noteImageName) +
+  "?v=" +
+  Date.now();
 
 noteBox.innerHTML =
   `<div
@@ -2652,7 +2654,14 @@ function closeActiveFileViewer() {
   ).style.display = "none";
 }
 async function loadParshaFile(fileName) {
-  const response = await fetch("ParshaRepository/" + fileName);
+
+  const response = await fetch(
+    "ParshaRepository/" +
+    encodeURIComponent(fileName) +
+    "?v=" +
+    Date.now(),
+    { cache: "no-store" }
+  );
 
   if (!response.ok) {
     alert("Could not load " + fileName);
@@ -2663,9 +2672,7 @@ async function loadParshaFile(fileName) {
 
   // action here with the loaded file data
   console.log(data);
-}
-
-function toggleLyricsDisplayRows() {
+}function toggleLyricsDisplayRows() {
   document
     .querySelectorAll(".active-file-lyrics-row")
     .forEach(function(row) {
@@ -2743,9 +2750,11 @@ async function playTropeSequence(tropes) {
     const playbackName =
       tropes[i].playbackName;
 
-    const wavFile =
-      audioPath +
-      encodeURIComponent(playbackName + ".wav");
+   const wavFile =
+  audioPath +
+  encodeURIComponent(playbackName + ".wav") +
+  "?v=" +
+  Date.now();
 
     console.log(
       "About to play index:",
@@ -3299,7 +3308,7 @@ buildTropeTable();
 
 document.getElementById("touchModeBtn").onclick =
   function() {
-
+   startupModeSelected = true;
     isTouchDevice = true;
     touchModeActive = true;
 buildTropeTable();
