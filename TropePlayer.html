@@ -6,7 +6,7 @@
 </head>
 <body>
 <div id="buildVersionBanner" style="background:red;color:white; ...">
-    BUILD 20260613-B
+    BUILD 20260614-B
 </div>
 <div id="ipadDebugBox" style="display:none;"></div>
 
@@ -2365,30 +2365,31 @@ async function loadSelectedActiveFile() {
     alert("No file selected.");
     return;
   }
+ const jsonFile =
+    selectedFile.endsWith(".json")
+      ? selectedFile
+      : selectedFile + ".json";
 
   try {
+console.log("selectedFile =", selectedFile);
+console.log("jsonFile =", jsonFile);
     const response =
      await fetch(
   "ParshaRepository/" +
-  encodeURIComponent(selectedFile) +
+  encodeURIComponent(jsonFile) +
   "?v=" +
   Date.now(),
   { cache: "no-store" }
 );
 
     if (!response.ok) {
-      alert("Could not load " + selectedFile);
+      alert("Could not load " + jsonFile);
       return;
     }
 
     const data = await response.json();
 // Test Diag
-/*
-console.log(
-  "Loaded JSON for " + selectedFile,
-  JSON.stringify(data, null, 2)
-);
-*/
+
     const lyricsData =
       await loadMatchingLyricsFile(selectedFile);
 
@@ -2404,9 +2405,19 @@ console.log(
   }
 }
 async function loadMatchingLyricsFile(selectedFile) {
+
 ipadTrace("ENTER loadMatchingLyrcsFile");
+const baseName =
+  selectedFile.endsWith(".json")
+    ? selectedFile.replace(".json", "")
+    : selectedFile;
+
+
   const lyricsFile =
-    selectedFile.replace(".json", "_Lyrics.json");
+  baseName + "_Lyrics.json";
+
+console.log("selectedFile for lyrics =", selectedFile);
+console.log("lyricsFile =", lyricsFile);
 
   try {
     const response =
