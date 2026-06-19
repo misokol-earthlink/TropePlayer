@@ -1,4 +1,7 @@
-[
+{
+  "name": "Zachor Maftir",
+  "description": "Zachor Maftir  Deuteronomy 25:17-19",
+  "lines": [
   {
     "lineName": "Line_1",
     "tropes": [
@@ -56,7 +59,7 @@
       "Pazer",
       "Munach",
       "Munach",
-      "Munach-l'garmeih"
+      "Munach"
     ]
   },
 
@@ -106,3 +109,4 @@
     ]
   }
 ]
+}
