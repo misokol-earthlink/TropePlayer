@@ -1,6 +1,7 @@
 document.getElementById("ipadDebugBox").innerHTML +=
   "Inline body script ran<br>";
 let startupModeSelected = false;
+let editExistingMode = false;
 let dummyvar ;
 //alert("SCRIPT START");
 function ipadLog(msg) {
@@ -10,7 +11,7 @@ function ipadLog(msg) {
   }
   console.log(msg);
 }
-
+console.log("TropePlayer JS version: EDIT-BUTTON-TEST-1");
 window.onerror = function(message, source, lineno, colno, error) {
   ipadLog("ERROR: " + message + " at line " + lineno + ":" + colno);
 };
@@ -932,34 +933,80 @@ function renderBluePanel() {
   lineItems.forEach(renderLineItemRow);
 }
 
+
 function renderLineItemRow(item, index) {
   const lineDiv = document.createElement("div");
   lineDiv.className = "data-line-row";
-if (index === activeLineIndex) {
-  lineDiv.classList.add("active-line-row");
-}
-lineDiv.onclick = function () {
-  activeLineIndex = index;
-  renderBluePanel();
-};
+
+  if (index === activeLineIndex) {
+    lineDiv.classList.add("active-line-row");
+  }
+
   lineDiv.dataset.id = item.id;
 
   const lineNumber = document.createElement("span");
   lineNumber.className = "line-number";
   lineNumber.textContent = "Line " + (index + 1) + ":";
 
- const valueInput = document.createElement("div");
-valueInput.className = "line-value-input";
-valueInput.innerHTML = item.tropes
-  .map(function (tropeName) {
-    return formatTropeNameForDisplay(tropeName);
-  })
-  .join('<span class="trope-delimiter">+</span>');
+  const valueInput = document.createElement("div");
+  valueInput.className = "line-value-input";
+  valueInput.contentEditable = "true";
+  valueInput.spellcheck = false;
+
+valueInput.onclick = function(event) {
+  event.stopPropagation();
+
+  activeLineIndex = index;
+
+  document
+    .querySelectorAll(".data-line-row")
+    .forEach(function(row) {
+      row.classList.remove("active-line-row");
+    });
+
+  lineDiv.classList.add("active-line-row");
+};
+
+valueInput.onfocus = function() {
+  activeLineIndex = index;
+
+  document
+    .querySelectorAll(".data-line-row")
+    .forEach(function(row) {
+      row.classList.remove("active-line-row");
+    });
+
+  lineDiv.classList.add("active-line-row");
+};
+
+  valueInput.innerHTML = item.tropes
+    .map(function (tropeName) {
+      return formatTropeNameForDisplay(tropeName);
+    })
+    .join('<span class="trope-delimiter">+</span>');
+
+  valueInput.onblur = function () {
+    const editedText =
+      valueInput.innerText.trim();
+
+    item.tropes =
+      editedText
+        .split("+")
+        .map(function(name) {
+          return name.trim();
+        })
+        .filter(function(name) {
+          return name.length > 0;
+        });
+
+    renderBluePanel();
+  };
 
   const deleteButton = document.createElement("button");
   deleteButton.type = "button";
   deleteButton.className = "delete-line-btn";
   deleteButton.textContent = "✕";
+
   deleteButton.onclick = function () {
     removeLineItem(item.id);
   };
@@ -969,24 +1016,6 @@ valueInput.innerHTML = item.tropes
   lineDiv.appendChild(deleteButton);
 
   dynamicContainer.appendChild(lineDiv);
-}
-function formatTropeNameForDisplay(tropeName) {
-  let colorToUse = comboColor;
-
- if (cleanNames.some(function (item) {
-  return item.name === tropeName;
-})) {
-
-  colorToUse = cleanColor;
-
-} else if (dirtyNames.some(function (item) {
-  return item.name === tropeName;
-})) {
-
-  colorToUse = dirtyColor;
-}
-
-  return '<span style="color:' + colorToUse + ';">' + tropeName + '</span>';
 }
 
 /* Data updates */
@@ -1279,6 +1308,15 @@ function selectMunachFollowingTrope(followingTropeName) {
 
 document.addEventListener("DOMContentLoaded", function() {
 
+console.log("DOMContentLoaded reached for edit button test");
+const editExistingBtn =    document.getElementById("editExistingBtn");
+
+if (editExistingBtn) {
+  editExistingBtn.onclick = function() {
+    //alert("Edit Existing clicked");
+    openActiveFilesSelector(true);
+  };
+}
   const cancelButton = document.getElementById("munachChoiceCancel");
 
   if (cancelButton) {
@@ -1384,7 +1422,8 @@ ipadTrace("ABOUT TO parse index.json");
     alert("Error loading Parsha repository index: " + err.message);
   }
 }
-async function openActiveFilesSelector() {
+async function openActiveFilesSelector(useEditMode = false) {
+  editExistingMode = useEditMode;
 if (!startupModeSelected) {
 return;
 }
@@ -1414,7 +1453,32 @@ ipadTrace("ENTER openActiveFilesSelector");
 function closeActiveFilesSelector() {
   document.getElementById("activeFilesPopup").style.display = "none";
 }
+function populateBluePanelFromFile(data) {
 
+  const sourceLines =
+    data.lines || data.lineItems || data;
+
+  if (!sourceLines || sourceLines.length === 0) {
+    alert("Selected file does not contain editable line data.");
+    return;
+  }
+
+  lineItems = sourceLines.map(function(lineItem, index) {
+    return {
+      id: Date.now() + index + Math.random(),
+      tropes: lineItem.tropes || []
+    };
+  });
+
+  activeLineIndex = 0;
+
+  showBluePanel();
+  renderBluePanel();
+
+  console.log(
+    "Blue panel populated from existing file."
+  );
+}
 async function loadSelectedActiveFile() {
  ipadTrace("ENTER SelectedActiveFile");
   const selectedFile = document.getElementById("activeFilesSelect").value;
@@ -1453,9 +1517,19 @@ console.log("jsonFile =", jsonFile);
 
     buildActiveLyricsLines(lyricsData);
 
-    openActiveFileViewer(selectedFile, data);
+if (editExistingMode) {
 
-    closeActiveFilesSelector();
+  populateBluePanelFromFile(data);
+
+  editExistingMode = false;
+
+} else {
+
+  openActiveFileViewer(selectedFile, data);
+
+}
+
+closeActiveFilesSelector();
 
   } catch (err) {
     console.error(err);
@@ -2468,4 +2542,23 @@ async function openInfoPopupFromJson(jsonFileName) {
   popup.style.display = "block";
   popup.style.zIndex = "400000";
 
+}
+
+function formatTropeNameForDisplay(tropeName) {
+  let colorToUse = comboColor;
+
+  if (cleanNames.some(function(item) {
+    return item.name === tropeName;
+  })) {
+
+    colorToUse = cleanColor;
+
+  } else if (dirtyNames.some(function(item) {
+    return item.name === tropeName;
+  })) {
+
+    colorToUse = dirtyColor;
+  }
+
+  return '<span style="color:' + colorToUse + ';">' + tropeName + '</span>';
 }
