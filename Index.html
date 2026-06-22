@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Trope Audio</title>
+</head>
+<body>
+<div id="buildVersionBanner" style="background:red;color:white; ...">
+    BUILD 20260614-B
+</div>
+<div id="ipadDebugBox" style="display:none;"></div>
+
+<div id="startupModeBox">
+
+  <span style="font-weight:bold; margin-right:20px;">
+    Select Display Device Type to Continue!
+  </span>
+
+  <button
+    id="desktopModeBtn"
+    type="button"
+    style="
+      background:green;
+      color:white;
+      font-weight:bold;
+      margin-right:20px;
+      padding:6px 14px;
+      border:1px solid black;
+      cursor:pointer;
+    ">
+    Desktop / Mouse
+  </button>
+
+  <button
+    id="touchModeBtn"
+    type="button"
+    style="
+      background:red;
+      color:white;
+      font-weight:bold;
+      padding:6px 14px;
+      border:1px solid black;
+      cursor:pointer;
+    ">
+    Touch Device
+  </button>
+<div style="height:20px;"></div>
+</div>
+<div
+  style="
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:6px;
+    width:1200px;
+  "
+>
+
+  <h2
+    style="
+      margin:0;
+      margin-right:8px;
+      white-space:nowrap;
+      color:black;
+    "
+  >
+    Trope Audio
+  </h2>
+
+  <button
+    onclick="togglePanelMode()"
+    style="
+      background:maroon;
+      color:white;
+      font-weight:bold;
+      font-size:16px;
+      padding:8px 18px;
+      border:2px solid black;
+      cursor:pointer;
+      min-width:325px;
+    "
+  >
+    Show/Hide Trope Line Builder
+  </button>
+
+  <button
+    onclick="openActiveFilesSelector()"
+    style="
+      background:darkgreen;
+      color:white;
+      font-weight:bold;
+      font-size:16px;
+      padding:8px 18px;
+      border:2px solid black;
+      cursor:pointer;
+      min-width:220px;
+    "
+  >
+    Access Active Files
+  </button>
+
+</div><table border="1" cellpadding="8">
+  <thead>
+    <tr>
+      <th>Index</th>
+      <th>Trope</th>
+      <th>Family</th>
+    </tr>
+  </thead>
+
+  <tbody id="tropeTable"></tbody>
+</table>
+<div style="height:80px;"></div>
+<!-- Hidden audio player used for trope playback -->
+<audio id="player"></audio>
+<!-- End hidden audio player -->
+
+<div id="tropeModal" class="tropeModal">
+  <div class="tropeModalBox">
+    <div class="modalHeader">
+      <span>Information About:</span>
+      <span id="modalTropeName"></span>
+    </div>
+
+  <div class="modalContent">
+  <div id="modalTropeImageBox"></div>
+  <div id="modalNoteBox"></div>
+  <div id="modalSymbolBox"></div>
+
+</div>
+
+    <button id="modalPlayButton">♫</button>
+    <span class="playHint">Click on notes to listen to trope</span>
+
+    <br><br>
+
+<div style="
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:12px;
+">
+
+  <button id="modalCloseButton">
+    CLOSE FORM
+  </button>
+
+  <button id="tropeNoteInfoButton"
+          type="button"
+          style="
+            width:34px;
+            height:34px;
+            border-radius:50%;
+            background:darkblue;
+            color:white;
+            border:1px solid black;
+            cursor:pointer;
+            font-size:20px;
+            font-weight:bold;
+            padding:0;
+            line-height:1;
+          ">
+    i
+  </button>
+
+  <button id="modalSizeButton"
+          type="button"
+          style="
+            width:38px;
+            height:38px;
+            border-radius:50%;
+            background:maroon;
+            color:white;
+            border:1px solid black;
+            cursor:pointer;
+            font-size:22px;
+            font-weight:bold;
+            padding:0;
+            line-height:1;
+          ">
+    ⊕
+  </button>
+
+</div><div id="comboNoteMessage"
+     style="
+       display:none;
+       margin-top:14px;
+       color:maroon;
+       font-size:13px;
+       font-weight:bold;
+       text-align:left;
+     ">
+</div>
+  </div>
+</div>
+<!-- ==========================================================================
+     1. THE HTML COMPONENT 
+     Place this directly inside your existing document body as a top-level element.
+     ========================================================================== -->
+
+<div id="blueFormPanel" class="fixed-blue-panel hidden">
+  
+  <!-- Panel Header -->
+  <div class="panel-header">
+    <h3>Dynamic Build Sheet</h3>
+    <!-- Minimizes window without clearing data -->
+    <button type="button" class="minimize-panel-btn" id="minimizePanelBtn">Minimize ✕</button> 
+  </div>
+
+  <!-- Dynamic Line Collector Canvas -->
+  <div id="dynamicLinesContainer"></div>
+
+  <!-- Persistent Panel Control Buttons -->
+ <!-- Persistent Panel Control Buttons -->
+<div class="panel-footer">
+  <button type="button" id="resetPanelBtn" class="btn-danger">
+    Reset / Clear All
+  </button>
+
+  <button type="button" id="editExistingBtn" class="btn-primary">
+    Edit Existing
+  </button>
+
+  <button type="button" id="savePanelBtn" class="btn-success">
+    Save to Repository
+  </button>
+
+  <button id="addLineBtn" type="button">
+    Add New Line
+  </button>
+</div>
+  
+</div>
+<div id="munachChoiceOverlay" class="munach-choice-overlay" style="display:none;">
+  <div id="munachChoiceModal" class="munach-choice-modal">
+
+     <h3>Munach Playback Selection</h3>
+    <p>Choose Following Trope</p>
+    <div id="munachChoiceButtons" class="munach-choice-buttons">
+      <!-- buttons are added by JavaScript -->
+    </div>
+
+    <button id="munachChoiceCancel" type="button">Cancel</button>
+
+  </div>
+</div>
+<div id="activeFilesPopup"
+     style="
+       display:none;
+       position:fixed;
+       top:120px;
+       left:50%;
+       transform:translateX(-50%);
+       z-index:99999;
+       border:2px solid maroon;
+       background:lightblue;
+       color:maroon;
+       padding:12px;
+       width:320px;
+       box-shadow:0 0 12px gray;
+     ">
+  <div style="font-weight:bold; color:maroon; margin-bottom:8px;">
+    Select Active File
+  </div>
+
+  <select id="activeFilesSelect" style="width:100%; margin-bottom:10px;"></select>
+
+  <button onclick="loadSelectedActiveFile()">Load</button>
+  <button onclick="closeActiveFilesSelector()">Cancel</button>
+</div>
+
+<div id="activeFileViewerOverlay" class="active-file-viewer-overlay">
+
+  <div id="activeFileViewerBox" class="active-file-viewer-box">
+
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:16px;
+        margin-bottom:18px;
+      "
+    >
+
+      <label
+        style="
+          font-size:14px;
+          font-weight:bold;
+          color:maroon;
+          user-select:none;
+          white-space:nowrap;
+        "
+      >
+        <input
+          type="checkbox"
+          id="notePlaybackCheckbox"
+          checked
+        >
+        Highlighted Note by Note
+      </label>
+
+     <div class="active-file-title-wrap">
+<button
+  id="playAllLyricsBtn"
+  type="button"
+  style="
+    width:24px;
+    height:24px;
+    border-radius:50%;
+    background:lightgreen;
+    color:black;
+    border:1px solid black;
+    cursor:pointer;
+    font-size:20px;
+    font-weight:bold;
+    padding:0;
+    line-height:1;
+    display: none;
+    flex:0 0 auto;
+  "
+  title="Play All Lyrics"
+>
+  ♫
+</button>
+  <div
+    id="activeFileViewerTitle"
+    class="active-file-viewer-title"
+  ></div>
+
+  <span id="activeFileInfoIconHolder"></span>
+</div>
+
+      <label
+        style="
+          font-size:14px;
+          font-weight:bold;
+          color:maroon;
+          user-select:none;
+          white-space:nowrap;
+        "
+      >
+        <input
+          type="checkbox"
+          id="smoothPlaybackCheckbox"
+        >
+        Smooth Playback
+      </label>
+
+    </div>
+
+    <div id="activeFileLinesContainer"></div>
+
+
+
+    <div style="text-align:center; margin-top:18px;">
+      <button onclick="closeActiveFileViewer()">CLOSE</button>
+    </div>
+
+  </div>
+
+</div>
+<div id="activeFileInfoPopup" class="active-file-info-popup">
+  <div class="active-file-info-textbox">
+    <div style="font-weight:bold; color:maroon; margin-bottom:10px;">
+      Information
+    </div>
+
+    <div id="activeFileInfoText">
+      Information content will be added here.
+    </div>
+
+    <div style="text-align:center; margin-top:16px;">
+      <button onclick="closeActiveFileInfoPopup()">CLOSE INFO</button>
+    </div>
+  </div>
+</div>
+
+<div id="hebrewLinePopup"
+     style="
+       display:none;
+       position:fixed;
+       top:80px;
+       left:50%;
+       transform:translateX(-50%);
+       z-index:100000;
+       background:#f7edcf;
+       border:3px solid maroon;
+       padding:18px;
+       width:max-content;
+       max-width:95vw;
+       box-shadow:0 0 18px gray;
+     ">
+  <div id="hebrewLineText"
+       style="
+         background:white;
+         border:1px solid darkblue;
+         color:maroon;
+         font-family:'Times New Roman', serif;
+         font-size:34px;
+         font-weight:bold;
+         text-align:center;
+         direction:rtl;
+         unicode-bidi:isolate;
+         padding:14px;
+         white-space:nowrap;
+       ">
+  </div>
+
+</div>
+<div id="tropeHoverBox"></div>
+
+<!-- ==========================================================================
+     2. THE CSS STYLESHEET COMPONENT 
+     Add these rules directly into your existing <style> tag or global .css file.
+     ========================================================================== -->
+<style>
+.active-file-viewer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(0,0,0,0.30);
+}
+#activeFileInfoText {
+  white-space: pre-wrap;
+}
+
+#tropeHoverBox {
+  display: none;
+  position: fixed;
+  z-index: 20000;
+  max-width: 350px;
+  background: #f7edcf;
+  border: 2px solid maroon;
+  color: darkblue;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  box-shadow: 0 0 8px gray;
+  pointer-events: auto;
+}
+.tropeModalBox.modalExpanded {
+  transform: scale(1.3);
+  transform-origin: top center;
+}
+
+#activeFileInfoPopup {
+  z-index: 400000;
+}
+.active-file-viewer-box {
+  position: relative;
+  width: 850px;
+  height: 80vh;
+  overflow: hidden;
+  margin: 70px auto;
+  padding: 20px 24px;
+  background: #f7edcf;
+  border: 3px solid maroon;
+  box-shadow: 0 0 18px gray;
+  display: flex;
+  flex-direction: column;
+}
+
+#activeFileLinesContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  min-height: 0;
+}
+
+.active-file-viewer-title {
+  background: white;
+  color: maroon;
+  border: 1px solid darkblue;
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px;
+  margin-bottom: 18px;
+}
+
+.active-file-line-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.active-file-lyrics-row {
+  cursor: pointer;
+}
+.lyrics-playing {
+  background: #dff5d8 !important;
+}
+.active-file-lyrics-row.lyrics-selected {
+  background-color: #fff2b8;   /* soft gold, complements royal blue */
+  outline: 2px solid #d6a800;
+}
+.active-file-line-number {
+  width: 45px;
+  color: maroon;
+  font-weight: bold;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.active-file-info-popup {
+  display: none;
+
+  position: absolute;
+  left: 50%;
+  top: 54%;
+
+  transform: translate(-50%, -50%);
+
+ width: min(650px, 80vw);
+ height: 70vh;
+
+  z-index: 100001;
+
+  background: lightblue;
+
+  border: 3px solid maroon;
+  box-shadow: 0 0 18px gray;
+
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.active-file-info-textbox {
+  width: 100%;
+  height: 100%;
+
+  background: white;
+  border: 1px solid darkblue;
+
+  color: black;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  padding: 16px;
+  box-sizing: border-box;
+
+  overflow-y: auto;
+}
+
+.lyrics-hebrew-word {
+  display: inline-block;
+  padding: 1px 4px;
+  border-radius: 5px;
+  cursor: pointer;
+
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.lyrics-hebrew-word:hover {
+  background: rgba(65, 105, 225, 0.14);
+  display: inline-block;
+  position: relative;
+  z-index: 10;
+  transform: scale(1.4, 1.8);
+  transform-origin: center center;
+}
+.active-file-line-box {
+  flex: 1;
+  background: white;
+  border: 1px solid darkblue;
+  color: black;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px 10px;
+}
+
+.active-file-lyrics-row {
+  display: none;
+  margin-left: 55px;
+  margin-bottom: 12px;
+}
+
+.active-file-lyrics-box {
+  background: #f1f3f7;
+
+  border: 1px solid royalblue;
+
+  color: royalblue;
+
+  font-family: "Times New Roman", serif;
+
+  font-size: 30px;
+  font-weight: bold;
+
+  text-align: center;
+
+  padding: 10px 14px;
+
+  direction: rtl;
+  unicode-bidi: isolate;
+
+  line-height: 1.5;
+
+  box-shadow:
+    inset 0 0 4px rgba(0,0,120,0.08);
+}/* Full screen overlay */
+
+.munach-choice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.45);
+
+  z-index: 5000;
+}
+
+
+/* Main modal window */
+
+.munach-choice-modal {
+  position: relative;
+
+  width: 420px;
+  max-width: 90%;
+
+  background: #e8f4ff;
+
+  border: 3px solid maroon;
+  border-radius: 12px;
+
+  padding: 24px 20px 20px 20px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  box-shadow: 0 0 18px rgba(0,0,0,0.35);
+}
+
+
+/* Title */
+
+.munach-choice-modal h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+
+  color: maroon;
+
+  font-size: 22px;
+  font-weight: bold;
+}
+
+
+/* Instruction text */
+
+.munach-choice-modal p {
+  margin-top: 0;
+  margin-bottom: 18px;
+
+  color: maroon;
+
+  font-size: 15px;
+  font-weight: bold;
+}
+
+
+/* Button grid container */
+
+.munach-choice-buttons {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+
+  margin-bottom: 22px;
+}
+
+
+/* Trope selection buttons */
+
+.munach-choice-buttons button {
+  height: 42px;
+
+  background: white;
+
+  border: 2px solid maroon;
+  border-radius: 8px;
+
+  color: maroon;
+
+  font-size: 14px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.15s;
+}
+
+
+/* Hover effect */
+
+.munach-choice-buttons button:hover {
+  background: lightgoldenrodyellow;
+}
+
+
+/* Cancel button */
+
+#munachChoiceCancel {
+  min-width: 110px;
+  height: 38px;
+
+  background: white;
+
+  border: 2px solid maroon;
+  border-radius: 8px;
+
+  color: maroon;
+
+  font-size: 14px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+
+#munachChoiceCancel:hover {
+  background: #f6dcdc;
+}
+
+
+/* Outer Overlay Window Geometry (Matches your diagram specification) */
+.fixed-blue-panel {
+  position: fixed; 
+  top: 10%;         /* Vertical offset from top viewport window edge */
+  right: 5%;        /* Anchored rigid right margin */
+  width: 65%;       /* Spans across 65% of screen width */
+  height: 75%;      /* Spans across 75% of screen height */
+  background-color: rgba(173, 216, 230, 0.95); /* Opaque light blue background */
+  border: 2px solid #005580;
+  border-radius: 6px;
+  z-index: 999;     /* Forces layer stack isolation over scrolling tables */
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column; /* Stack header, content canvas, footer vertically */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Visibility State Toggle Engine */
+.fixed-blue-panel.hidden {
+  display: none !important;
+}
+
+/* Header & Structural Panels Styles */
+.panel-header {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  border-bottom: 2px solid #005580; 
+  padding-bottom: 10px; 
+  margin-bottom: 15px;
+}
+.panel-header h3 {
+  margin: 0;
+  font-family: sans-serif;
+  color: #00334d;
+}
+.minimize-panel-btn {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #005580;
+  cursor: pointer;
+}
+
+/* Middle Layout Core: Handles overflow rows seamlessly within the fixed box */
+#dynamicLinesContainer {
+  flex-grow: 1;        
+  overflow-y: auto;    /* Spawns an internal vertical scrollbar if rows grow long */
+  padding-right: 8px;
+}
+.panel-placeholder-text {
+  color: #555;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+/* Component Dynamic Row Injection Styling */
+.data-line-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.line-number {
+  font-weight: bold;
+  font-size: 0.9em;
+  color: #444;
+  min-width: 55px;
+}
+.line-value-input {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: bold;
+  padding: 6px 8px;
+  box-sizing: border-box;
+}
+.line-note-input {
+  flex-grow: 1; /* Automatically stretches input horizontal span to fill row */
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.delete-line-btn {
+  background: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 6px 10px;
+  font-weight: bold;
+}
+.delete-line-btn:hover { background: #c9302c; }
+
+/* Control Layout Footer Styles */
+.panel-footer {
+  margin-top: 15px; 
+  padding-top: 15px; 
+  border-top: 1px solid #005580; 
+  display: flex; 
+  gap: 12px;
+}
+.btn-danger { background: #d9534f; color: white; border: none; padding: 10px 18px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+.btn-danger:hover { background: maroon; }
+.btn-success { background: #5cb85c; color: white; border: none; padding: 10px 18px; cursor: pointer; border-radius: 4px; font-weight: bold; margin-left: auto; }
+.btn-success:hover { background: darkgreen; }
+.btn-primary { background: royalblue; color: white; border: none; padding: 10px 18px; cursor: pointer; border-radius: 4px;   margin-left: 75px; font-weight: bold; }
+//.btn-primary:hover { background: #2f5fd0; }
+.btn-primary:hover { background: purple; }
+#addLineBtn { background: orange; color: white; border: none; padding: 10px 18px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+#addLineBtn:hover { background: darkorange; }
+
+
+
+.tropeModal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.35);
+}
+
+.tropeModalBox {
+  background: #ffffcc;
+  width: 620px;
+  margin: 280px auto;
+  padding: 14px;
+  border: 2px solid maroon;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 45px;
+}
+
+#modalTropeName {
+  color: red;
+}
+
+.modalContent {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+#modalTropeImageBox {
+  width: 500px;
+  height: 100px;
+  border: 1px solid gray;
+  background: white;
+}
+#modalNoteBox {
+  width: 500px;
+  height: 100px;
+  border: 1px solid gray;
+  background: white;
+}
+
+#modalSymbolBox {
+  width: 64px;
+  height: 78px;
+  border: 1px solid gray;
+  background: white;
+  text-align: center;
+  font-family: "Times New Roman";
+  font-size: 32px;
+  font-weight: normal;
+  line-height: 78px;
+}
+#modalPlayButton {
+  margin-top: 30px;
+  margin-left: 45px;
+  font-size: 34px;
+  width: 72px;
+  height: 64px;
+}
+
+.playHint {
+  color: red;
+  font-weight: bold;
+  margin-left: 45px;
+}
+
+#modalCloseButton {
+  background: red;
+  color: black;
+  font-weight: bold;
+  padding: 10px;
+  border: 2px solid black;
+}
+.familyGlyph {
+  display: inline-block;
+  min-width: 20px;
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 1px 4px;
+  margin-right: 4px;
+  border-radius: 4px;
+  line-height: 1.4;
+}
+.active-line-row {
+  border: 2px solid maroon;
+  background: #fff8dc;
+}
+
+.hebrew-trope-span {
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+.hebrew-trope-active {
+  background: rgba(255, 255, 0, 0.55);
+}
+.active-file-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.active-file-info-icon {
+  color: royalblue;
+  cursor: pointer;
+  margin-left: 12px;
+  flex: 0 0 auto;
+}
+
+.active-file-info-icon:hover {
+  color: maroon;
+  transform: scale(1.12);
+}
+.touch-info-glyph {
+  cursor: pointer;
+  margin-left: 6px;
+  font-size: 85%;
+  vertical-align: super;
+}
+</style>
+<script src="TropePlayer.js?v=20260615C"></script>
+
+
+</body>
+</html>

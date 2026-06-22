@@ -2,7 +2,10 @@ document.getElementById("ipadDebugBox").innerHTML +=
   "Inline body script ran<br>";
 let startupModeSelected = false;
 let editExistingMode = false;
+let lineCount = 0;
 let dummyvar ;
+let playAllEnable = false;
+let playAllResolve = null;
 //alert("SCRIPT START");
 function ipadLog(msg) {
   const box = document.getElementById("ipadDebugBox");
@@ -192,7 +195,7 @@ const cleanNames = [
   {hover: "Text", name: "SofPaSuk", unicode: "05C3", wav: "SofPaSuk.wav", image: "" },
   {hover: "Text", name: "Tipchah", unicode: "0596", wav: "Tipchah.wav", image: "" },
   {hover: "Text", name: "Tvir", unicode: "059B", wav: "Tvir.wav", image: "" },
-  {hover: "Text", name: "V'azlah", unicode: "059C", wav: "V'azlah.wav", image: "" },
+  {hover: "Trope name is Azlah and must follow Kadma.  See Kadma-V'azlah. Use v' with the name to emphasize this relationshp.  Without Kadma, see Geresh.", name: "V'azlah", unicode: "059C", wav: "V'azlah.wav", image: "" },
   {hover: "Very rare trope found once in Torah (Numbers 35:5).", name: "YareachBenYomo", unicode: "05AA", wav: "YareachBenYomo.wav", image: "" },
   {hover: "Text", name: "Y'tiv", unicode: "059A", wav: "Y'tiv.wav", image: "" },
   {hover: "Text", name: "ZakefGadol", unicode: "0595", wav: "ZakefGadol.wav", image: "" },
@@ -636,33 +639,37 @@ tropeCell.onclick = function () {
 
 if (!touchModeActive) {
 
-  tropeCell.onmouseenter = function(event) {
-    const hoverBox = document.getElementById("tropeHoverBox");
+ tropeCell.onmouseenter = function(event) {
 
-    if (!this.dataset.hoverText) {
-      return;
-    }
+  const hoverBox =
+    document.getElementById("tropeHoverBox");
 
-    hoverBox.textContent = this.dataset.hoverText;
-    hoverBox.style.left = (event.clientX + 12) + "px";
-    hoverBox.style.top = (event.clientY + 12) + "px";
-    hoverBox.style.display = "block";
-  };
+  if (!this.dataset.hoverText) {
+    return;
+  }
 
-  tropeCell.onmousemove = function(event) {
-    const hoverBox = document.getElementById("tropeHoverBox");
+  const rect =
+    this.getBoundingClientRect();
 
-    if (hoverBox.style.display !== "block") {
-      return;
-    }
+  hoverBox.textContent =
+    this.dataset.hoverText;
 
-    hoverBox.style.left = (event.clientX + 12) + "px";
-    hoverBox.style.top = (event.clientY + 12) + "px";
-  };
+  hoverBox.style.left =
+    (rect.right + 12) + "px";
 
-  tropeCell.onmouseleave = function() {
-    document.getElementById("tropeHoverBox").style.display = "none";
-  };
+  hoverBox.style.top =
+    rect.top + "px";
+
+  hoverBox.style.display = "block";
+};
+
+tropeCell.onmousemove = function(event) {
+  // fixed position
+};
+
+tropeCell.onmouseleave = function() {
+  document.getElementById("tropeHoverBox").style.display = "none";
+};
 
 }
 
@@ -1599,7 +1606,6 @@ function openActiveFileViewer(fileName, data) {
 
   const linesContainer =
     document.getElementById("activeFileLinesContainer");
-
   titleBox.textContent =
     fileName.replace(".json", "");
 document.getElementById("activeFileInfoIconHolder").innerHTML =
@@ -1672,6 +1678,7 @@ lyricsRow.onclick = function(event) {
 
   event.stopPropagation();
 lyricsBox.classList.add("lyrics-playing");
+
   showTropeTrainerCreditLine(lineNumber);
 
   const sectionName =
@@ -1791,11 +1798,15 @@ toggleLyricsDisplayRows();
 
 
 function closeActiveFileViewer() {
+  stopPlayAllLyrics();
+
+  lineCount = 0;
 
   document.getElementById(
     "activeFileViewerOverlay"
   ).style.display = "none";
 }
+
 async function loadParshaFile(fileName) {
 
   const response = await fetch(
@@ -1815,13 +1826,32 @@ async function loadParshaFile(fileName) {
 
   // action here with the loaded file data
   console.log(data);
-}function toggleLyricsDisplayRows() {
+}
+
+function toggleLyricsDisplayRows() {
+
+  lineCount = 0;
+
+  const playBtn =
+    document.getElementById("playAllLyricsBtn");
+
   document
     .querySelectorAll(".active-file-lyrics-row")
     .forEach(function(row) {
-      row.style.display =
-        viewLyricsMode ? "block" : "none";
+
+      if (viewLyricsMode) {
+        row.style.display = "block";
+        lineCount++;
+      } else {
+        row.style.display = "none";
+      }
+
     });
+
+  if (playBtn) {
+    playBtn.style.display =
+      viewLyricsMode ? "inline-block" : "none";
+  }
 }
 
 function buildActiveFileLines(data) {
@@ -2339,7 +2369,7 @@ function showTropeTrainerCreditLine(lineNumber) {
   if (lineNumber === 1) {
     popup.style.top = "420px";
   } else {
-    popup.style.top = "80px";
+    popup.style.top = "200px";
   }
 
   popup.style.display = "block";
@@ -2561,4 +2591,170 @@ function formatTropeNameForDisplay(tropeName) {
   }
 
   return '<span style="color:' + colorToUse + ';">' + tropeName + '</span>';
+}
+
+
+document.getElementById("playAllLyricsBtn").onclick = function(event) {
+  event.stopPropagation();
+
+  if (playAllEnable) {
+    stopPlayAllLyrics();
+    return;
+  }
+
+  playAllLyricsLines();
+};
+
+function setPlayAllButtonRunning() {
+  const btn = document.getElementById("playAllLyricsBtn");
+  if (!btn) return;
+
+  btn.style.background = "pink";
+  btn.title = "Stop Play All";
+}
+
+function setPlayAllButtonStopped() {
+  const btn = document.getElementById("playAllLyricsBtn");
+  if (!btn) return;
+
+  btn.style.background = "lightgreen";
+  btn.title = "Play All Lyrics";
+}
+
+function stopPlayAllLyrics() {
+  playAllEnable = false;
+
+  player.pause();
+  player.currentTime = 0;
+
+  if (playAllResolve) {
+    const resolveNow = playAllResolve;
+    playAllResolve = null;
+    resolveNow();
+  }
+
+  clearLyricsPlayingHighlight();
+  setPlayAllButtonStopped();
+
+  document.getElementById("hebrewLinePopup").style.display = "none";
+}
+
+async function playAllLyricsLines() {
+  playAllEnable = true;
+  setPlayAllButtonRunning();
+
+  const sectionName =
+    document.getElementById("activeFileViewerTitle")
+      .textContent
+      .trim();
+
+  try {
+    for (let lineNumber = 1; lineNumber <= lineCount; lineNumber++) {
+
+      if (!playAllEnable) {
+        return;
+      }
+
+      const wavPath =
+        audioPath +
+        encodeURIComponent(sectionName) +
+        "/" +
+        encodeURIComponent(sectionName + "_line" + lineNumber + ".wav");
+
+      highlightLyricsLineForPlayAll(lineNumber);
+      scrollLyricsLineIntoView(lineNumber);
+      showTropeTrainerCreditLine(lineNumber);
+
+      await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+
+      if (!playAllEnable) {
+        return;
+      }
+    }
+
+  } finally {
+    playAllEnable = false;
+    playAllResolve = null;
+    setPlayAllButtonStopped();
+    clearLyricsPlayingHighlight();
+
+    document.getElementById("hebrewLinePopup").style.display = "none";
+  }
+}
+
+function highlightLyricsLineForPlayAll(lineNumber) {
+  clearLyricsPlayingHighlight();
+
+  const lyricsRow =
+    document.querySelector(
+      '.active-file-lyrics-row[data-line-number="' +
+      lineNumber +
+      '"]'
+    );
+
+  if (!lyricsRow) return;
+
+  const lyricsBox =
+    lyricsRow.querySelector(".active-file-lyrics-box");
+
+  if (lyricsBox) {
+    lyricsBox.classList.add("lyrics-playing");
+  }
+}
+
+function playTropeTrainerLineAudioAndWait(wavPath, lineNumber) {
+  return new Promise(function(resolve) {
+
+    let alreadyResolved = false;
+
+    function finishPlayback() {
+      if (alreadyResolved) return;
+
+      alreadyResolved = true;
+      playAllResolve = null;
+
+      clearLyricsPlayingHighlight();
+
+      document.getElementById("hebrewLinePopup").style.display =
+        "none";
+
+      resolve();
+    }
+
+    playAllResolve = finishPlayback;
+
+    player.pause();
+    player.onended = null;
+    player.onerror = null;
+
+    player.src = wavPath + "?v=" + Date.now();
+    player.load();
+
+    player.onended = finishPlayback;
+    player.onerror = finishPlayback;
+
+    const playPromise = player.play();
+
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(function() {
+        finishPlayback();
+      });
+    }
+  });
+}
+
+function scrollLyricsLineIntoView(lineNumber) {
+  const lyricsRow =
+    document.querySelector(
+      '.active-file-lyrics-row[data-line-number="' +
+      lineNumber +
+      '"]'
+    );
+
+  if (!lyricsRow) return;
+
+  lyricsRow.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
 }
