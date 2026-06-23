@@ -566,6 +566,29 @@ const FAMILY_GLYPHS = {
 
 const table = document.getElementById("tropeTable");
 const player = document.getElementById("player");
+
+function buildTropeUnicodeDisplay(tropeName) {
+  if (comboTropeNames.includes(tropeName)) {
+    return "";
+  }
+  const tropeInfo = findTropeInfo(tropeName);
+  if (!tropeInfo || !tropeInfo.unicode) {
+    return "";
+  }
+  if (tropeInfo.name === "SofPaSuk") {
+    return "\u00A0" + "\u05BD" + "\u05C3";
+  }
+  if (tropeInfo.name === "Munach-l'garmeih") {
+    return "\u00A0" +
+      String.fromCharCode(parseInt(tropeInfo.unicode, 16)) +
+      "\u00A0" +
+      "\u05C0";
+  }
+
+  return "\u00A0" +
+    String.fromCharCode(parseInt(tropeInfo.unicode, 16));
+}
+
 function buildTropeTable() {tropeNames.forEach((name, index) => {
   const row = document.createElement("tr");
 
@@ -673,6 +696,18 @@ tropeCell.onmouseleave = function() {
 
 }
 
+
+  /* Symbol column */
+const symbolCell = document.createElement("td");
+symbolCell.textContent = buildTropeUnicodeDisplay(name);
+symbolCell.style.fontFamily = "'Times New Roman', serif";
+symbolCell.style.fontSize = "28px";
+symbolCell.style.fontWeight = "bold";
+symbolCell.style.direction = "rtl";
+symbolCell.style.unicodeBidi = "isolate";
+symbolCell.style.textAlign = "center";
+symbolCell.style.color = "maroon";
+
   /* Family column */
   const familyCell = document.createElement("td");
   familyCell.innerHTML = buildFamilyGlyphString(name);
@@ -683,9 +718,9 @@ tropeCell.onmouseleave = function() {
 
   row.appendChild(indexCell);
   row.appendChild(tropeCell);
+row.appendChild(symbolCell);
   row.appendChild(familyCell);
- // row.appendChild(hebrewCell);
- // row.appendChild(notesCell);
+
 
   table.appendChild(row);
 });
