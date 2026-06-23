@@ -68,64 +68,64 @@
         }
       ]
     },
+ {
+  "lineName": "Line-3",
+  "words": [
     {
-      "lineName": "Line-3",
-      "words": [
-        {
-          "hebrew": "לֹ֣א",
-          "translit": "l'"
-        },
-        {
-          "hebrew": "יִהְיֶ֣ה",
-          "translit": "yhyh"
-        },
-        {
-          "hebrew": "לְךָ֩",
-          "translit": "lch"
-        },
-        {
-          "hebrew": "אֱלֹהִ֨ים אֲחֵרִ֜ים",
-          "translit": "'lhym 'chrym"
-        },
-        {
-          "hebrew": "עַל־פָּנַ֗י",
-          "translit": "'l-fny"
-        }
-      ]
+      "hebrew": "לֹ֣א־",
+      "translit": "l'"
     },
     {
-      "lineName": "Line-4A",
-      "words": [
-        {
-          "hebrew": "לֹ֣א",
-          "translit": "l'"
-        },
-        {
-          "hebrew": "תַעֲשֶׂה־לְךָ֣",
-          "translit": "t'shh-lch"
-        },
-        {
-          "hebrew": "פֶ֣סֶל׀",
-          "translit": "fsl"
-        },
-        {
-          "hebrew": "וְכָל־תְּמוּ֡נָה",
-          "translit": "vchl-tmvnh"
-        },
-        {
-          "hebrew": "אֲשֶׁ֣ר",
-          "translit": "'shr"
-        },
-        {
-          "hebrew": "בַּשָּׁמַ֣יִם׀",
-          "translit": "vshmym"
-        },
-        {
-          "hebrew": "מִמַּ֡עַל",
-          "translit": "mm'l"
-        }
-      ]
+      "hebrew": "יִהְיֶ֣ה־",
+      "translit": "yhyh"
     },
+    {
+      "hebrew": "לְךָ֩",
+      "translit": "lch"
+    },
+    {
+      "hebrew": "אֱלֹהִ֨ים אֲחֵרִ֜ים",
+      "translit": "'lhym 'chrym"
+    },
+    {
+      "hebrew": "עַל־פָּנַ֗י",
+      "translit": "'l-fny"
+    }
+  ]
+},
+   {
+  "lineName": "Line-4A",
+  "words": [
+    {
+      "hebrew": "לֹ֣א",
+      "translit": "l'"
+    },
+    {
+      "hebrew": "תַעֲשֶׂה־לְךָ֣",
+      "translit": "t'shh-lch"
+    },
+    {
+      "hebrew": "פֶ֣סֶל ׀",
+      "translit": "fsl"
+    },
+    {
+      "hebrew": "וְכָל־תְּמוּ֡נָה",
+      "translit": "vchl-tmvnh"
+    },
+    {
+      "hebrew": "אֲשֶׁ֣ר",
+      "translit": "'shr"
+    },
+    {
+      "hebrew": "בַּשָּׁמַ֣יִם ׀",
+      "translit": "vshmym"
+    },
+    {
+      "hebrew": "מִמַּ֡עַל",
+      "translit": "mm'l"
+    }
+  ]
+},
     {
       "lineName": "Line-4B",
       "words": [
