@@ -1596,6 +1596,15 @@ function buildActiveLyricsLines(lyricsData) {
   });
 }
 
+function normalizeHebrewDisplayWord(hebrew) {
+
+  if (!hebrew) return "";
+
+  return String(hebrew)
+    .trim()
+    .replace(/\s*\u05C0/g, " \u05C0");   // pasik
+}
+
 function openActiveFileViewer(fileName, data) {
   viewLyricsMode = false;
   const overlay =
@@ -1709,8 +1718,10 @@ if (activeLyricsLines[lineNumber]) {
 
     wordSpan.className = "lyrics-hebrew-word";
 
-    wordSpan.textContent =
-      wordItem.hebrew || "";
+   wordSpan.textContent =
+  normalizeHebrewDisplayWord(
+    wordItem.hebrew || ""
+  );
 
     wordSpan.dataset.translit =
       wordItem.translit || "";
@@ -1779,14 +1790,27 @@ hoverBox.style.pointerEvents = "auto";
 
     lyricsBox.appendChild(wordSpan);
 
-    if (wordIndex < activeLyricsLines[lineNumber].length - 1) {
-      lyricsBox.appendChild(
-        document.createTextNode("\u00A0\u00A0")
-      );
-    }
+if (wordIndex < activeLyricsLines[lineNumber].length - 1) {
 
+  const MAQAF = "\u05BE";
+
+  const currentHebrew =
+    (wordItem.hebrew || "").trim();
+
+  const nextHebrew =
+    (activeLyricsLines[lineNumber][wordIndex + 1].hebrew || "").trim();
+
+  const suppressSpace =
+    currentHebrew.endsWith(MAQAF) ||
+    nextHebrew.startsWith(MAQAF);
+
+  if (!suppressSpace) {
+    lyricsBox.appendChild(
+      document.createTextNode(" ")
+    );
+  }
+}
   });
-
 }
 
 lyricsRow.appendChild(lyricsBox);
