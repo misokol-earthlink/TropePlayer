@@ -72,11 +72,11 @@
   "lineName": "Line-3",
   "words": [
     {
-      "hebrew": "לֹ֣א־",
+     "hebrew": "\u05DC\u05BD\u05A3\u05D0\u05BE",
       "translit": "l'"
     },
     {
-      "hebrew": "יִהְיֶ֣ה־",
+      "hebrew": "יִהְיֶ֣ה",
       "translit": "yhyh"
     },
     {
@@ -97,7 +97,7 @@
   "lineName": "Line-4A",
   "words": [
     {
-      "hebrew": "לֹ֣א",
+    "hebrew": "לֹֽ֣א",
       "translit": "l'"
     },
     {
@@ -204,7 +204,7 @@
           "translit": "kn'"
         },
         {
-          "hebrew": "פֹּקֵ֠ד",
+          "hebrew": "פֹּ֠קֵ֠ד",
           "translit": "fkd"
         },
         {
@@ -337,12 +337,8 @@
           "translit": "zchvr"
         },
         {
-          "hebrew": "אֶת־י֨וֹם",
-          "translit": "'t-yvm"
-        },
-        {
-          "hebrew": "הַשַּׁבָּ֜ת",
-          "translit": "hshvt"
+          "hebrew": "אֶת־י֨וֹם הַשַּׁבָּ֜ת",
+               "translit": "'t-yvm hshvt"
         },
         {
           "hebrew": "לְקַדְּשׁ֗וֹ",
@@ -391,7 +387,7 @@
           "translit": "shvt"
         },
         {
-          "hebrew": "לַיהֹוָ֣ה",
+         "hebrew": "לַיהוָ֣ה",
           "translit": "Adonai"
         },
         {
@@ -404,7 +400,7 @@
       "lineName": "Line-10B",
       "words": [
         {
-          "hebrew": "לֹ֣א",
+         "hebrew": "לֹ֣א־",
           "translit": "l'"
         },
         {
@@ -416,24 +412,20 @@
           "translit": "chl-ml'chh"
         },
         {
-          "hebrew": "אַתָּ֣ה׀",
+          "hebrew": "אַתָּ֣ה",
           "translit": "'th"
         },
         {
-          "hebrew": "וּבִנְךָ֣",
+         "hebrew": "וּבִנְךָ֣־",
           "translit": "vvnch"
         },
         {
-          "hebrew": "וּ֠בִתֶּ֠ךָ",
+          "hebrew": "וּ֠בִתֶּ֠ךָ",                                     
           "translit": "vvtch"
         },
         {
-          "hebrew": "עַבְדְּךָ֨",
-          "translit": "'vdch"
-        },
-        {
-          "hebrew": "וַאֲמָֽתְךָ֜",
-          "translit": "v'mtch"
+          "hebrew": "עַבְדְּךָ֨ וַאֲמָֽתְךָ֜",
+                "translit": "vdch v'mtch"
         },
         {
           "hebrew": "וּבְהֶמְתֶּ֗ךָ",
@@ -575,10 +567,15 @@
       "lineName": "Line-12B",
       "words": [
        
-        {
-          "hebrew": "עַ֚ל־הָאֲדָמָ֔ה",
-          "translit": "'l-h'dmh"
-        },
+       {
+  "hebrew": "עַ֚ל",
+  "translit": "al"
+},
+   {
+  "hebrew": "הָאֲדָמָ֔ה",
+  "translit": "ha-adamah"
+},
+
         {
           "hebrew": "אֲשֶׁר־יְהֹוָ֥ה",
           "translit": "Adonai"
@@ -649,7 +646,7 @@
       "translit": "vr'ch"
     },
     {
-      "hebrew": "עֵ֖ד",
+     "hebrew": "עֵ֥ד",
       "translit": "'d"
     },
     {
