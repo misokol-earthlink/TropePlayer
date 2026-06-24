@@ -34,7 +34,7 @@
           "translit": "'nchy"
         },
         {
-          "hebrew": "יְהֹוָ֣ה",
+          "hebrew": "יְהוָ֣ה",
           "translit": "Adonai"
         },
         {
@@ -68,64 +68,64 @@
         }
       ]
     },
- {
-  "lineName": "Line-3",
-  "words": [
     {
-     "hebrew": "\u05DC\u05BD\u05A3\u05D0\u05BE",
-      "translit": "l'"
+      "lineName": "Line-3",
+      "words": [
+        {
+          "hebrew": "לֽ֣א־",
+          "translit": "l'"
+        },
+        {
+          "hebrew": "יִהְיֶ֣ה",
+          "translit": "yhyh"
+        },
+        {
+          "hebrew": "לְךָ֩",
+          "translit": "lch"
+        },
+        {
+          "hebrew": "אֱלֹהִ֨ים אֲחֵרִ֜ים",
+          "translit": "'lhym 'chrym"
+        },
+        {
+          "hebrew": "עַל־פָּנַ֗י",
+          "translit": "'l-fny"
+        }
+      ]
     },
     {
-      "hebrew": "יִהְיֶ֣ה",
-      "translit": "yhyh"
+      "lineName": "Line-4A",
+      "words": [
+        {
+          "hebrew": "לֹֽ֣א",
+          "translit": "l'"
+        },
+        {
+          "hebrew": "תַעֲשֶׂה־לְךָ֣",
+          "translit": "t'shh-lch"
+        },
+        {
+          "hebrew": "פֶ֣סֶל ׀",
+          "translit": "fsl"
+        },
+        {
+          "hebrew": "וְכָל־תְּמוּ֡נָה",
+          "translit": "vchl-tmvnh"
+        },
+        {
+          "hebrew": "אֲשֶׁ֣ר",
+          "translit": "'shr"
+        },
+        {
+          "hebrew": "בַּשָּׁמַ֣יִם ׀",
+          "translit": "vshmym"
+        },
+        {
+          "hebrew": "מִמַּ֡עַל",
+          "translit": "mm'l"
+        }
+      ]
     },
-    {
-      "hebrew": "לְךָ֩",
-      "translit": "lch"
-    },
-    {
-      "hebrew": "אֱלֹהִ֨ים אֲחֵרִ֜ים",
-      "translit": "'lhym 'chrym"
-    },
-    {
-      "hebrew": "עַל־פָּנַ֗י",
-      "translit": "'l-fny"
-    }
-  ]
-},
-   {
-  "lineName": "Line-4A",
-  "words": [
-    {
-    "hebrew": "לֹֽ֣א",
-      "translit": "l'"
-    },
-    {
-      "hebrew": "תַעֲשֶׂה־לְךָ֣",
-      "translit": "t'shh-lch"
-    },
-    {
-      "hebrew": "פֶ֣סֶל ׀",
-      "translit": "fsl"
-    },
-    {
-      "hebrew": "וְכָל־תְּמוּ֡נָה",
-      "translit": "vchl-tmvnh"
-    },
-    {
-      "hebrew": "אֲשֶׁ֣ר",
-      "translit": "'shr"
-    },
-    {
-      "hebrew": "בַּשָּׁמַ֣יִם ׀",
-      "translit": "vshmym"
-    },
-    {
-      "hebrew": "מִמַּ֡עַל",
-      "translit": "mm'l"
-    }
-  ]
-},
     {
       "lineName": "Line-4B",
       "words": [
@@ -188,7 +188,7 @@
       "lineName": "Line-5B",
       "words": [
         {
-          "hebrew": "יְהֹוָ֤ה",
+          "hebrew": "יְהוָ֤ה",
           "translit": "Adonai"
         },
         {
@@ -279,7 +279,7 @@
           "translit": "tsh'"
         },
         {
-          "hebrew": "אֶת־שֵׁם־יְהֹוָ֥ה",
+          "hebrew": "אֶת־שֵׁם־יְהוָ֥ה",
           "translit": "Adonai"
         },
         {
@@ -308,7 +308,7 @@
           "translit": "ynkh"
         },
         {
-          "hebrew": "יְהֹוָ֔ה",
+          "hebrew": "יְהוָ֔ה",
           "translit": "Adonai"
         },
         {
@@ -338,7 +338,7 @@
         },
         {
           "hebrew": "אֶת־י֨וֹם הַשַּׁבָּ֜ת",
-               "translit": "'t-yvm hshvt"
+          "translit": "'t-yvm hshvt"
         },
         {
           "hebrew": "לְקַדְּשׁ֗וֹ",
@@ -387,7 +387,7 @@
           "translit": "shvt"
         },
         {
-         "hebrew": "לַיהוָ֣ה",
+          "hebrew": "לַיהוָ֣ה",
           "translit": "Adonai"
         },
         {
@@ -400,7 +400,7 @@
       "lineName": "Line-10B",
       "words": [
         {
-         "hebrew": "לֹ֣א־",
+          "hebrew": "לֹ֣א־",
           "translit": "l'"
         },
         {
@@ -416,16 +416,16 @@
           "translit": "'th"
         },
         {
-         "hebrew": "וּבִנְךָ֣־",
+          "hebrew": "וּבִנְךָ֣־",
           "translit": "vvnch"
         },
         {
-          "hebrew": "וּ֠בִתֶּ֠ךָ",                                     
+          "hebrew": "וּ֠בִתֶּ֠ךָ",
           "translit": "vvtch"
         },
         {
           "hebrew": "עַבְדְּךָ֨ וַאֲמָֽתְךָ֜",
-                "translit": "vdch v'mtch"
+          "translit": "vdch v'mtch"
         },
         {
           "hebrew": "וּבְהֶמְתֶּ֗ךָ",
@@ -466,7 +466,7 @@
           "translit": "'shh"
         },
         {
-          "hebrew": "יְהֹוָ֜ה",
+          "hebrew": "יְהוָ֜ה",
           "translit": "Adonai"
         },
         {
@@ -516,7 +516,7 @@
           "translit": "vrch"
         },
         {
-          "hebrew": "יְהֹוָ֛ה",
+          "hebrew": "יְהוָ֛ה",
           "translit": "Adonai"
         },
         {
@@ -560,24 +560,21 @@
           "hebrew": "יָמֶ֔יךָ",
           "translit": "ymych"
         }
-       
       ]
     },
- {
+    {
       "lineName": "Line-12B",
       "words": [
-       
-       {
-  "hebrew": "עַ֚ל",
-  "translit": "al"
-},
-   {
-  "hebrew": "הָאֲדָמָ֔ה",
-  "translit": "ha-adamah"
-},
-
         {
-          "hebrew": "אֲשֶׁר־יְהֹוָ֥ה",
+          "hebrew": "עַ֚ל",
+          "translit": "al"
+        },
+        {
+          "hebrew": "הָאֲדָמָ֔ה",
+          "translit": "ha-adamah"
+        },
+        {
+          "hebrew": "אֲשֶׁר־יְהוָ֥ה",
           "translit": "Adonai"
         },
         {
@@ -594,7 +591,6 @@
         }
       ]
     },
-
     {
       "lineName": "Line-13A",
       "words": [
@@ -634,27 +630,27 @@
         }
       ]
     },
-   {
-  "lineName": "Line-13D",
-  "words": [
     {
-      "hebrew": "לֹֽא־תַֽעֲנֶ֥ה",
-      "translit": "l'-t'nh"
+      "lineName": "Line-13D",
+      "words": [
+        {
+          "hebrew": "לֹֽא־תַֽעֲנֶ֥ה",
+          "translit": "l'-t'nh"
+        },
+        {
+          "hebrew": "בְרֵֽעֲךָ֖",
+          "translit": "vr'ch"
+        },
+        {
+          "hebrew": "עֵ֥ד",
+          "translit": "'d"
+        },
+        {
+          "hebrew": "שָֽׁקֶר׃",
+          "translit": "shkr"
+        }
+      ]
     },
-    {
-      "hebrew": "בְרֵֽעֲךָ֖",
-      "translit": "vr'ch"
-    },
-    {
-     "hebrew": "עֵ֥ד",
-      "translit": "'d"
-    },
-    {
-      "hebrew": "שָֽׁקֶר׃",
-      "translit": "shkr"
-    }
-  ]
-},
     {
       "lineName": "Line-14A",
       "words": [
