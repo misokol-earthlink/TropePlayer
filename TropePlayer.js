@@ -3,6 +3,7 @@ document.getElementById("ipadDebugBox").innerHTML +=
 let startupModeSelected = false;
 let editExistingMode = false;
 let lineCount = 0;
+let displayVowels = false;
 let dummyvar ;
 let playAllEnable = false;
 let playAllResolve = null;
@@ -187,7 +188,7 @@ const cleanNames = [
   {hover: "Etnachtah Family", name: "EtNachTah", unicode: "0591", wav: "EtNachTah.wav", image: "" },
   {hover: "Very rare trope found once in Torah (Numbers 35:5).", name: "Karne-farah", unicode: "059F", wav: "Karne-farah.wav", image: "" },
   {hover: "May be in combo tropes such as Munach-Katon and often called Zakef Katon.  Since Portnoy et.al. use Katon for this trop name this is how it appears in the trope names. Zakef does not appear in trope name transliterations or in the image of the music scale and associated lyrics in the trope detail display popup window.", name: "Katon", unicode: "0594", wav: "Katon.wav", image: "" },
-  {hover: "Text", name: "MerchahK'fulah", unicode: "05A6", wav: "MerchahK'fulah.wav", image: "" },
+  {hover: "Rare trope found in Torah 5 times.  Repeated note then finishing on higher pitch trill on closing melisma.", name: "MerchahK'fulah", unicode: "05A6", wav: "MerchahK'fulah.wav", image: "" },
   {hover: "Text", name: "Pazer", unicode: "05A1", wav: "Pazer.wav", image: "" },
   {hover: "Text", name: "Rvi'i", unicode: "0597", wav: "Rvi'i.wav", image: "" },
   {hover: "Always on the last letter of the word.  If the accented syllable is elsewhere, the same mark is used again.  Howver this is a single applction of the trope.", name: "Segol", unicode: "0592", wav: "Segol.wav", image: "" },
@@ -1437,10 +1438,15 @@ document.addEventListener("click", function(event) {
 
   viewLyricsMode = !viewLyricsMode;
 
+  if (viewLyricsMode) {
+    displayVowels = confirm(
+      "Confirm displaying vowels on YHVH if contained in source reference.\n\nClick Cancel to omit vowels."
+    );
+  }
+
   toggleLyricsDisplayRows();
 
 });
-
 async function loadParshaRepositoryIndex() {
  ipadTrace("ENTER loadParshaDirectory");
   try {
@@ -1753,10 +1759,13 @@ if (activeLyricsLines[lineNumber]) {
 
     wordSpan.className = "lyrics-hebrew-word";
 
-   wordSpan.textContent =
+wordSpan.textContent =
   normalizeHebrewDisplayWord(
-    wordItem.hebrew || ""
+    displayVowels
+      ? stripYHVHVowelsOnly(wordItem.hebrew || "")
+      : (wordItem.hebrew || "")
   );
+
 if (isYHVH(wordItem.hebrew)) {
   wordSpan.classList.add("yhvh-highlight");
 }
@@ -2825,4 +2834,22 @@ function isYHVH(hebrewText) {
     String(hebrewText || "").replace(/[\u0591-\u05C7]/g, "");
 
   return consonants.includes("יהוה");
+}
+
+function stripYHVHVowelsOnly(hebrew) {
+
+  if (!hebrew) return "";
+
+  const YHVH_PATTERN =
+    /י[\u0591-\u05C7]*ה[\u0591-\u05C7]*ו[\u0591-\u05C7]*ה/g;
+
+  return String(hebrew).replace(
+    YHVH_PATTERN,
+    function(match) {
+      return match.replace(
+        /[\u05B0-\u05BC\u05C7]/g,
+        ""
+      );
+    }
+  );
 }
