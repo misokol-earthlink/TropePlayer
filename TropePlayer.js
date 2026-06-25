@@ -1757,7 +1757,9 @@ if (activeLyricsLines[lineNumber]) {
   normalizeHebrewDisplayWord(
     wordItem.hebrew || ""
   );
-
+if (isYHVH(wordItem.hebrew)) {
+  wordSpan.classList.add("yhvh-highlight");
+}
     wordSpan.dataset.translit =
       wordItem.translit || "";
 
@@ -2816,4 +2818,11 @@ function scrollLyricsLineIntoView(lineNumber) {
     behavior: "smooth",
     block: "center"
   });
+}
+
+function isYHVH(hebrewText) {
+  const consonants =
+    String(hebrewText || "").replace(/[\u0591-\u05C7]/g, "");
+
+  return consonants.includes("יהוה");
 }
