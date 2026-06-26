@@ -1438,12 +1438,6 @@ document.addEventListener("click", function(event) {
 
   viewLyricsMode = !viewLyricsMode;
 
-  if (viewLyricsMode) {
-    displayVowels = confirm(
-      "Confirm displaying vowels on YHVH if contained in source reference.\n\nClick Cancel to omit vowels."
-    );
-  }
-
   toggleLyricsDisplayRows();
 
 });
@@ -1560,9 +1554,14 @@ console.log("jsonFile =", jsonFile);
     const data = await response.json();
 // Test Diag
 
-    const lyricsData =
-      await loadMatchingLyricsFile(selectedFile);
+const lyricsData =
+  await loadMatchingLyricsFile(selectedFile);
 
+if (!editExistingMode) {
+  displayVowels = confirm(
+    "Confirm displaying vowels on YHVH if contained in source reference.\n\nClick Cancel to omit vowels."
+  );
+}
     buildActiveLyricsLines(lyricsData);
 
 if (editExistingMode) {
@@ -1761,9 +1760,9 @@ if (activeLyricsLines[lineNumber]) {
 
 wordSpan.textContent =
   normalizeHebrewDisplayWord(
-    displayVowels
-      ? stripYHVHVowelsOnly(wordItem.hebrew || "")
-      : (wordItem.hebrew || "")
+   displayVowels
+          ? (wordItem.hebrew || "")
+            : stripYHVHVowelsOnly(wordItem.hebrew || "")
   );
 
 if (isYHVH(wordItem.hebrew)) {
