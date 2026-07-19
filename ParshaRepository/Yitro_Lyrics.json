@@ -80,14 +80,10 @@
     {
       "lineName": "Line-3",
       "words": [
-        {
-        "hebrew": "לֹ֣א",
-          "translit": "l'"
-        },
-        {
-          "hebrew": "לִהְיֶ֣ה־",
-          "translit": "yhyh"
-        },
+       {
+       "hebrew": "לֹ֣א־לִהְיֶ֣ה",
+            "translit": "l' yhyh"
+},
         {
           "hebrew": "לְךָ֩",
           "translit": "lch"
