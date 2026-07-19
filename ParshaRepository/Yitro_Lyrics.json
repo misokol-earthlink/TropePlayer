@@ -17,9 +17,14 @@
           "translit": "et"
         },
         {
-          "hebrew": "כׇּל־הַדְּבָרִ֥ים הָאֵ֖לֶּה ",
-          "translit": "kol-had'varim ha'eleh"
+          "hebrew": "כׇּל־הַדְּבָרִ֥ים",
+          "translit": "kol-had'varim"
         },
+{
+          "hebrew": "הָאֵ֖לֶּה",
+          "translit": "ha'eleh"
+        },
+
         {
           "hebrew": "לֵאמֹֽר׃",
           "translit": "leimor"
@@ -55,8 +60,12 @@
       "lineName": "Line-2B",
       "words": [
         {
-          "hebrew": "מֵאֶ֨רֶץ  מִצְרַ֜יִם",
-          "translit": "m'rtz mtzrym"
+          "hebrew": "מֵאֶ֨רֶץ",
+          "translit": "m'rtz"
+        },
+        {
+          "hebrew": "מִצְרַ֜יִם",
+          "translit": "mtzrym"
         },
         {
           "hebrew": "מִבֵּ֣ית",
@@ -72,11 +81,11 @@
       "lineName": "Line-3",
       "words": [
         {
-          "hebrew": "לֽ֣א־",
+        "hebrew": "לֹ֣א",
           "translit": "l'"
         },
         {
-          "hebrew": "יִהְיֶ֣ה",
+          "hebrew": "לִהְיֶ֣ה־",
           "translit": "yhyh"
         },
         {
@@ -84,8 +93,12 @@
           "translit": "lch"
         },
         {
-          "hebrew": "אֱלֹהִ֨ים אֲחֵרִ֜ים",
-          "translit": "'lhym 'chrym"
+          "hebrew": "אֱלֹהִ֨ים",
+          "translit": "'lhym'm"
+        },
+ {
+          "hebrew": "אֲחֵרִ֜ים",
+          "translit": "chrym"
         },
         {
           "hebrew": "עַל־פָּנַ֗י",
@@ -97,7 +110,7 @@
       "lineName": "Line-4A",
       "words": [
         {
-          "hebrew": "לֹֽ֣א",
+          "hebrew": "לֹ֣א",
           "translit": "l'"
         },
         {
@@ -109,7 +122,7 @@
           "translit": "fsl"
         },
         {
-          "hebrew": "וְכָל־תְּמוּ֡נָה",
+         "hebrew": "וְכָל־תְּמוּנָ֡ה",
           "translit": "vchl-tmvnh"
         },
         {
@@ -134,15 +147,20 @@
           "translit": "v'shr"
         },
         {
-          "hebrew": " בָּאָ֨רֶץ מִתַּ֜חַת ",
-          "translit": "v'rtz mtcht"
+          "hebrew": "בָּאָ֨רֶץ",
+          "translit": "v'rtz"
         },
+   {
+          "hebrew": "מִתַּ֜חַת",
+          "translit": "mtcht"
+        },
+
         {
           "hebrew": "וַאֲשֶׁ֥ר",
           "translit": "v'shr"
         },
         {
-          "hebrew": "בַּמַּ֣יִם׀",
+          "hebrew": "בַּמַּ֣יִם ׀",
           "translit": "vmym"
         },
         {
@@ -229,7 +247,7 @@
           "translit": "'l-shlshym"
         },
         {
-          "hebrew": "וְעַל־רִבֵּעִי֭ם",
+          "hebrew": "וְעַל־רִבֵּעִ֖ים",
           "translit": "v'l-rv'ym"
         },
         {
@@ -279,7 +297,7 @@
           "translit": "tsh'"
         },
         {
-          "hebrew": "אֶת־שֵׁם־יְהוָ֥ה",
+          "hebrew": "אֶת־שֵֽׁם־יְהוָ֥ה",
           "translit": "Adonai"
         },
         {
@@ -304,7 +322,7 @@
           "translit": "l'"
         },
         {
-          "hebrew": "יְנַקֶּה֨",
+         "hebrew": "יְנַקֶּה֙",
           "translit": "ynkh"
         },
         {
@@ -333,13 +351,18 @@
       "lineName": "Line-8",
       "words": [
         {
-          "hebrew": "זָכ֩וֹר֩",
+          "hebrew": "זָכוֹר֩",
           "translit": "zchvr"
         },
         {
-          "hebrew": "אֶת־י֨וֹם הַשַּׁבָּ֜ת",
-          "translit": "'t-yvm hshvt"
+          "hebrew": "אֶת־י֨וֹם",
+          "translit": "'t-yvm"
         },
+    {
+          "hebrew": "הַשַּׁבָּ֜ת",
+          "translit": "hshvt"
+        },
+
         {
           "hebrew": "לְקַדְּשׁ֗וֹ",
           "translit": "lkdshv"
@@ -358,7 +381,7 @@
           "translit": "ymym"
         },
         {
-          "hebrew": "תַּֽעֲבֹ֮ד",
+          "hebrew": "תַּֽעֲבֹד֮",
           "translit": "t'vd"
         },
         {
@@ -387,7 +410,7 @@
           "translit": "shvt"
         },
         {
-          "hebrew": "לַיהוָ֣ה",
+          "hebrew": "לַֽיהוָ֣ה",
           "translit": "Adonai"
         },
         {
@@ -400,7 +423,7 @@
       "lineName": "Line-10B",
       "words": [
         {
-          "hebrew": "לֹ֣א־",
+          "hebrew": "לֹ֣א",
           "translit": "l'"
         },
         {
@@ -415,18 +438,19 @@
           "hebrew": "אַתָּ֣ה",
           "translit": "'th"
         },
+       {
+  "hebrew": "וּבִנְךָ֣־וּ֠בִתֶּ֠ךָ",
+  "translit": "vvnch vvtch"
+},
         {
-          "hebrew": "וּבִנְךָ֣־",
-          "translit": "vvnch"
+          "hebrew": "עַבְדְּךָ֨",
+          "translit": "vdch"
         },
         {
-          "hebrew": "וּ֠בִתֶּ֠ךָ",
-          "translit": "vvtch"
+          "hebrew": "וַאֲמָֽתְךָ֜",
+          "translit": "v'mtch"
         },
-        {
-          "hebrew": "עַבְדְּךָ֨ וַאֲמָֽתְךָ֜",
-          "translit": "vdch v'mtch"
-        },
+
         {
           "hebrew": "וּבְהֶמְתֶּ֗ךָ",
           "translit": "vvhmtch"
@@ -458,7 +482,7 @@
           "translit": "chy"
         },
         {
-          "hebrew": "שֵֽׁשֶׁת־יָמִים֩",
+      "hebrew": "שֵֽׁשֶׁת־יָמִים֩",
           "translit": "shsht-ymym"
         },
         {
@@ -634,7 +658,7 @@
       "lineName": "Line-13D",
       "words": [
         {
-          "hebrew": "לֹֽא־תַֽעֲנֶ֥ה",
+          "hebrew": "לֹא־תַעֲנֶ֥ה",
           "translit": "l'-t'nh"
         },
         {
