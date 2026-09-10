@@ -1,0 +1,33 @@
+PocketTorah Audio and Timing Data
+=================================
+
+This directory contains selected data derived from the PocketTorah project.
+
+PocketTorah was created by Russel Neiss and Rabbi Charlie Schwartz.
+
+Original PocketTorah project:
+https://github.com/rneiss/PocketTorah
+
+The PocketTorah creators released the project's audio files and their
+corresponding metadata under a Creative Commons Attribution-ShareAlike
+(CC BY-SA) license.
+
+This repository currently uses selected PocketTorah materials for Torah
+audio playback, including:
+
+    data/aliyah.json
+    data/audio/
+    data/torah/labels/
+
+Only selected Torah readings are included. Haftarah audio and related
+material are not included.
+
+The Hebrew biblical text in data/torah/json/ is derived from the
+Westminster Leningrad Codex (WLC), maintained by the J. Alan Groves
+Center for Advanced Biblical Research.
+
+The WLC text is public domain.
+
+PocketTorah materials remain subject to their applicable original
+license. No ownership of the PocketTorah recordings or associated
+PocketTorah source material is claimed by this repository.
