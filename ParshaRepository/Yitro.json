@@ -1,37 +1,32 @@
 {
-  "name": "Yitro",
+  "name": "NewYitro",
   "description": "Description",
   "lines": [
     {
-      "lineName": "Line-1",
+      "lineName": "20:01",
       "tropes": [
-      "Munach",
-      "Katon",
-      "Tvir",
-      "Kadma-V'azlah",
-      "SofPaSuk"
+        "Munach",
+        "Katon",
+        "Tvir",
+        "Kadma-V'azlah",
+        "SofPaSuk"
       ]
     },
     {
-      "lineName": "Line-2A",
+      "lineName": "20:02",
       "tropes": [
         "PashTa",
         "Munach",
         "Katon",
         "Munach",
-        "T'LishaK'tanah"
-      ]
-    },
-    {
-      "lineName": "Line-2B",
-      "tropes": [
+        "T'LishaK'tanah",
         "Kadma-V'azlah",
         "Munach",
         "Rvi'i"
       ]
     },
     {
-      "lineName": "Line-3",
+      "lineName": "20:03",
       "tropes": [
         "Munach",
         "Munach",
@@ -41,7 +36,7 @@
       ]
     },
     {
-      "lineName": "Line-4A",
+      "lineName": "20:04",
       "tropes": [
         "Munach",
         "Munach",
@@ -49,12 +44,7 @@
         "Pazer",
         "Munach",
         "Munach",
-        "Pazer"
-      ]
-    },
-    {
-      "lineName": "Line-4B",
-      "tropes": [
+        "Pazer",
         "T'LishaK'tanah",
         "Kadma-V'azlah",
         "Merchah",
@@ -64,19 +54,14 @@
       ]
     },
     {
-      "lineName": "Line-5A",
+      "lineName": "20:05",
       "tropes": [
         "Munach",
         "Zarka",
         "Munach",
         "Segol",
         "Munach",
-        "Gershayim"
-      ]
-    },
-    {
-      "lineName": "Line-5B",
-      "tropes": [
+        "Gershayim",
         "Mapach",
         "Kadma",
         "Munach",
@@ -84,19 +69,14 @@
         "T'LishaGadola",
         "Kadma",
         "Darga",
-        "Tvir"
-      ]
-    },
-    {
-      "lineName": "Line-5C",
-      "tropes": [
+        "Tvir",
         "Merchah",
-         "Tipchah",
+        "Tipchah",
         "Etnactah"
       ]
     },
     {
-      "lineName": "Line-6",
+      "lineName": "20:06",
       "tropes": [
         "Mapach",
         "PashTa",
@@ -107,18 +87,13 @@
       ]
     },
     {
-      "lineName": "Line-7A",
+      "lineName": "20:07",
       "tropes": [
         "Merchah",
         "Tvir",
         "Merchah",
         "Tipchah",
-        "EtNachTah"
-      ]
-    },
-    {
-      "lineName": "Line-7B",
-      "tropes": [
+        "EtNachTah",
         "Munach",
         "Mapach",
         "Kadma",
@@ -130,7 +105,7 @@
       ]
     },
     {
-      "lineName": "Line-8",
+      "lineName": "20:08",
       "tropes": [
         "T'LishaK'tanah",
         "Kadma-V'azlah",
@@ -138,7 +113,7 @@
       ]
     },
     {
-      "lineName": "Line-9",
+      "lineName": "20:09",
       "tropes": [
         "Munach",
         "Munach",
@@ -148,18 +123,13 @@
       ]
     },
     {
-      "lineName": "Line-10A",
+      "lineName": "20:10",
       "tropes": [
         "PashTa",
         "V'azlah",
         "Munach",
         "Munach",
-        "Rvi'i"
-      ]
-    },
-    {
-      "lineName": "Line-10B",
-      "tropes": [
+        "Rvi'i",
         "Munach",
         "Munach",
         "Pazer",
@@ -167,41 +137,26 @@
         "Munach",
         "T'LishaGadola",
         "Kadma-V'azlah",
-        "Rvi'i"
-      ]
-    },
-    {
-      "lineName": "Line-10C",
-      "tropes": [
+        "Rvi'i",
         "Kadma",
         "Munach",
         "Katon"
       ]
     },
     {
-      "lineName": "Line-11A",
+      "lineName": "20:11",
       "tropes": [
         "Munach",
         "T'LishaK'tanah",
         "Kadma-V'azlah",
         "Munach",
-        "Rvi'i"
-      ]
-    },
-    {
-      "lineName": "Line-11B",
-      "tropes": [
+        "Rvi'i",
         "PashTa",
         "Katon",
         "Tipchah",
         "Munach",
         "EtNachTah",
-        "Rvi'i"
-      ]
-    },
-    {
-      "lineName": "Line-11C",
-      "tropes": [
+        "Rvi'i",
         "Darga",
         "Tvir",
         "Merchah",
@@ -209,19 +164,14 @@
       ]
     },
     {
-      "lineName": "Line-12A",
+      "lineName": "20:12",
       "tropes": [
         "Merchah",
         "Tipchah",
         "EtNachTah",
         "Kadma",
         "Munach",
-        "Katon"
-      ]
-    },
- {
-      "lineName": "Line-12B",
-      "tropes": [
+        "Katon",
         "Y'tiv",
         "Katon",
         "Merchah",
@@ -230,33 +180,15 @@
         "SofPaSuk"
       ]
     },
-
     {
-      "lineName": "Line-13A",
+      "lineName": "20:13",
       "tropes": [
         "Tipchah",
-        "SofPaSuk"
-      ]
-    },
-
-{
-      "lineName": "Line-13B",
-      "tropes": [
+        "SofPaSuk",
         "Tipchah",
-        "SofPaSuk"
-      ]
-    },
-{
-      "lineName": "Line-13C",
-      "tropes": [
+        "SofPaSuk",
         "Tipchah",
-        "SofPaSuk"
-      ]
-    },
-
-    {
-      "lineName": "Line-13D",
-      "tropes": [
+        "SofPaSuk",
         "Merchah",
         "Tipchah",
         "Merchah",
@@ -264,7 +196,7 @@
       ]
     },
     {
-      "lineName": "Line-14",
+      "lineName": "20:14",
       "tropes": [
         "Merchah",
         "Tipchah",
@@ -272,28 +204,15 @@
         "EtNachTah",
         "Gershayim",
         "Munach",
-         "Riv'i"
-      ]
-    },
-{
-      "lineName": "Line-15a",
-      "tropes": [
+        "Riv'i",
         "Y'tiv",
-  "Kadma",
-   "Munach",
-   "Katon",
-   "Tipchah",
-   "Merchah",
-   "SofPaSuk"
-      ]
-    },
-
-{
-      "lineName": "Line-15f",
-      "tropes": [
-         "Merchah"
+        "Kadma",
+        "Munach",
+        "Katon",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
       ]
     }
-
   ]
 }

@@ -2,7 +2,7 @@
   "title": "Yitro",
   "lines": [
     {
-      "lineName": "Line-1",
+      "lineName": "20:01",
       "words": [
         {
           "hebrew": "וַיְדַבֵּ֣ר",
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "lineName": "Line-2A",
+      "lineName": "20:02",
       "words": [
         {
           "hebrew": "אָֽנֹכִי֙",
@@ -52,12 +52,7 @@
         {
           "hebrew": "הוֹצֵאתִ֩יךָ֩",
           "translit": "hvtz'tych"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-2B",
-      "words": [
+        },
         {
           "hebrew": "מֵאֶ֨רֶץ",
           "translit": "m'rtz"
@@ -77,16 +72,16 @@
       ]
     },
     {
-      "lineName": "Line-3",
+      "lineName": "20:03",
       "words": [
         {
-  "hebrew": "לֹ֣א",
-  "translit": "lo"
-},
-{
-  "hebrew": "יְהוָ֣ה־לְךָ֩",
-  "translit": "Adonai lch"
-},
+          "hebrew": "לֹ֣א",
+          "translit": "lo"
+        },
+        {
+          "hebrew": "יְהוָ֣ה־לְךָ֩",
+          "translit": "Adonai lch"
+        },
         {
           "hebrew": "אֱלֹהִ֨ים",
           "translit": "'lhym'm"
@@ -102,7 +97,7 @@
       ]
     },
     {
-      "lineName": "Line-4A",
+      "lineName": "20:04",
       "words": [
         {
           "hebrew": "לֹ֣א",
@@ -131,12 +126,7 @@
         {
           "hebrew": "מִמַּ֡עַל",
           "translit": "mm'l"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-4B",
-      "words": [
+        },
         {
           "hebrew": "וַֽאֲשֶׁר֩",
           "translit": "v'shr"
@@ -168,7 +158,7 @@
       ]
     },
     {
-      "lineName": "Line-5A",
+      "lineName": "20:05",
       "words": [
         {
           "hebrew": "לֹֽא־תִשְׁתַּֽחֲוֶ֣ה",
@@ -193,12 +183,7 @@
         {
           "hebrew": "אָֽנֹכִ֞י",
           "translit": "'nchy"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-5B",
-      "words": [
+        },
         {
           "hebrew": "יְהוָ֤ה",
           "translit": "Adonai"
@@ -230,12 +215,7 @@
         {
           "hebrew": "עַל־בָּנִ֛ים",
           "translit": "'l-vnym"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-5C",
-      "words": [
+        },
         {
           "hebrew": "עַל־שִׁלֵּשִׁ֥ים",
           "translit": "'l-shlshym"
@@ -251,7 +231,7 @@
       ]
     },
     {
-      "lineName": "Line-6",
+      "lineName": "20:06",
       "words": [
         {
           "hebrew": "וְעֹ֤שֶׂה",
@@ -280,7 +260,7 @@
       ]
     },
     {
-      "lineName": "Line-7A",
+      "lineName": "20:07",
       "words": [
         {
           "hebrew": "לֹ֥א",
@@ -301,12 +281,7 @@
         {
           "hebrew": "לַשָּׁ֑וְא",
           "translit": "lshv'"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-7B",
-      "words": [
+        },
         {
           "hebrew": "כִּ֣י",
           "translit": "chy"
@@ -342,7 +317,7 @@
       ]
     },
     {
-      "lineName": "Line-8",
+      "lineName": "20:08",
       "words": [
         {
           "hebrew": "זָכוֹר֩",
@@ -363,7 +338,7 @@
       ]
     },
     {
-      "lineName": "Line-9",
+      "lineName": "20:09",
       "words": [
         {
           "hebrew": "שֵׁ֣שֶׁת",
@@ -388,7 +363,7 @@
       ]
     },
     {
-      "lineName": "Line-10A",
+      "lineName": "20:10",
       "words": [
         {
           "hebrew": "וְי֙וֹם",
@@ -409,12 +384,7 @@
         {
           "hebrew": "אֱלֹהֶ֗יךָ",
           "translit": "'lhych"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-10B",
-      "words": [
+        },
         {
           "hebrew": "לֹ֣א",
           "translit": "l'"
@@ -446,12 +416,7 @@
         {
           "hebrew": "וּבְהֶמְתֶּ֗ךָ",
           "translit": "vvhmtch"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-10C",
-      "words": [
+        },
         {
           "hebrew": "וְגֵֽרְךָ֨",
           "translit": "vgrch"
@@ -467,7 +432,7 @@
       ]
     },
     {
-      "lineName": "Line-11A",
+      "lineName": "20:11",
       "words": [
         {
           "hebrew": "כִּ֣י",
@@ -492,12 +457,7 @@
         {
           "hebrew": "וְאֶת־הָאָ֗רֶץ",
           "translit": "v't-h'rtz"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-11B",
-      "words": [
+        },
         {
           "hebrew": "אֶת־הַיָּם֙",
           "translit": "'t-hym"
@@ -521,12 +481,7 @@
         {
           "hebrew": "עַל־כֵּ֗ן",
           "translit": "'l-chn"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-11C",
-      "words": [
+        },
         {
           "hebrew": "בֵּרַ֧ךְ",
           "translit": "vrch"
@@ -550,7 +505,7 @@
       ]
     },
     {
-      "lineName": "Line-12A",
+      "lineName": "20:12",
       "words": [
         {
           "hebrew": "כַּבֵּ֥ד",
@@ -575,12 +530,7 @@
         {
           "hebrew": "יָמֶ֔יךָ",
           "translit": "ymych"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-12B",
-      "words": [
+        },
         {
           "hebrew": "עַ֚ל",
           "translit": "al"
@@ -608,7 +558,7 @@
       ]
     },
     {
-      "lineName": "Line-13A",
+      "lineName": "20:13",
       "words": [
         {
           "hebrew": "לֹ֖א",
@@ -617,12 +567,7 @@
         {
           "hebrew": "תִּרְצָֽח׃",
           "translit": "trtzch"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-13B",
-      "words": [
+        },
         {
           "hebrew": "לֹ֖א",
           "translit": "l'"
@@ -630,12 +575,7 @@
         {
           "hebrew": "תִּנְאָֽף׃",
           "translit": "tn'f"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-13C",
-      "words": [
+        },
         {
           "hebrew": "לֹ֖א",
           "translit": "l'"
@@ -643,12 +583,7 @@
         {
           "hebrew": "תִּגְנֹֽב׃",
           "translit": "tgnv"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-13D",
-      "words": [
+        },
         {
           "hebrew": "לֹא־תַעֲנֶ֥ה",
           "translit": "l'-t'nh"
@@ -668,7 +603,7 @@
       ]
     },
     {
-      "lineName": "Line-14A",
+      "lineName": "20:14",
       "words": [
         {
           "hebrew": "לֹ֥א",
@@ -697,12 +632,7 @@
         {
           "hebrew": "רֵעֶ֗ךָ",
           "translit": "r'ch"
-        }
-      ]
-    },
-    {
-      "lineName": "Line-14B",
-      "words": [
+        },
         {
           "hebrew": "וְעַבְדּ֤וֹ",
           "translit": "v'vdv"
