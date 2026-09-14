@@ -1579,6 +1579,7 @@ if (
   lyricsData.title.endsWith("-PT")
 ) {
   ptEnabled = true;
+console.log("PT TITLE DETECTED:", lyricsData.title);
   pocketTorahControl.style.display = "";
 }
 
