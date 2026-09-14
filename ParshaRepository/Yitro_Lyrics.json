@@ -1,8 +1,8 @@
 {
-  "title": "Yitro_PT",
+  "title": "Yitro",
   "lines": [
     {
-      "lineName": "EX:20:01",
+      "lineName": "20:01",
       "words": [
         {
           "hebrew": "וַיְדַבֵּ֣ר",
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "lineName": "EX:20:02",
+      "lineName": "20:02",
       "words": [
         {
           "hebrew": "אָֽנֹכִי֙",
@@ -72,7 +72,7 @@
       ]
     },
     {
-      "lineName": "EX:20:03",
+      "lineName": "20:03",
       "words": [
         {
           "hebrew": "לֹ֣א",
@@ -97,7 +97,7 @@
       ]
     },
     {
-      "lineName": "EX:20:04",
+      "lineName": "20:04",
       "words": [
         {
           "hebrew": "לֹ֣א",
@@ -158,7 +158,7 @@
       ]
     },
     {
-      "lineName": "EX:20:05",
+      "lineName": "20:05",
       "words": [
         {
           "hebrew": "לֹֽא־תִשְׁתַּֽחֲוֶ֣ה",
@@ -231,7 +231,7 @@
       ]
     },
     {
-      "lineName": "EX:20:06",
+      "lineName": "20:06",
       "words": [
         {
           "hebrew": "וְעֹ֤שֶׂה",
@@ -260,7 +260,7 @@
       ]
     },
     {
-      "lineName": "EX:20:07",
+      "lineName": "20:07",
       "words": [
         {
           "hebrew": "לֹ֥א",
@@ -317,7 +317,7 @@
       ]
     },
     {
-      "lineName": "EX:20:08",
+      "lineName": "20:08",
       "words": [
         {
           "hebrew": "זָכוֹר֩",
@@ -338,7 +338,7 @@
       ]
     },
     {
-      "lineName": "EX:20:09",
+      "lineName": "20:09",
       "words": [
         {
           "hebrew": "שֵׁ֣שֶׁת",
@@ -363,7 +363,7 @@
       ]
     },
     {
-      "lineName": "EX:20:10",
+      "lineName": "20:10",
       "words": [
         {
           "hebrew": "וְי֙וֹם",
@@ -432,7 +432,7 @@
       ]
     },
     {
-      "lineName": "EX:20:11",
+      "lineName": "20:11",
       "words": [
         {
           "hebrew": "כִּ֣י",
@@ -505,7 +505,7 @@
       ]
     },
     {
-      "lineName": "EX:20:12",
+      "lineName": "20:12",
       "words": [
         {
           "hebrew": "כַּבֵּ֥ד",
@@ -558,7 +558,7 @@
       ]
     },
     {
-      "lineName": "EX:20:13",
+      "lineName": "20:13",
       "words": [
         {
           "hebrew": "לֹ֖א",
@@ -603,7 +603,7 @@
       ]
     },
     {
-      "lineName": "EX:20:14",
+      "lineName": "20:14",
       "words": [
         {
           "hebrew": "לֹ֥א",
