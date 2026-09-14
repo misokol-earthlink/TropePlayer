@@ -99,6 +99,9 @@ let smoothAudioContext = null;
 let smoothSourceNode = null;
 let activeFileLines = [];
 let activeFiles = [];
+let ptEnabled = false;
+let usePocketTorah = false;
+let ptLineData = [];
 let resolveMunachChoice = null;
 const dirtyColor = "maroon";
 const cleanColor = "darkgreen";
@@ -1562,8 +1565,24 @@ if (!editExistingMode) {
     "Confirm displaying vowels on YHVH if contained in source reference.\n\nClick Cancel to omit vowels."
   );
 }
-    buildActiveLyricsLines(lyricsData);
 
+ptEnabled = false;
+usePocketTorah = false;
+ptLineData = [];
+
+pocketTorahCheckbox.checked = false;
+pocketTorahControl.style.display = "none";
+
+if (
+  lyricsData &&
+  typeof lyricsData.title === "string" &&
+  lyricsData.title.endsWith("-PT")
+) {
+  ptEnabled = true;
+  pocketTorahControl.style.display = "";
+}
+
+buildActiveLyricsLines(lyricsData);
 if (editExistingMode) {
 
   populateBluePanelFromFile(data);
@@ -1726,6 +1745,11 @@ lyricsRow.dataset.lineNumber = lineNumber;
 lyricsRow.onclick = function(event) {
 
   event.stopPropagation();
+if (usePocketTorah) {
+  playPocketTorahAudio();
+  return;
+}
+
 lyricsBox.classList.add("lyrics-playing");
 
   showTropeTrainerCreditLine(lineNumber);
@@ -2115,6 +2139,22 @@ const notePlaybackCheckbox =
 
 const smoothPlaybackCheckbox =
   document.getElementById("smoothPlaybackCheckbox");
+
+const pocketTorahControl =
+  document.getElementById("pocketTorahControl");
+
+const pocketTorahCheckbox =
+  document.getElementById("pocketTorahCheckbox");
+
+pocketTorahCheckbox.addEventListener("change", function() {
+  usePocketTorah = pocketTorahCheckbox.checked;
+});
+
+function playPocketTorahAudio() {
+  console.log("Pocket Torah playback is not yet implemented.");
+  alert("Pocket Torah playback is not yet implemented.");
+}
+
 
 notePlaybackCheckbox.addEventListener("change", function() {
 
@@ -2665,7 +2705,10 @@ function formatTropeNameForDisplay(tropeName) {
 
 document.getElementById("playAllLyricsBtn").onclick = function(event) {
   event.stopPropagation();
-
+if (usePocketTorah) {
+  playPocketTorahAudio();
+  return;
+}
   if (playAllEnable) {
     stopPlayAllLyrics();
     return;
