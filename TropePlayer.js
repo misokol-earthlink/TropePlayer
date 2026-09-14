@@ -101,6 +101,7 @@ let activeFileLines = [];
 let activeFiles = [];
 let ptEnabled = false;
 let usePocketTorah = false;
+let ptParshaName = "";
 let ptLineData = [];
 let resolveMunachChoice = null;
 const dirtyColor = "maroon";
@@ -1568,8 +1569,8 @@ if (!editExistingMode) {
 
 ptEnabled = false;
 usePocketTorah = false;
+ptParshaName = "";
 ptLineData = [];
-
 pocketTorahCheckbox.checked = false;
 pocketTorahControl.style.display = "none";
 
@@ -1579,10 +1580,36 @@ if (
   lyricsData.title.endsWith("-PT")
 ) {
   ptEnabled = true;
-console.log("PT TITLE DETECTED:", lyricsData.title);
-  pocketTorahControl.style.display = "";
-}
+ptParshaName = lyricsData.title.slice(0, -3);
 
+  ptLineData =
+    lyricsData.lines.map(function(lineItem, lineIndex) {
+
+      const parts =
+        String(lineItem.lineName || "").split(":");
+
+      return {
+        lineIndex: lineIndex,
+        lineName: lineItem.lineName,
+        bookCode: parts[0],
+        chapter: Number(parts[1]),
+        verse: Number(parts[2])
+      };
+
+    });
+
+  pocketTorahControl.style.display = "";
+
+  console.log(
+    "Pocket Torah portion:",
+    ptParshaName
+  );
+
+  console.log(
+    "Pocket Torah lines:",
+    ptLineData
+  );
+}
 buildActiveLyricsLines(lyricsData);
 if (editExistingMode) {
 
