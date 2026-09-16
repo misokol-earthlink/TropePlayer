@@ -1577,16 +1577,43 @@ function findPocketTorahAliyah(parshaName, bookCode, chapter, verse) {
     return null;
   }
 
-  parsha.fullkriyah.aliyah.forEach(function(aliyah, index) {
-  console.log(
-    "Pocket Torah aliyah candidate:",
-    index + 1,
-    aliyah
-  );
-});
+for (const aliyah of parsha.fullkriyah.aliyah) {
 
-return parsha;
+  const beginParts = aliyah._begin.split(":");
+  const endParts = aliyah._end.split(":");
+
+  const beginChapter = Number(beginParts[0]);
+  const beginVerse = Number(beginParts[1]);
+
+  const endChapter = Number(endParts[0]);
+  const endVerse = Number(endParts[1]);
+
+  const afterOrAtBeginning =
+    chapter > beginChapter ||
+    (
+      chapter === beginChapter &&
+      verse >= beginVerse
+    );
+
+  const beforeOrAtEnd =
+    chapter < endChapter ||
+    (
+      chapter === endChapter &&
+      verse <= endVerse
+    );
+
+  if (afterOrAtBeginning && beforeOrAtEnd) {
+    return {
+      aliyah: Number(aliyah._num),
+      beginChapter: beginChapter,
+      beginVerse: beginVerse,
+      endChapter: endChapter,
+      endVerse: endVerse
+    };
+  }
 }
+
+return null;}
 
 async function loadSelectedActiveFile() {
  ipadTrace("ENTER SelectedActiveFile");
@@ -1662,12 +1689,23 @@ await ensurePocketTorahResourcesLoaded();
 
     });
 ptLineData.forEach(function(lineData) {
-  findPocketTorahAliyah(
-    ptParshaName,
-    lineData.bookCode,
-    lineData.chapter,
-    lineData.verse
-  );
+
+  const aliyahData =
+    findPocketTorahAliyah(
+      ptParshaName,
+      lineData.bookCode,
+      lineData.chapter,
+      lineData.verse
+    );
+
+  if (aliyahData) {
+    lineData.aliyah = aliyahData.aliyah;
+    lineData.aliyahBeginChapter = aliyahData.beginChapter;
+    lineData.aliyahBeginVerse = aliyahData.beginVerse;
+    lineData.aliyahEndChapter = aliyahData.endChapter;
+    lineData.aliyahEndVerse = aliyahData.endVerse;
+  }
+
 });
   pocketTorahControl.style.display = "";
 
