@@ -2045,6 +2045,40 @@ lineData.audioPath =
     ".mp3"
   );
 });
+ptPlaybackSegments = [];
+
+ptLineData.forEach(function(lineData) {
+
+  const lastSegment =
+    ptPlaybackSegments[
+      ptPlaybackSegments.length - 1
+    ];
+
+  if (
+    lastSegment &&
+    lastSegment.audioPath === lineData.audioPath
+  ) {
+
+    lastSegment.endTime =
+      lineData.endTime;
+
+  } else {
+
+    ptPlaybackSegments.push({
+      audioPath: lineData.audioPath,
+      startTime: lineData.startTime,
+      endTime: lineData.endTime
+    });
+
+  }
+
+});
+
+console.log(
+  "Pocket Torah playback segments:",
+  ptPlaybackSegments
+);
+
   pocketTorahControl.style.display = "";
 
   console.log(
