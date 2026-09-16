@@ -1660,6 +1660,43 @@ async function loadPocketTorahBook(bookName) {
   return ptTorahData[bookName];
 }
 
+function getPocketTorahVerse(bookName, chapter, verse) {
+
+  const bookData = ptTorahData[bookName];
+
+  if (
+    !bookData ||
+    !bookData.Tanach ||
+    !bookData.Tanach.tanach ||
+    !bookData.Tanach.tanach.book ||
+    !Array.isArray(bookData.Tanach.tanach.book.c)
+  ) {
+    return null;
+  }
+
+  const chapterData =
+    bookData.Tanach.tanach.book.c[chapter - 1];
+
+  if (
+    !chapterData ||
+    !Array.isArray(chapterData.v)
+  ) {
+    return null;
+  }
+
+  const verseData =
+    chapterData.v[verse - 1];
+
+  if (
+    !verseData ||
+    !Array.isArray(verseData.w)
+  ) {
+    return null;
+  }
+
+  return verseData;
+}
+
 
 async function loadSelectedActiveFile() {
  ipadTrace("ENTER SelectedActiveFile");
@@ -1771,6 +1808,14 @@ for (const bookName of ptBookNames) {
     ptTorahData[bookName]
   );
 }
+const ptTestVerse =
+  getPocketTorahVerse("Exodus", 20, 1);
+
+console.log(
+  "Pocket Torah test Exodus 20:1 word count:",
+  ptTestVerse ? ptTestVerse.w.length : null
+);
+
   pocketTorahControl.style.display = "";
 
   console.log(
