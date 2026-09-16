@@ -1872,6 +1872,7 @@ ptLineData.forEach(function(lineData) {
       lineData.aliyahBeginVerse,
       lineData.chapter,
       lineData.verse
+    );
 const verseData =
   getPocketTorahVerse(
     bookName,
@@ -1886,8 +1887,6 @@ if (verseData) {
     lineData.labelStartIndex +
     lineData.wordCount;
 }
-    );
-
 });
   pocketTorahControl.style.display = "";
 
