@@ -1615,6 +1615,52 @@ for (const aliyah of parsha.fullkriyah.aliyah) {
 
 return null;}
 
+function getPocketTorahBookName(bookCode) {
+
+  const bookMap = {
+    GE: "Genesis",
+    EX: "Exodus",
+    LE: "Leviticus",
+    NU: "Numbers",
+    DE: "Deuteronomy"
+  };
+
+  return bookMap[bookCode] || null;
+}
+async function loadPocketTorahBook(bookName) {
+
+  if (ptTorahData[bookName]) {
+    return ptTorahData[bookName];
+  }
+
+  const response = await fetch(
+    "PocketTorah/data/torah/json/" +
+    encodeURIComponent(bookName + ".json") +
+    "?v=" +
+    Date.now(),
+    { cache: "no-store" }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Could not load Pocket Torah book " +
+      bookName +
+      ". Status: " +
+      response.status
+    );
+  }
+
+  ptTorahData[bookName] = await response.json();
+
+  console.log(
+    "Pocket Torah book data loaded:",
+    bookName
+  );
+
+  return ptTorahData[bookName];
+}
+
+
 async function loadSelectedActiveFile() {
  ipadTrace("ENTER SelectedActiveFile");
   const selectedFile = document.getElementById("activeFilesSelect").value;
@@ -1707,6 +1753,19 @@ ptLineData.forEach(function(lineData) {
   }
 
 });
+const ptBookNames =
+  [...new Set(
+    ptLineData
+      .map(function(lineData) {
+        return getPocketTorahBookName(lineData.bookCode);
+      })
+      .filter(Boolean)
+  )];
+
+for (const bookName of ptBookNames) {
+  await loadPocketTorahBook(bookName);
+}
+
   pocketTorahControl.style.display = "";
 
   console.log(
