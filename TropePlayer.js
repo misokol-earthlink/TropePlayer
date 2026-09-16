@@ -107,6 +107,7 @@ let ptResourcesLoaded = false;
 let ptAliyahData = null;
 let ptTorahData = {};
 let ptLabelData = {};
+let ptAudioDurationData = {};
 let ptPlaybackSegments = [];
 
 let resolveMunachChoice = null;
@@ -1708,6 +1709,59 @@ async function loadPocketTorahLabels(parshaName, aliyahNumber) {
 
   return ptLabelData[labelKey];
 }
+
+async function loadPocketTorahAudioDuration(
+  parshaName,
+  aliyahNumber
+) {
+
+  const audioKey =
+    parshaName +
+    "-" +
+    aliyahNumber;
+
+  if (ptAudioDurationData[audioKey]) {
+    return ptAudioDurationData[audioKey];
+  }
+
+  const audioPath =
+    "PocketTorah/data/audio/" +
+    encodeURIComponent(audioKey + ".mp3");
+
+  const duration =
+    await new Promise(function(resolve, reject) {
+
+      const audio = document.createElement("audio");
+
+      audio.preload = "metadata";
+      audio.src = audioPath;
+
+      audio.onloadedmetadata = function() {
+        resolve(audio.duration);
+      };
+
+      audio.onerror = function() {
+        reject(
+          new Error(
+            "Could not load Pocket Torah audio metadata: " +
+            audioPath
+          )
+        );
+      };
+
+    });
+
+  ptAudioDurationData[audioKey] = duration;
+
+  console.log(
+    "Pocket Torah audio duration loaded:",
+    audioKey,
+    duration
+  );
+
+  return duration;
+}
+
 function getPocketTorahVerse(bookName, chapter, verse) {
 
   const bookData = ptTorahData[bookName];
@@ -1952,6 +2006,11 @@ for (const aliyahNumber of ptAliyahNumbers) {
     ptParshaName,
     aliyahNumber
   );
+  await loadPocketTorahAudioDuration(
+    ptParshaName,
+    aliyahNumber
+  );
+
 }
 ptLineData.forEach(function(lineData) {
 
