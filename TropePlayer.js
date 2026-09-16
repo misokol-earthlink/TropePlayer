@@ -2255,9 +2255,9 @@ lyricsRow.onclick = function(event) {
 
   event.stopPropagation();
 if (usePocketTorah) {
-  playPocketTorahAudio();
+  playPocketTorahAudio(lineNumber);
   return;
-}
+}}
 
 lyricsBox.classList.add("lyrics-playing");
 
@@ -2659,11 +2659,35 @@ pocketTorahCheckbox.addEventListener("change", function() {
   usePocketTorah = pocketTorahCheckbox.checked;
 });
 
-function playPocketTorahAudio() {
-  console.log("Pocket Torah playback is not yet implemented.");
-  alert("Pocket Torah playback is not yet implemented.");
-}
+function playPocketTorahAudio(lineNumber) {
 
+  const lineData =
+    ptLineData[lineNumber - 1];
+
+  if (!lineData) {
+    console.error(
+      "Pocket Torah line data not found:",
+      lineNumber
+    );
+    return;
+  }
+
+  player.pause();
+
+  player.src =
+    lineData.audioPath;
+
+  player.currentTime =
+    lineData.startTime;
+
+  player.play();
+
+  console.log(
+    "Pocket Torah line playback:",
+    lineNumber,
+    lineData
+  );
+}
 
 notePlaybackCheckbox.addEventListener("change", function() {
 
