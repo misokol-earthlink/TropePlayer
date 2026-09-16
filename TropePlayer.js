@@ -1697,7 +1697,57 @@ function getPocketTorahVerse(bookName, chapter, verse) {
   return verseData;
 }
 
+function countPocketTorahWordsBeforeVerse(
+  bookName,
+  beginChapter,
+  beginVerse,
+  targetChapter,
+  targetVerse
+) {
 
+  let wordCount = 0;
+
+  for (
+    let chapter = beginChapter;
+    chapter <= targetChapter;
+    chapter++
+  ) {
+
+    const firstVerse =
+      chapter === beginChapter
+        ? beginVerse
+        : 1;
+
+    const lastVerse =
+      chapter === targetChapter
+        ? targetVerse - 1
+        : ptTorahData[bookName]
+            .Tanach.tanach.book.c[chapter - 1]
+            .v.length;
+
+    for (
+      let verse = firstVerse;
+      verse <= lastVerse;
+      verse++
+    ) {
+
+      const verseData =
+        getPocketTorahVerse(
+          bookName,
+          chapter,
+          verse
+        );
+
+      if (!verseData) {
+        return null;
+      }
+
+      wordCount += verseData.w.length;
+    }
+  }
+
+  return wordCount;
+}
 async function loadSelectedActiveFile() {
  ipadTrace("ENTER SelectedActiveFile");
   const selectedFile = document.getElementById("activeFilesSelect").value;
@@ -1808,14 +1858,23 @@ for (const bookName of ptBookNames) {
     ptTorahData[bookName]
   );
 }
-const ptTestVerse =
-  getPocketTorahVerse("Exodus", 20, 1);
+ptLineData.forEach(function(lineData) {
 
-console.log(
-  "Pocket Torah test Exodus 20:1 word count:",
-  ptTestVerse ? ptTestVerse.w.length : null
-);
+  const bookName =
+    getPocketTorahBookName(
+      lineData.bookCode
+    );
 
+  lineData.labelStartIndex =
+    countPocketTorahWordsBeforeVerse(
+      bookName,
+      lineData.aliyahBeginChapter,
+      lineData.aliyahBeginVerse,
+      lineData.chapter,
+      lineData.verse
+    );
+
+});
   pocketTorahControl.style.display = "";
 
   console.log(
