@@ -2036,6 +2036,14 @@ lineData.endTime =
     "-" +
     lineData.aliyah
   ];
+lineData.audioPath =
+  "PocketTorah/data/audio/" +
+  encodeURIComponent(
+    ptParshaName +
+    "-" +
+    lineData.aliyah +
+    ".mp3"
+  );
 });
   pocketTorahControl.style.display = "";
 
