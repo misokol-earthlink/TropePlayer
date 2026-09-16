@@ -2398,7 +2398,46 @@ toggleLyricsDisplayRows();
   overlay.style.display = "block";
 }
 
+function playPocketTorahAll() {
 
+  const segment =
+    ptPlaybackSegments[0];
+
+  if (!segment) {
+    console.error(
+      "Pocket Torah playback segment not found."
+    );
+    return;
+  }
+
+  /*
+    Remove an individual-verse stop handler
+    if one is still attached.
+  */
+  if (playPocketTorahAudio.stopHandler) {
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAudio.stopHandler
+    );
+
+    playPocketTorahAudio.stopHandler = null;
+  }
+
+  player.pause();
+
+  player.src =
+    segment.audioPath;
+
+  player.currentTime =
+    segment.startTime;
+
+  player.play();
+
+  console.log(
+    "Pocket Torah Play All started:",
+    segment
+  );
+}
 function closeActiveFileViewer() {
   stopPlayAllLyrics();
 
@@ -3279,7 +3318,7 @@ function formatTropeNameForDisplay(tropeName) {
 document.getElementById("playAllLyricsBtn").onclick = function(event) {
   event.stopPropagation();
 if (usePocketTorah) {
-  playPocketTorahAudio();
+  playPocketTorahAll();
   return;
 }
   if (playAllEnable) {
