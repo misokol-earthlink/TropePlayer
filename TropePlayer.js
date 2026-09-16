@@ -1872,6 +1872,20 @@ ptLineData.forEach(function(lineData) {
       lineData.aliyahBeginVerse,
       lineData.chapter,
       lineData.verse
+const verseData =
+  getPocketTorahVerse(
+    bookName,
+    lineData.chapter,
+    lineData.verse
+  );
+
+if (verseData) {
+  lineData.wordCount = verseData.w.length;
+
+  lineData.labelEndIndex =
+    lineData.labelStartIndex +
+    lineData.wordCount;
+}
     );
 
 });
