@@ -2672,6 +2672,19 @@ function playPocketTorahAudio(lineNumber) {
     return;
   }
 
+  /*
+    Remove the stop monitor from any previous
+    Pocket Torah line playback.
+  */
+  if (playPocketTorahAudio.stopHandler) {
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAudio.stopHandler
+    );
+
+    playPocketTorahAudio.stopHandler = null;
+  }
+
   player.pause();
 
   player.src =
@@ -2679,6 +2692,33 @@ function playPocketTorahAudio(lineNumber) {
 
   player.currentTime =
     lineData.startTime;
+
+  /*
+    Stop when this verse reaches its prepared
+    Pocket Torah end time.
+  */
+  playPocketTorahAudio.stopHandler =
+    function() {
+
+      if (
+        player.currentTime >=
+        lineData.endTime
+      ) {
+        player.pause();
+
+        player.removeEventListener(
+          "timeupdate",
+          playPocketTorahAudio.stopHandler
+        );
+
+        playPocketTorahAudio.stopHandler = null;
+      }
+    };
+
+  player.addEventListener(
+    "timeupdate",
+    playPocketTorahAudio.stopHandler
+  );
 
   player.play();
 
