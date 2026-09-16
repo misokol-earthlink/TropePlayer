@@ -1538,7 +1538,7 @@ async function ensurePocketTorahResourcesLoaded() {
   }
 
   const response = await fetch(
-    "PocketTorah/DATA/aliyah.json?v=" + Date.now(),
+    "PocketTorah/data/aliyah.json?v=" + Date.now(),
     { cache: "no-store" }
   );
 
