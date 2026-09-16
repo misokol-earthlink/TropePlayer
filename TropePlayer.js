@@ -1554,6 +1554,39 @@ async function ensurePocketTorahResourcesLoaded() {
 
   console.log("Pocket Torah aliyah data loaded.");
 }
+function findPocketTorahAliyah(parshaName, bookCode, chapter, verse) {
+
+  if (
+    !ptAliyahData ||
+    !ptAliyahData.parshiot ||
+    !Array.isArray(ptAliyahData.parshiot.parsha)
+  ) {
+    return null;
+  }
+
+  const parsha =
+    ptAliyahData.parshiot.parsha.find(function(item) {
+      return item._id === parshaName;
+    });
+
+  if (
+    !parsha ||
+    !parsha.fullkriyah ||
+    !Array.isArray(parsha.fullkriyah.aliyah)
+  ) {
+    return null;
+  }
+
+  parsha.fullkriyah.aliyah.forEach(function(aliyah, index) {
+  console.log(
+    "Pocket Torah aliyah candidate:",
+    index + 1,
+    aliyah
+  );
+});
+
+return parsha;
+}
 
 async function loadSelectedActiveFile() {
  ipadTrace("ENTER SelectedActiveFile");
@@ -1628,7 +1661,14 @@ await ensurePocketTorahResourcesLoaded();
       };
 
     });
-
+ptLineData.forEach(function(lineData) {
+  findPocketTorahAliyah(
+    ptParshaName,
+    lineData.bookCode,
+    lineData.chapter,
+    lineData.verse
+  );
+});
   pocketTorahControl.style.display = "";
 
   console.log(
