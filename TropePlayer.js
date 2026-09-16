@@ -1660,6 +1660,54 @@ async function loadPocketTorahBook(bookName) {
   return ptTorahData[bookName];
 }
 
+async function loadPocketTorahLabels(parshaName, aliyahNumber) {
+
+  const labelKey =
+    parshaName.toLowerCase() +
+    "-" +
+    aliyahNumber;
+
+  if (ptLabelData[labelKey]) {
+    return ptLabelData[labelKey];
+  }
+
+  const response = await fetch(
+    "PocketTorah/data/torah/labels/" +
+    encodeURIComponent(labelKey + ".txt") +
+    "?v=" +
+    Date.now(),
+    { cache: "no-store" }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Could not load Pocket Torah labels " +
+      labelKey +
+      ". Status: " +
+      response.status
+    );
+  }
+
+  const labelText = await response.text();
+
+  ptLabelData[labelKey] =
+    labelText
+      .split(",")
+      .map(function(value) {
+        return Number(value.trim());
+      })
+      .filter(function(value) {
+        return Number.isFinite(value);
+      });
+
+  console.log(
+    "Pocket Torah labels loaded:",
+    labelKey,
+    ptLabelData[labelKey].length
+  );
+
+  return ptLabelData[labelKey];
+}
 function getPocketTorahVerse(bookName, chapter, verse) {
 
   const bookData = ptTorahData[bookName];
@@ -1888,6 +1936,24 @@ if (verseData) {
     lineData.wordCount;
 }
 });
+const ptAliyahNumbers =
+  [...new Set(
+    ptLineData
+      .map(function(lineData) {
+        return lineData.aliyah;
+      })
+      .filter(function(aliyahNumber) {
+        return Number.isFinite(aliyahNumber);
+      })
+  )];
+
+for (const aliyahNumber of ptAliyahNumbers) {
+  await loadPocketTorahLabels(
+    ptParshaName,
+    aliyahNumber
+  );
+}
+
   pocketTorahControl.style.display = "";
 
   console.log(
