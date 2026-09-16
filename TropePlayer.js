@@ -2257,7 +2257,7 @@ lyricsRow.onclick = function(event) {
 if (usePocketTorah) {
   playPocketTorahAudio(lineNumber);
   return;
-}}
+}
 
 lyricsBox.classList.add("lyrics-playing");
 
