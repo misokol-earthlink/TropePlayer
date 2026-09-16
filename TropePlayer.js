@@ -1953,7 +1953,27 @@ for (const aliyahNumber of ptAliyahNumbers) {
     aliyahNumber
   );
 }
+ptLineData.forEach(function(lineData) {
 
+  const labelKey =
+    ptParshaName.toLowerCase() +
+    "-" +
+    lineData.aliyah;
+
+  const labels =
+    ptLabelData[labelKey];
+
+  if (!labels) {
+    return;
+  }
+
+  lineData.startTime =
+    labels[lineData.labelStartIndex];
+
+  lineData.endTime =
+    labels[lineData.labelEndIndex];
+
+});
   pocketTorahControl.style.display = "";
 
   console.log(
