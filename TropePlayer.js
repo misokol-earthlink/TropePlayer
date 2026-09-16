@@ -1764,8 +1764,13 @@ const ptBookNames =
 
 for (const bookName of ptBookNames) {
   await loadPocketTorahBook(bookName);
-}
 
+  console.log(
+    "Pocket Torah book structure:",
+    bookName,
+    ptTorahData[bookName]
+  );
+}
   pocketTorahControl.style.display = "";
 
   console.log(
