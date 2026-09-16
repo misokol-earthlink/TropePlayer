@@ -103,6 +103,12 @@ let ptEnabled = false;
 let usePocketTorah = false;
 let ptParshaName = "";
 let ptLineData = [];
+let ptResourcesLoaded = false;
+let ptAliyahData = null;
+let ptTorahData = {};
+let ptLabelData = {};
+let ptPlaybackSegments = [];
+
 let resolveMunachChoice = null;
 const dirtyColor = "maroon";
 const cleanColor = "darkgreen";
@@ -1525,6 +1531,30 @@ function populateBluePanelFromFile(data) {
     "Blue panel populated from existing file."
   );
 }
+async function ensurePocketTorahResourcesLoaded() {
+
+  if (ptResourcesLoaded) {
+    return;
+  }
+
+  const response = await fetch(
+    "PocketTorah/DATA/aliyah.json?v=" + Date.now(),
+    { cache: "no-store" }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Could not load PocketTorah/DATA/aliyah.json. Status: " +
+      response.status
+    );
+  }
+
+  ptAliyahData = await response.json();
+  ptResourcesLoaded = true;
+
+  console.log("Pocket Torah aliyah data loaded.");
+}
+
 async function loadSelectedActiveFile() {
  ipadTrace("ENTER SelectedActiveFile");
   const selectedFile = document.getElementById("activeFilesSelect").value;
@@ -1571,6 +1601,7 @@ ptEnabled = false;
 usePocketTorah = false;
 ptParshaName = "";
 ptLineData = [];
+ptPlaybackSegments = [];
 pocketTorahCheckbox.checked = false;
 pocketTorahControl.style.display = "none";
 
@@ -1581,7 +1612,7 @@ if (
 ) {
   ptEnabled = true;
 ptParshaName = lyricsData.title.slice(0, -3);
-
+await ensurePocketTorahResourcesLoaded();
   ptLineData =
     lyricsData.lines.map(function(lineItem, lineIndex) {
 
