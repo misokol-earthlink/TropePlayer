@@ -2029,9 +2029,13 @@ ptLineData.forEach(function(lineData) {
   lineData.startTime =
     labels[lineData.labelStartIndex];
 
-  lineData.endTime =
-    labels[lineData.labelEndIndex];
-
+lineData.endTime =
+  labels[lineData.labelEndIndex] ??
+  ptAudioDurationData[
+    ptParshaName +
+    "-" +
+    lineData.aliyah
+  ];
 });
   pocketTorahControl.style.display = "";
 
