@@ -2410,6 +2410,8 @@ function playPocketTorahAll() {
 
     playPocketTorahAll.stopHandler = null;
 
+setPlayAllButtonStopped();
+
     return;
   }
 
@@ -2453,12 +2455,14 @@ playPocketTorahAll.stopHandler =
     ) {
       player.pause();
 
-      player.removeEventListener(
-        "timeupdate",
-        playPocketTorahAll.stopHandler
-      );
+player.removeEventListener(
+  "timeupdate",
+  playPocketTorahAll.stopHandler
+);
 
-      playPocketTorahAll.stopHandler = null;
+playPocketTorahAll.stopHandler = null;
+
+setPlayAllButtonStopped();
     }
   };
 
@@ -2466,6 +2470,7 @@ player.addEventListener(
   "timeupdate",
   playPocketTorahAll.stopHandler
 );
+setPlayAllButtonRunning();
   player.play();
 
   console.log(
