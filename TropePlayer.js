@@ -2399,6 +2399,20 @@ toggleLyricsDisplayRows();
 }
 
 function playPocketTorahAll() {
+  if (playPocketTorahAll.stopHandler) {
+
+    player.pause();
+
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAll.stopHandler
+    );
+
+    playPocketTorahAll.stopHandler = null;
+
+    return;
+  }
+
 
   const segment =
     ptPlaybackSegments[0];
