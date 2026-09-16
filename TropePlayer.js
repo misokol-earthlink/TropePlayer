@@ -2430,7 +2430,28 @@ function playPocketTorahAll() {
 
   player.currentTime =
     segment.startTime;
+playPocketTorahAll.stopHandler =
+  function() {
 
+    if (
+      player.currentTime >=
+      segment.endTime
+    ) {
+      player.pause();
+
+      player.removeEventListener(
+        "timeupdate",
+        playPocketTorahAll.stopHandler
+      );
+
+      playPocketTorahAll.stopHandler = null;
+    }
+  };
+
+player.addEventListener(
+  "timeupdate",
+  playPocketTorahAll.stopHandler
+);
   player.play();
 
   console.log(
