@@ -689,6 +689,22 @@ background:white;
   </button>
 <div style="height:20px;"></div>
 </div>
+
+<div
+  id="licenseInformationLink"
+  style="
+    margin-bottom:10px;
+    font-family:sans-serif;
+    font-size:14px;
+    font-weight:bold;
+    color:royalblue;
+    text-decoration:underline;
+    cursor:pointer;
+    width:max-content;
+  "
+>
+  License Information
+</div>
 <div
   style="
     display:flex;
@@ -1072,6 +1088,113 @@ background:white;
 
 </div>
 <div id="tropeHoverBox"></div>
+<!-- License Information Popup -->
+<div
+  id="licenseInformationPopup"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:500000;
+    background:rgba(0,0,0,0.35);
+    align-items:center;
+    justify-content:center;
+  "
+>
+  <div
+    class="modal-content-attribution"
+    style="
+      position:relative;
+      font-family:sans-serif;
+      line-height:1.5;
+      color:#333;
+      width:600px;
+      max-width:85vw;
+      background:white;
+      border:3px solid maroon;
+      box-shadow:0 0 18px gray;
+      padding:20px;
+      box-sizing:border-box;
+    "
+  >
+
+    <h3
+      style="
+        margin-top:0;
+        color:#111;
+        border-bottom:1px solid #ccc;
+        padding-bottom:8px;
+      "
+    >
+      Audio Attribution &amp; Licensing
+    </h3>
+
+    <p style="margin-top:12px; margin-bottom:12px;">
+      Some audio playback functionality on this website uses audio derived
+      from audio available through
+      <a
+        href="https://tropetrainer.com"
+        target="_blank"
+        rel="noopener"
+        style="color:#0066cc; text-decoration:underline;"
+      >TropeTrainer.com</a>.
+      The audio has been adapted for use in this application as described below.
+    </p>
+
+    <ul style="padding-left:20px; margin-top:12px; margin-bottom:0;">
+
+      <li style="margin-bottom:10px;">
+        <strong>Original Source:</strong>
+        Audio generated via
+        <a
+          href="https://tropetrainer.com"
+          target="_blank"
+          rel="noopener"
+          style="color:#0066cc; text-decoration:underline;"
+        >TropeTrainer.com</a>.
+      </li>
+
+      <li style="margin-bottom:10px;">
+        <strong>Modifications:</strong>
+        The original audio was captured via recording and may have been
+        subsequently edited, sliced, and segmented into individual
+        line-by-line WAV files to match the corresponding text playback.
+      </li>
+
+      <li style="margin-bottom:0;">
+        <strong>License:</strong>
+        This material is used and adapted under the terms of the
+        <a
+          href="https://creativecommons.org/licenses/by/4.0/"
+          target="_blank"
+          rel="noopener"
+          style="color:#0066cc; text-decoration:underline;"
+        >Creative Commons Attribution 4.0 International License (CC BY 4.0)</a>.
+      </li>
+
+    </ul>
+
+    <div style="text-align:center; margin-top:20px;">
+      <button
+        id="licenseInformationClose"
+        type="button"
+        style="
+          background:maroon;
+          color:white;
+          font-weight:bold;
+          padding:7px 20px;
+          border:2px solid black;
+          cursor:pointer;
+        "
+      >
+        CLOSE
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- End License Information Popup -->
+
 
 <script src="TropePlayer.js?v=20260615C"></script>
 
@@ -1092,7 +1215,28 @@ background:white;
 window.addEventListener("load", () => {
     const splash = document.getElementById("splash-screen");
     const mainDOM = document.getElementById("main-app-dom");
+    const licenseLink =
+        document.getElementById("licenseInformationLink");
 
+    const licensePopup =
+        document.getElementById("licenseInformationPopup");
+
+    const licenseClose =
+        document.getElementById("licenseInformationClose");
+
+    licenseLink.addEventListener("click", () => {
+        licensePopup.style.display = "flex";
+    });
+
+    licenseClose.addEventListener("click", () => {
+        licensePopup.style.display = "none";
+    });
+
+    licensePopup.addEventListener("click", (event) => {
+        if (event.target === licensePopup) {
+            licensePopup.style.display = "none";
+        }
+    });
     setTimeout(() => {
         splash.style.opacity = "0";
         mainDOM.classList.add("visible");
