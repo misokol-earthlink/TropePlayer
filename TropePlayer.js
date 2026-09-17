@@ -3138,6 +3138,21 @@ function showTropeTrainerCreditLine(lineNumber) {
 
   popup.style.display = "block";
 }
+
+function getHoverText(tropeName) {
+  const tropeInfo = findTropeInfo(tropeName);
+
+  if (tropeInfo && tropeInfo.hover) {
+    return tropeInfo.hover;
+  }
+
+  if (comboHoverText[tropeName]) {
+    return comboHoverText[tropeName];
+  }
+
+  return "";
+}
+
 function initializeTropeHoverBoxClickClose() {
   const hoverBox = document.getElementById("tropeHoverBox");
 
@@ -3152,6 +3167,8 @@ function initializeTropeHoverBoxClickClose() {
     hoverBox.style.display = "none";
   };
 }
+
+
 function playTropeTrainerLineAudio(wavPath, lineNumber) {
   console.log("Playing TropeTrainer audio:");
   console.log("Line:", lineNumber);
