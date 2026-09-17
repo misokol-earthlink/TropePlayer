@@ -2688,7 +2688,7 @@ function showHebrewLineForPlayback(tropes) {
 
  const hebrewLineBox =
   document.getElementById("hebrewLineText");
-
+hebrewLineBox.style.fontSize = "34px";
 hebrewLineBox.innerHTML = "";
 
 tropes.forEach(function(item, index) {
@@ -3139,7 +3139,7 @@ function showTropeTrainerCreditLine(lineNumber) {
   const popup = document.getElementById("hebrewLinePopup");
   const messageBox = document.getElementById("hebrewLineText");
 
-  messageBox.style.fontSize = "18px";
+  messageBox.style.fontSize = "24px";
 
   messageBox.innerHTML =
     "Audio playback for line " +
