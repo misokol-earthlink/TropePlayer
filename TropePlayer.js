@@ -2492,7 +2492,57 @@ setPlayAllButtonRunning();
   );
 }
 function closeActiveFileViewer() {
+
+  // Stop any playback using the normal audio player.
   stopPlayAllLyrics();
+
+  // Remove any Pocket Torah individual-line stop handler.
+  if (playPocketTorahAudio.stopHandler) {
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAudio.stopHandler
+    );
+
+    playPocketTorahAudio.stopHandler = null;
+  }
+
+  // Remove any Pocket Torah Play All stop handler.
+  if (playPocketTorahAll.stopHandler) {
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAll.stopHandler
+    );
+
+    playPocketTorahAll.stopHandler = null;
+  }
+
+  // Stop Smooth trope playback if it is active.
+  if (smoothSourceNode) {
+    try {
+      smoothSourceNode.stop();
+    } catch (err) {
+      console.warn(
+        "Could not stop Smooth playback:",
+        err
+      );
+    }
+
+    smoothSourceNode = null;
+  }
+
+  // Clear any remaining audio callbacks.
+  player.onended = null;
+  player.onerror = null;
+
+  // Restore playback to the idle state.
+  audioPlaybackMode = null;
+
+  clearLyricsPlayingHighlight();
+  setPlayAllButtonStopped();
+
+  document.getElementById(
+    "hebrewLinePopup"
+  ).style.display = "none";
 
   lineCount = 0;
 
@@ -2500,7 +2550,6 @@ function closeActiveFileViewer() {
     "activeFileViewerOverlay"
   ).style.display = "none";
 }
-
 async function loadParshaFile(fileName) {
 
   const response = await fetch(
