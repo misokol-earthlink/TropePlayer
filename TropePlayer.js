@@ -7,6 +7,7 @@ let displayVowels = false;
 let dummyvar ;
 let playAllEnable = false;
 let playAllResolve = null;
+let audioPlaybackMode = null;
 //alert("SCRIPT START");
 function ipadLog(msg) {
   const box = document.getElementById("ipadDebugBox");
@@ -2212,6 +2213,12 @@ lineRow.style.cursor = "pointer";
 
 lineRow.onclick = function() {
 
+  if (audioPlaybackMode !== null) {
+    return;
+  }
+
+  audioPlaybackMode = "trope";
+
   if (document.getElementById("notePlaybackCheckbox").checked) {
 
     playActiveFileLine(lineNumber);
@@ -2254,6 +2261,11 @@ lyricsRow.dataset.lineNumber = lineNumber;
 lyricsRow.onclick = function(event) {
 
   event.stopPropagation();
+  if (audioPlaybackMode !== null) {
+    return;
+  }
+
+  audioPlaybackMode = "lyrics";
 if (usePocketTorah) {
   playPocketTorahAudio(lineNumber);
   return;
@@ -2409,13 +2421,13 @@ function playPocketTorahAll() {
     );
 
     playPocketTorahAll.stopHandler = null;
-
+audioPlaybackMode = null;
 setPlayAllButtonStopped();
 
     return;
   }
 
-
+audioPlaybackMode = "playAll";
   const segment =
     ptPlaybackSegments[0];
 
@@ -2423,6 +2435,7 @@ setPlayAllButtonStopped();
     console.error(
       "Pocket Torah playback segment not found."
     );
+audioPlaybackMode = null;
     return;
   }
 
@@ -2461,7 +2474,7 @@ player.removeEventListener(
 );
 
 playPocketTorahAll.stopHandler = null;
-
+audioPlaybackMode = null;
 setPlayAllButtonStopped();
     }
   };
@@ -2588,7 +2601,7 @@ function playActiveFileLine(lineNumber) {
       document.getElementById(
         "hebrewLinePopup"
       ).style.display = "none";
-
+audioPlaybackMode = null;
     });
 }
 
@@ -2791,6 +2804,7 @@ function playPocketTorahAudio(lineNumber) {
         );
 
         playPocketTorahAudio.stopHandler = null;
+audioPlaybackMode = null;
       }
     };
 
@@ -2864,6 +2878,7 @@ ipadTrace("ENTER playSmooth");
 
     if (!response.ok) {
       alert("Could not load " + wavPath);
+audioPlaybackMode = null;
       return;
     }
 
@@ -2887,10 +2902,11 @@ ipadTrace("ENTER playSmooth");
     smoothAudioContext.destination
   );
 
-  smoothSourceNode.onended = function() {
-    document.getElementById("hebrewLinePopup").style.display = "none";
-    smoothSourceNode = null;
-  };
+ smoothSourceNode.onended = function() {
+  document.getElementById("hebrewLinePopup").style.display = "none";
+  smoothSourceNode = null;
+  audioPlaybackMode = null;
+};
 
   smoothSourceNode.start();
 }
@@ -3187,6 +3203,7 @@ function playTropeTrainerLineAudio(wavPath, lineNumber) {
 
     document.getElementById("hebrewLinePopup").style.display =
       "none";
+  audioPlaybackMode = null;
   };
 
   player.onerror = function() {
@@ -3200,6 +3217,7 @@ function playTropeTrainerLineAudio(wavPath, lineNumber) {
 
     document.getElementById("hebrewLinePopup").style.display =
       "none";
+  audioPlaybackMode = null;
   };
 
   const playPromise = player.play();
@@ -3207,7 +3225,7 @@ function playTropeTrainerLineAudio(wavPath, lineNumber) {
   if (playPromise && typeof playPromise.catch === "function") {
     playPromise.catch(function(err) {
       clearLyricsPlayingHighlight();
-
+audioPlaybackMode = null;
       console.error(
         "player.play() failed:",
         wavPath,
@@ -3363,6 +3381,12 @@ function formatTropeNameForDisplay(tropeName) {
 
 document.getElementById("playAllLyricsBtn").onclick = function(event) {
   event.stopPropagation();
+  if (
+    audioPlaybackMode !== null &&
+    audioPlaybackMode !== "playAll"
+  ) {
+    return;
+  }
 if (usePocketTorah) {
   playPocketTorahAll();
   return;
@@ -3411,6 +3435,7 @@ function stopPlayAllLyrics() {
 
 async function playAllLyricsLines() {
   playAllEnable = true;
+audioPlaybackMode = "playAll";
   setPlayAllButtonRunning();
 
   const sectionName =
@@ -3444,6 +3469,7 @@ async function playAllLyricsLines() {
 
   } finally {
     playAllEnable = false;
+audioPlaybackMode = null;
     playAllResolve = null;
     setPlayAllButtonStopped();
     clearLyricsPlayingHighlight();
