@@ -2420,9 +2420,16 @@ function playPocketTorahAll() {
       playPocketTorahAll.stopHandler
     );
 
-    playPocketTorahAll.stopHandler = null;
-audioPlaybackMode = null;
-setPlayAllButtonStopped();
+       playPocketTorahAll.stopHandler = null;
+
+    clearLyricsPlayingHighlight();
+
+    document.getElementById(
+      "hebrewLinePopup"
+    ).style.display = "none";
+
+    audioPlaybackMode = null;
+    setPlayAllButtonStopped();
 
     return;
   }
@@ -2508,10 +2515,16 @@ player.removeEventListener(
 );
 
 playPocketTorahAll.stopHandler = null;
+
+clearLyricsPlayingHighlight();
+
+document.getElementById(
+  "hebrewLinePopup"
+).style.display = "none";
+
 audioPlaybackMode = null;
 setPlayAllButtonStopped();
-    }
-  };
+    }  };
 
 player.addEventListener(
   "timeupdate",
