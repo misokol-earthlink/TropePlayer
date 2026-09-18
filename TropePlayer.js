@@ -2059,26 +2059,25 @@ ptLineData.forEach(function(lineData) {
   if (!labels) {
     return;
   }
+const resourceName =
+  resolvePocketTorahResourceName(ptParshaName);
 
+const audioKey =
+  resourceName.audio +
+  "-" +
+  lineData.aliyah;
   lineData.startTime =
     labels[lineData.labelStartIndex];
 
 lineData.endTime =
   labels[lineData.labelEndIndex] ??
-  ptAudioDurationData[
-    ptParshaName +
-    "-" +
-    lineData.aliyah
-  ];
+  ptAudioDurationData[audioKey];
+
 lineData.audioPath =
   "PocketTorah/data/audio/" +
   encodeURIComponent(
-    ptParshaName +
-    "-" +
-    lineData.aliyah +
-    ".mp3"
-  );
-});
+    audioKey + ".mp3"
+  );});
 ptPlaybackSegments = [];
 
 ptLineData.forEach(function(lineData) {
