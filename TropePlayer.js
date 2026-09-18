@@ -2459,9 +2459,43 @@ audioPlaybackMode = null;
 
   player.currentTime =
     segment.startTime;
+  highlightLyricsLineForPlayAll(1);
+  scrollLyricsLineIntoView(1);
+  showTropeTrainerCreditLine(1);
+
+let currentLineNumber = 1;
 playPocketTorahAll.stopHandler =
   function() {
+    for (
+      let lineIndex = currentLineNumber;
+      lineIndex < ptLineData.length;
+      lineIndex++
+    ) {
+      const nextLine =
+        ptLineData[lineIndex];
 
+      if (
+        player.currentTime >=
+        nextLine.startTime
+      ) {
+        currentLineNumber =
+          lineIndex + 1;
+
+        highlightLyricsLineForPlayAll(
+          currentLineNumber
+        );
+
+        scrollLyricsLineIntoView(
+          currentLineNumber
+        );
+
+        showTropeTrainerCreditLine(
+          currentLineNumber
+        );
+      } else {
+        break;
+      }
+    }
     if (
       player.currentTime >=
       segment.endTime
