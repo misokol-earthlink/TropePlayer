@@ -2856,8 +2856,15 @@ function playPocketTorahAudio(lineNumber) {
           playPocketTorahAudio.stopHandler
         );
 
-        playPocketTorahAudio.stopHandler = null;
-audioPlaybackMode = null;
+               playPocketTorahAudio.stopHandler = null;
+
+        clearLyricsPlayingHighlight();
+
+        document.getElementById(
+          "hebrewLinePopup"
+        ).style.display = "none";
+
+        audioPlaybackMode = null;
       }
     };
 
