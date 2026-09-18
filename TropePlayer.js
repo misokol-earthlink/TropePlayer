@@ -1573,6 +1573,15 @@ async function ensurePocketTorahResourcesLoaded() {
   console.log("Pocket Torah aliyah data loaded.");
   console.log("Pocket Torah resource names loaded:", ptResourceNames);
 }
+function resolvePocketTorahResourceName(parshaName) {
+
+  const match = ptResourceNames.find(function(resourceName) {
+    return resourceName.toLowerCase() === parshaName.toLowerCase();
+  });
+
+  return match || parshaName;
+}
+
 function findPocketTorahAliyah(parshaName, bookCode, chapter, verse) {
 
   if (
@@ -1681,11 +1690,13 @@ async function loadPocketTorahBook(bookName) {
 
 async function loadPocketTorahLabels(parshaName, aliyahNumber) {
 
-  const labelKey =
-    parshaName.toLowerCase() +
+const resourceName =
+    resolvePocketTorahResourceName(parshaName);
+
+const labelKey =
+    resourceName +
     "-" +
     aliyahNumber;
-
   if (ptLabelData[labelKey]) {
     return ptLabelData[labelKey];
   }
