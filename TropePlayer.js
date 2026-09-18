@@ -106,6 +106,7 @@ let ptParshaName = "";
 let ptLineData = [];
 let ptResourcesLoaded = false;
 let ptAliyahData = null;
+let ptResourceNames = [];
 let ptTorahData = {};
 let ptLabelData = {};
 let ptAudioDurationData = {};
@@ -1552,9 +1553,25 @@ async function ensurePocketTorahResourcesLoaded() {
   }
 
   ptAliyahData = await response.json();
+
+  const resourceMapResponse = await fetch(
+    "PocketTorah/data/PocketTorahResourceMap.json?v=" + Date.now(),
+    { cache: "no-store" }
+  );
+
+  if (!resourceMapResponse.ok) {
+    throw new Error(
+      "Could not load PocketTorah/data/PocketTorahResourceMap.json. Status: " +
+      resourceMapResponse.status
+    );
+  }
+
+  ptResourceNames = await resourceMapResponse.json();
+
   ptResourcesLoaded = true;
 
   console.log("Pocket Torah aliyah data loaded.");
+  console.log("Pocket Torah resource names loaded:", ptResourceNames);
 }
 function findPocketTorahAliyah(parshaName, bookCode, chapter, verse) {
 
