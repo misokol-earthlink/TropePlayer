@@ -1,4 +1,10 @@
-[
-  "yitro",
-  "Ki Teitzei"
-]
+{
+  "Yitro": {
+    "labels": "yitro",
+    "audio": "Yitro"
+  },
+  "Ki Teitzei": {
+    "labels": "Ki Teitzei",
+    "audio": "KiTeitzei"
+  }
+}
