@@ -1575,13 +1575,19 @@ async function ensurePocketTorahResourcesLoaded() {
 }
 function resolvePocketTorahResourceName(parshaName) {
 
-  const match = ptResourceNames.find(function(resourceName) {
+  const matchKey = Object.keys(ptResourceNames).find(function(resourceName) {
     return resourceName.toLowerCase() === parshaName.toLowerCase();
   });
 
-  return match || parshaName;
-}
+  if (matchKey) {
+    return ptResourceNames[matchKey];
+  }
 
+  return {
+    labels: parshaName,
+    audio: parshaName
+  };
+}
 function findPocketTorahAliyah(parshaName, bookCode, chapter, verse) {
 
   if (
@@ -1694,7 +1700,7 @@ const resourceName =
     resolvePocketTorahResourceName(parshaName);
 
 const labelKey =
-    resourceName +
+    resourceName.labels +
     "-" +
     aliyahNumber;
   if (ptLabelData[labelKey]) {
@@ -1744,16 +1750,15 @@ async function loadPocketTorahAudioDuration(
   aliyahNumber
 ) {
 
-  const audioKey =
-    parshaName +
+ const resourceName =
+    resolvePocketTorahResourceName(parshaName);
+
+const audioKey =
+    resourceName.audio +
     "-" +
     aliyahNumber;
 
-  if (ptAudioDurationData[audioKey]) {
-    return ptAudioDurationData[audioKey];
-  }
-
-  const audioPath =
+const audioPath =
     "PocketTorah/data/audio/" +
     encodeURIComponent(audioKey + ".mp3");
 
