@@ -1852,7 +1852,7 @@ function countPocketTorahWordsBeforeVerse(
     const firstVerse =
       chapter === beginChapter
         ? beginVerse
-        : 1;
+        : 1;line
 
     const lastVerse =
       chapter === targetChapter
@@ -2009,6 +2009,17 @@ ptLineData.forEach(function(lineData) {
       lineData.chapter,
       lineData.verse
     );
+
+console.log(
+  "PT label index diagnostic:",
+  lineData.lineName,
+  "aliyah begins",
+  lineData.aliyahBeginChapter + ":" + lineData.aliyahBeginVerse,
+  "target",
+  lineData.chapter + ":" + lineData.verse,
+  "labelStartIndex",
+  lineData.labelStartIndex
+);
 const verseData =
   getPocketTorahVerse(
     bookName,
