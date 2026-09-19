@@ -2059,8 +2059,11 @@ for (const aliyahNumber of ptAliyahNumbers) {
 }
 ptLineData.forEach(function(lineData) {
 
+  const resourceName =
+    resolvePocketTorahResourceName(ptParshaName);
+
   const labelKey =
-    ptParshaName.toLowerCase() +
+    resourceName.labels +
     "-" +
     lineData.aliyah;
 
@@ -2070,8 +2073,6 @@ ptLineData.forEach(function(lineData) {
   if (!labels) {
     return;
   }
-const resourceName =
-  resolvePocketTorahResourceName(ptParshaName);
 
 const audioKey =
   resourceName.audio +
