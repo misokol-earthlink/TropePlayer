@@ -1852,7 +1852,7 @@ function countPocketTorahWordsBeforeVerse(
     const firstVerse =
       chapter === beginChapter
         ? beginVerse
-        : 1;line
+        : 1;
 
     const lastVerse =
       chapter === targetChapter
