@@ -2079,7 +2079,16 @@ const audioKey =
   lineData.aliyah;
   lineData.startTime =
     labels[lineData.labelStartIndex];
-
+console.log(
+  "PT start time diagnostic:",
+  lineData.lineName,
+  "index",
+  lineData.labelStartIndex,
+  "value",
+  lineData.startTime,
+  "finite",
+  Number.isFinite(lineData.startTime)
+);
 lineData.endTime =
   labels[lineData.labelEndIndex] ??
   ptAudioDurationData[audioKey];
