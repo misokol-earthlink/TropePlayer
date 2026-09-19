@@ -3725,7 +3725,10 @@ function isYHVH(hebrewText) {
   const consonants =
     String(hebrewText || "").replace(/[\u0591-\u05C7]/g, "");
 
-  return consonants.includes("יהוה");
+  return (
+    consonants.includes("יהוה") ||
+    consonants.includes("יי")
+  );
 }
 
 function stripYHVHVowelsOnly(hebrew) {
