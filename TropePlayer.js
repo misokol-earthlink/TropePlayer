@@ -1608,12 +1608,18 @@ if (
   ptEnabled = true;
   ptParshaName = lyricsData.title.slice(0, -3);
 
+  // A newly loaded PT Lyrics file defines a new Pocket Torah reading.
+  // PT.js owns the reset/source policy; TropePlayer owns this reset trigger.
+  await PocketTorah.resetSourceForNewReading();
+
   const preparedPocketTorah =
-    await PocketTorah.preparePlaybackData(
-      ptParshaName,
-      lyricsData.lines,
-      loadPocketTorahAudioDurationFromElement
-    );
+    await PocketTorah.runWithSourceFallback(function() {
+      return PocketTorah.preparePlaybackData(
+        ptParshaName,
+        lyricsData.lines,
+        loadPocketTorahAudioDurationFromElement
+      );
+    });
 
   ptLineData = preparedPocketTorah.lineData;
   ptPlaybackSegments = preparedPocketTorah.playbackSegments;
