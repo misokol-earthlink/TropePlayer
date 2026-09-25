@@ -1637,10 +1637,99 @@ async function readParshaRepositoryJson(fileName, optionalFile) {
   return await response.json();
 }
 
-async function openActiveFilesSelector(useEditMode = false) {
+async function openActiveFilesSelector(
+  useEditMode = false
+) {
+
   editExistingMode = useEditMode;
-if (!startupModeSelected) {
-return;
+
+  if (!startupModeSelected) {
+    return;
+  }
+
+  ipadTrace(
+    "ENTER openActiveFilesSelector"
+  );
+
+  const popup =
+    document.getElementById(
+      "activeFilesPopup"
+    );
+
+  const select =
+    document.getElementById(
+      "activeFilesSelect"
+    );
+
+  /*
+    If Local has already been selected during
+    this page load, keep using the existing
+    local directory and local Parsha list.
+  */
+  if (parshaRepositorySource === "local") {
+
+    populateActiveFilesSelect(
+      activeFiles,
+      false
+    );
+
+    popup.style.display = "block";
+    return;
+  }
+
+  /*
+    We have not selected Local during this
+    page load, so show the normal GitHub
+    repository plus the Local choice.
+  */
+  await loadParshaRepositoryIndex();
+
+  if (
+    !activeFiles ||
+    activeFiles.length === 0
+  ) {
+    alert(
+      "No active files were loaded from index.json."
+    );
+    return;
+  }
+
+  populateActiveFilesSelect(
+    activeFiles,
+    true
+  );
+
+  select.onchange =
+    async function() {
+
+      if (
+        select.value !== "__LOCAL__"
+      ) {
+        return;
+      }
+
+      const localActivated =
+        await activateLocalParshaRepository();
+
+      /*
+        If the user cancels the directory
+        picker, remain in GitHub mode.
+      */
+      if (!localActivated) {
+
+        parshaRepositorySource =
+          "github";
+
+        await loadParshaRepositoryIndex();
+
+        populateActiveFilesSelect(
+          activeFiles,
+          true
+        );
+      }
+    };
+
+  popup.style.display = "block";
 }
 
 ipadTrace("ENTER openActiveFilesSelector");
