@@ -1,1381 +1,3451 @@
-    let currentLyricsJson = {
-      title: "",
-      lines: []
-    };
+document.getElementById("ipadDebugBox").innerHTML +=
+  "Inline body script ran<br>";
+let startupModeSelected = false;
+let editExistingMode = false;
+let lineCount = 0;
+let displayVowels = false;
+let dummyvar ;
+let playAllEnable = false;
+let playAllResolve = null;
+let audioPlaybackMode = null;
+//alert("SCRIPT START");
+function ipadLog(msg) {
+  const box = document.getElementById("ipadDebugBox");
+  if (box) {
+    box.innerHTML += String(msg) + "<br>";
+  }
+  console.log(msg);
+}
+console.log("TropePlayer JS version: EDIT-BUTTON-TEST-1");
+window.onerror = function(message, source, lineno, colno, error) {
+  ipadLog("ERROR: " + message + " at line " + lineno + ":" + colno);
+};
 
-    let selectedTropeType = "lower";
-    let wordDetailsVisible = false;
-    let paragraphMarkersVisible = false;
-    let lastFetchedRef = "";
-    let lastSefariaData = null;
-
-    const torahBooks = [
-      {
-        label: "Genesis / Bereishit",
-        sefariaBook: "Genesis",
-        chapters: [31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,46,22,35,43,55,32,20,31,29,43,36,30,23,23,57,38,34,34,28,34,31,22,33,26]
-      },
-      {
-        label: "Exodus / Shemot",
-        sefariaBook: "Exodus",
-        chapters: [22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,37,30,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38]
-      },
-      {
-        label: "Leviticus / Vayikra",
-        sefariaBook: "Leviticus",
-        chapters: [17,16,17,35,26,23,38,36,24,20,47,8,59,57,33,34,16,30,37,27,24,33,44,23,55,46,34]
-      },
-      {
-        label: "Numbers / Bamidbar",
-        sefariaBook: "Numbers",
-        chapters: [54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,39,17,54,42,56,29,34,13]
-      },
-      {
-        label: "Deuteronomy / Devarim",
-        sefariaBook: "Deuteronomy",
-        chapters: [46,37,29,49,33,25,26,20,29,22,32,31,19,29,23,22,20,22,21,20,23,30,25,22,19,19,26,69,28,20,30,52,29,12]
-      }
-    ];
-
-    const bookSelect = document.getElementById("bookSelect");
-    const chapterSelect = document.getElementById("chapterSelect");
-    const startVerseSelect = document.getElementById("startVerseSelect");
-    const endVerseSelect = document.getElementById("endVerseSelect");
-    const generatedRefDisplay = document.getElementById("generatedRefDisplay");
-    const titleInput = document.getElementById("titleInput");
-    const lowerTropeBtn = document.getElementById("lowerTropeBtn");
-    const upperTropeBtn = document.getElementById("upperTropeBtn");
-    const dualTropeBtn = document.getElementById("dualTropeBtn");
-    document.getElementById("downloadDocBtn").addEventListener("click", downloadHebrewDocument);
-    document.getElementById("fetchBtn").addEventListener("click", fetchSelectedTorahText);
-    document.getElementById("manualFetchBtn").addEventListener("click", fetchManualRef);
-    document.getElementById("refreshJsonBtn").addEventListener("click", rebuildJsonFromEditor);
-    document.getElementById("copyJsonBtn").addEventListener("click", copyCurrentJson);
-    const saveJsonBtn = document.getElementById("saveJsonBtn");
-    if (saveJsonBtn) {
-      saveJsonBtn.addEventListener("click", saveLyricsAndTropeJson);
-    }
-    document.getElementById("toggleTranslitBtn").addEventListener("click", toggleWordDetails);
-    document.getElementById("toggleParagraphBtn").addEventListener("click", toggleParagraphMarkers);
-    titleInput.addEventListener("input", rebuildJsonFromEditor);
-
-    lowerTropeBtn.addEventListener("click", function () {
-      setTropeSelection("lower");
-      document.getElementById("status").textContent =
-        "Trope type set to Lower / Tahton.";
-    });
-
-    upperTropeBtn.addEventListener("click", function () {
-      setTropeSelection("upper");
-      document.getElementById("status").textContent =
-        "Trope type set to Upper / Elyon.";
-    });
-
-dualTropeBtn.addEventListener("click", function () {
-  setTropeSelection("dual");
-  document.getElementById("status").textContent =
-    "Trope type set to Dual.";
+window.addEventListener("unhandledrejection", function(event) {
+  ipadLog("PROMISE ERROR: " + event.reason);
 });
 
+ipadLog("Script started");
+let buildTableOpen = false;
+let activeBuildLineIndex = 0;
+const comboTropeNames = [
+  "SofAliyah",
+  "SofAliyah2",
+  "SofAliyah3",
+  "Munach-Katon",
+  "Kadma-V'azlah",
+  "Munach-Rvi'i"
+];
 
-    bookSelect.addEventListener("change", function () {
-      populateChapterSelect();
-      chapterSelect.value = "1";
-      populateVerseSelects();
-      startVerseSelect.value = "1";
-      endVerseSelect.value = "1";
-      updateGeneratedRefDisplay(true);
-    });
+/* =========================================================
+   DEVICE / MODE SELECTION
+   ========================================================= */
 
-    chapterSelect.addEventListener("change", function () {
-      populateVerseSelects();
-      startVerseSelect.value = "1";
-      endVerseSelect.value = "1";
-      updateGeneratedRefDisplay(true);
-    });
+/*
+  PC testing flags:
+    - Use these only when the filename does NOT contain IPAD.
+    - If filename contains IPAD, these flags are ignored.
+*/
+const forceTouchDevice = true;    // PC debug: true = simulate iPad/touch
+const forceDesktopMode = false;   // PC debug: true = force desktop mode
 
-    startVerseSelect.addEventListener("change", function () {
-      endVerseSelect.value = startVerseSelect.value;
-      updateGeneratedRefDisplay(true);
-    });
+const currentFileName =
+  window.location.pathname
+    .split("/")
+    .pop()
+    .toUpperCase();
 
-    endVerseSelect.addEventListener("change", function () {
-      keepEndVerseAtOrAfterStart();
-      updateGeneratedRefDisplay(true);
-    });
+const fileNameIsIPad =
+  currentFileName.includes("IPAD");
 
-    window.addEventListener("load", function () {
-      initializeSelectors();
-    });
+const actualTouchDevice =
+  ("ontouchstart" in window) ||
+  (navigator.maxTouchPoints > 0);
 
-    function initializeSelectors() {
-      bookSelect.innerHTML = "";
-      torahBooks.forEach(function (book, index) {
-        const option = document.createElement("option");
-        option.value = index;
-        option.textContent = book.label;
-        bookSelect.appendChild(option);
-      });
+let isTouchDevice = false;
+let touchModeActive = false;
+if (fileNameIsIPad) {
 
-      bookSelect.value = "0";
-      populateChapterSelect();
-      chapterSelect.value = "1";
-      populateVerseSelects();
-      startVerseSelect.value = "1";
-      endVerseSelect.value = "1";
-      updateGeneratedRefDisplay(true);
-      titleInput.value = buildSelectedRef();
-    }
+  // Real iPad/IPAD-named version always wins.
+  // Force flags are irrelevant here.
+  isTouchDevice = true;
 
-    function populateChapterSelect() {
-      const book = getSelectedBook();
-      chapterSelect.innerHTML = "";
+} else if (forceDesktopMode) {
 
-      book.chapters.forEach(function (_verseCount, index) {
-        const chapterNumber = index + 1;
-        const option = document.createElement("option");
-        option.value = chapterNumber;
-        option.textContent = chapterNumber;
-        chapterSelect.appendChild(option);
-      });
-    }
+  // PC override: force desktop behavior.
+  isTouchDevice = false;
 
-    function populateVerseSelects() {
-      const verseCount = getSelectedChapterVerseCount();
-      const oldStart = parseInt(startVerseSelect.value || "1", 10);
-      const oldEnd = parseInt(endVerseSelect.value || "1", 10);
+} else if (forceTouchDevice) {
 
-      startVerseSelect.innerHTML = "";
-      endVerseSelect.innerHTML = "";
+  // PC override: simulate iPad/touch behavior.
+  isTouchDevice = true;
 
-      for (let i = 1; i <= verseCount; i++) {
-        const startOption = document.createElement("option");
-        startOption.value = i;
-        startOption.textContent = i;
-        startVerseSelect.appendChild(startOption);
+} else {
 
-        const endOption = document.createElement("option");
-        endOption.value = i;
-        endOption.textContent = i;
-        endVerseSelect.appendChild(endOption);
-      }
+  // Normal automatic detection.
+  isTouchDevice = actualTouchDevice;
 
-      startVerseSelect.value = Math.min(oldStart, verseCount);
-      endVerseSelect.value = Math.min(Math.max(oldEnd, parseInt(startVerseSelect.value, 10)), verseCount);
-    }
+}
 
-    function keepEndVerseAtOrAfterStart() {
-      const start = parseInt(startVerseSelect.value, 10);
-      const end = parseInt(endVerseSelect.value, 10);
-      if (end < start) endVerseSelect.value = start;
-    }
 
-    function getSelectedBook() {
-      return torahBooks[parseInt(bookSelect.value, 10)];
-    }
+console.log("currentFileName =", currentFileName);
+console.log("fileNameIsIPad =", fileNameIsIPad);
+console.log("actualTouchDevice =", actualTouchDevice);
+console.log("forceTouchDevice =", forceTouchDevice);
+console.log("forceDesktopMode =", forceDesktopMode);
+console.log("touchModeActive =", touchModeActive);
+let viewLyricsMode = false;
+let activeLyricsLines = [];
+let smoothAudioContext = null;
+let smoothSourceNode = null;
+let activeFileLines = [];
+let activeFiles = [];
 
-    function getSelectedChapterVerseCount() {
-      const book = getSelectedBook();
-      const chapter = parseInt(chapterSelect.value, 10);
-      return book.chapters[chapter - 1];
-    }
-function buildSelectedRef() {
-  const book = getSelectedBook();
-  const chapter = parseInt(chapterSelect.value, 10);
-  const startVerse = parseInt(startVerseSelect.value, 10);
-  const endVerse = parseInt(endVerseSelect.value, 10);
+/* Parsha repository source state.
+   GitHub remains the default. Local mode affects only ParshaRepository files;
+   ./Trope/ and Pocket Torah source/fallback handling remain unchanged. */
+let parshaRepositorySource = "github";
+let localParshaFiles = new Map();
+let ptEnabled = false;
+let usePocketTorah = false;
+let ptParshaName = "";
+let ptLineData = [];
+let ptPlaybackSegments = [];
 
-  if (startVerse === endVerse) {
-    return book.sefariaBook + " " + chapter + ":" + startVerse;
+let resolveMunachChoice = null;
+const dirtyColor = "maroon";
+const cleanColor = "darkgreen";
+const comboColor = "blue";
+var buildMode = false;
+let currentModalTropeWave = "";
+let currentMunachFollowingTrope = "";
+/* Folder containing WAV files */
+//const audioPath =    "file:///C:/Users/misok/OneDrive/Documents/MuseScore3/Scores/Trope/";
+const audioPath = "./Trope/";
+const imagePath = "./Images/";
+/* File names without extension */
+const tropeNames = [
+  "Darga",
+  "EtNachTah",
+  "Geresh",
+  "Gershayim",
+  "Kadma",
+  "Kadma-V'azlah",
+  "Karne-farah",
+  "Katon",
+  "Mapach",
+  "Merchah",
+  "MerchahK'fulah",
+  "Munach",
+  "Munach-Katon",
+  "Munach-l'garmeih",
+  "Munach-Rvi'i",
+  "PashTa",
+  "Pazer",
+  "Rvi'i",
+  "Segol",
+  "Shalshelet",
+  "SofAliyah",
+  "SofAliyah2",
+  "SofAliyah3",
+  "SofPaSuk",
+  "Tipchah",
+  "T'LishaGadola",
+  "T'LishaK'tanah",
+  "Tvir",
+  "V'azlah",
+  "YareachBenYomo",
+  "Y'tiv",
+  "ZakefGadol",
+  "Zarka"
+];
+
+const hebrewTropeNames = {
+  Darga:             "דַּרְגָּ֧א",
+  EtNachTah:         "אֶתְנַחְתָּ֑א",
+  Geresh:            "גֵּרֵ֜שׁ",
+  Gershayim:         "גֵּרְשַׁ֞יִם",
+  Kadma:             "קַדְמָ֨א",
+ "Kadma-V'azlah": "קַדְמָ֨א אַזְלָ֜א",
+  "Karne-farah":     "קַרְנֵי פָרָ֟ה",
+  Katon:             "קָטֹ֔ן",
+  Mapach:            "מַהְפַּ֤ךְ",
+  Merchah:           "מֵרְכָ֥א",
+  "MerchahK'fulah":  "מֵרְכָ֦א כְּפוּלָה",
+  Munach:            "מֻנַּ֣ח",
+  "Munach-Katon":    "מֻנַּ֣ח קָטֹ֔ן",
+  "Munach-l'garmeih": "מֻנַּ֣ח ׀ (לְגַרְמֵיהּ)",
+  "Munach-Rvi'i":    "מֻנַּ֣ח רְבִיעִ֗י",
+  PashTa:            "פַּשְׁטָ֙א",
+  Pazer:             "פָּזֵ֡ר",
+  "Rvi'i":           "רְבִיעִ֗י",
+  Segol:             "סֶגּ֒וֹל",
+  Shalshelet:        "שַׁלְשֶׁ֓לֶת",
+  SofAliyah:          "מֵרְכָ֥א טִפְּחָ֖א מֵרְכָ֥א סוֹף פָּסֽוּק׃",
+  SofAliyah2:        "מֵרְכָ֥א טִפְּחָ֖א סוֹף פָּסֽוּק׃",
+ SofAliyah3:        "טִפְּחָ֖א סוֹף פָּסֽוּק׃",
+  SofPaSuk:          "סוֹף פָּסֽוּק׃",
+  Tipchah:           "טִפְּחָ֖א",
+  "T'LishaGadola":   "תְּלִישָׁא גְּדוֹלָ֠ה",
+  "T'LishaK'tanah":  "תְּלִישָׁא קְטַנָּ֩ה",
+  Tvir:              "תְּבִירָ֛א",
+ "V'azlah":         "אַזְלָ֜א",
+  YareachBenYomo:    "יָרֵחַ בֶּן יוֹמ֪וֹ",
+  "Y'tiv":           "יְתִ֚יב",
+  ZakefGadol:        "גָּד֕וֹל",
+  Zarka:             "זַרְקָ֮א"
+};
+
+/* clean / dirty playback collections */
+const cleanNames = [
+  {hover: "Etnachtah Family", name: "EtNachTah", unicode: "0591", wav: "EtNachTah.wav", image: "" },
+  {hover: "Very rare trope found once in Torah (Numbers 35:5).", name: "Karne-farah", unicode: "059F", wav: "Karne-farah.wav", image: "" },
+  {hover: "May be in combo tropes such as Munach-Katon and often called Zakef Katon.  Since Portnoy et.al. use Katon for this trop name this is how it appears in the trope names. Zakef does not appear in trope name transliterations or in the image of the music scale and associated lyrics in the trope detail display popup window.", name: "Katon", unicode: "0594", wav: "Katon.wav", image: "" },
+  {hover: "Rare trope found in Torah 5 times.  Repeated note then finishing on higher pitch trill on closing melisma.", name: "MerchahK'fulah", unicode: "05A6", wav: "MerchahK'fulah.wav", image: "" },
+  {hover: "Text", name: "Pazer", unicode: "05A1", wav: "Pazer.wav", image: "" },
+  {hover: "Text", name: "Rvi'i", unicode: "0597", wav: "Rvi'i.wav", image: "" },
+  {hover: "Always on the last letter of the word.  If the accented syllable is elsewhere, the same mark is used again.  Howver this is a single applction of the trope.", name: "Segol", unicode: "0592", wav: "Segol.wav", image: "" },
+  {hover: "Text", name: "Shalshelet", unicode: "0593", wav: "Shalshelet.wav", image: "" },
+  {hover: "Text", name: "SofPaSuk", unicode: "05C3", wav: "SofPaSuk.wav", image: "" },
+  {hover: "Text", name: "Tipchah", unicode: "0596", wav: "Tipchah.wav", image: "" },
+  {hover: "Text", name: "Tvir", unicode: "059B", wav: "Tvir.wav", image: "" },
+  {hover: "Trope name is Azlah and must follow Kadma.  See Kadma-V'azlah. Use v' with the name to emphasize this relationshp.  Without Kadma, see Geresh.", name: "V'azlah", unicode: "059C", wav: "V'azlah.wav", image: "" },
+  {hover: "Very rare trope found once in Torah (Numbers 35:5).", name: "YareachBenYomo", unicode: "05AA", wav: "YareachBenYomo.wav", image: "" },
+  {hover: "Text", name: "Y'tiv", unicode: "059A", wav: "Y'tiv.wav", image: "" },
+  {hover: "Text", name: "ZakefGadol", unicode: "0595", wav: "ZakefGadol.wav", image: "" },
+  {hover: "Always on the last letter of the word.  If the accented syllable is elsewhere, the same mark is used again.  Howver this is a single applction of the trope.", name: "Zarka", unicode: "05AE", wav: "Zarka.wav", image: "" },
+  {hover: "Text", name: "Geresh", unicode: "059C", wav: "Geresh.wav", image: "" },
+  {hover: "Text", name: "Mapach", unicode: "05A4", wav: "Mapach.wav", image: "" },
+  {hover: "Treated as a single trope name but in reality it is an instance of Munach appearing before a Munach Rvi'i sequence. Also the two words marked with Munach trope are separated with a vertical line called a pasik. In this unique situtation, the trope is named Muncah L'garmeih and the melody of the munach is more complex than other melodies for the trope. In the cantillation symbol on the display page tropemark is just a munach but the pasik in the following text character postion is shown for emphasis.", name: "Munach-l'garmeih", unicode: "05A3", wav: "Munach-l'garmeih.wav", image: "" },
+  {hover: "Always on the last letter of the word.  If the accented syllable is elsewhere, the same mark is used again.  Howver this is a single applction of the trope.", name: "PashTa", unicode: "0599", wav: "PashTa.wav", image: "" },
+  {hover: "Always on the first letter of the word.  If the accented syllable is elsewhere, the same mark is used again.  Howver this is a single applction of the trope.", name: "T'LishaGadola", unicode: "05A0", wav: "T'LishaGadola.wav",    image: "" },
+  {hover: "Always on the last letter of the word.  If the accented syllable is elsewhere, the same mark is used again.  Howver this is a single applction of the trope.", name: "T'LishaK'tanah", unicode: "05A9", wav: "T'LishaK'tanah.wav",  image: "" }
+];
+const comboHoverText = {
+  "SofAliyah": "Combined aliyah-ending playback for the sequence Merchah, Tipchah, Merchah, Sof Pasuk.",
+  "SofAliyah2": "Combined aliyah-ending playback for the sequence Merchah, Tipchah, Sof Pasuk.",
+  "SofAliyah3": "Combined aliyah-ending playback for the sequence Tipchah,  Sof Pasuk.",
+  "Munach-Katon": "Combo entry for  Munach, Katon.",
+  "Munach-Rvi'i": "Combo entry for  Munach, Rvi'i.",
+  "Kadma-V'azlah": "Combo entry for Kadma, Azlah and label as a special trope sequence in Rvi'i family. Without the Kadma,  the folowing trope would be Geresh with same marking."
+};
+const dirtyNames = [
+  {
+    hover: "Text",
+    name: "Darga",
+    unicode: "05A7",
+    wav: "Darga.wav",
+    image: "",
+    families: ["Default", "Tvir", "Rvi'i"]
+  },
+  {
+    hover: "Text",
+    name: "Gershayim",
+    unicode: "059E",
+    wav: "Gershayim.wav",
+    image: "",
+    families: ["Default", "Tvir", "Rvi'i"]
+  },
+  {
+    hover: "See comment for Kadma V'azlah.  Otherwise Kadma is played with a common melody regardless of the following trope, but in actual Cantillation there could be more variation than provided for  in this applicaiton.",
+    name: "Kadma",
+    unicode: "05A8",
+    wav: "Kadma.wav",
+    image: "",
+    families: ["Default", "Katon", "Tvir", "Segol", "Rvi'i"]
+  },
+  {
+    hover: "Text",
+    name: "Merchah",
+    unicode: "05A5",
+    wav: "Merchah.wav",
+    image: "",
+    families: ["Default", "EtNachTah", "SofPaSuk", "Katon", "Tvir", "Segol"]
+  },
+/*
+ {
+    hover: "Text",
+    name: "T'LishaGadola",
+    unicode: "05A0",
+    wav: "T'LishaGadola.wav",
+    image: "",
+    families: ["Default", "Katon", "Segol", "Rvi'i"]
+  },
+  {
+    hover: "Text",
+    name: "T'LishaK'tanah",
+    unicode: "05A9",
+    wav: "T'LishaK'tanah.wav",
+    image: "",
+    families: ["Default", "Tvir", "Rvi'i"]
+  },
+*/
+  {
+    hover: "Appears in several families.  Melody chanes with the trope following.  Sound played is based on this distinction.  Munach L'garmeih is separtely identified for correct playback.",
+    name: "Munach",
+    unicode: "05A3",
+    wav: "Munach.wav",
+    image: "",
+    families: ["Default", "EtNachTah", "Katon", "Tvir", "Segol", "Rvi'i"]
+  }
+ 
+];
+const tropeFamilyMap = {
+  "Darga": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": true,
+    "Rvi'i": true,
+    "Segol": false
+  },
+  "EtNachTah": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Geresh": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Gershayim": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": true,
+    "Rvi'i": true,
+    "Segol": false
+  },
+  "Kadma": {
+    "EtNachTah": false,
+    "Katon": true,
+    "SofPasuk": false,
+    "Tvir": true,
+    "Rvi'i": true,
+    "Segol": true
+  },
+"Kadma-V'azlah": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": true,
+    "Segol": false
+  },
+
+  "Karne-farah": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Katon": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Mapach": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Merchah": {
+    "EtNachTah": true,
+    "Katon": true,
+    "SofPasuk": true,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": true
+  },
+  "MerchahK'fulah": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Munach": {
+    "EtNachTah": true,
+    "Katon": true,
+    "SofPasuk": false,
+    "Tvir": true,
+    "Rvi'i": true,
+    "Segol": true
+  },
+  "Munach-Katon": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Munach-l'garmeih": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Munach-Rvi'i": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "PashTa": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Pazer": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Rvi'i": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Segol": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Shalshelet": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "SofAliyah": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "SofAliyah2": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+ "SofAliyah3": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "SofPaSuk": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Tipchah": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "T'LishaGadola": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "T'LishaK'tanah": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Tvir": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "V'azlah": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "YareachBenYomo": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Y'tiv": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "ZakefGadol": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  },
+  "Zarka": {
+    "EtNachTah": false,
+    "Katon": false,
+    "SofPasuk": false,
+    "Tvir": false,
+    "Rvi'i": false,
+    "Segol": false
+  }
+};
+
+const FAMILY_GLYPHS = {
+  EtNachTah:
+    `<span class="familyGlyph" style="background:darkblue;">ET</span>`,
+
+  SofPasuk:
+    `<span class="familyGlyph" style="background:maroon;">SP</span>`,
+
+  Katon:
+    `<span class="familyGlyph" style="background:darkgreen;">K</span>`,
+
+  Segol:
+    `<span class="familyGlyph" style="background:purple;">S</span>`,
+
+  Tvir:
+    `<span class="familyGlyph" style="background:brown;">T</span>`,
+
+  "Rvi'i":
+    `<span class="familyGlyph" style="background:darkorange;">R</span>`
+};
+
+const table = document.getElementById("tropeTable");
+const player = document.getElementById("player");
+
+function buildTropeUnicodeDisplay(tropeName) {
+  if (comboTropeNames.includes(tropeName)) {
+    return "";
+  }
+  const tropeInfo = findTropeInfo(tropeName);
+  if (!tropeInfo || !tropeInfo.unicode) {
+    return "";
+  }
+  if (tropeInfo.name === "SofPaSuk") {
+    return "\u00A0" + "\u05BD" + "\u05C3";
+  }
+  if (tropeInfo.name === "Munach-l'garmeih") {
+    return "\u00A0" +
+      String.fromCharCode(parseInt(tropeInfo.unicode, 16)) +
+      "\u00A0" +
+      "\u05C0";
   }
 
-  return book.sefariaBook + " " + chapter + ":" + startVerse + "-" + endVerse;
-}
-function parseSimpleTorahRef(ref) {
-  const match = ref.trim().match(/^(.+?)\s+(\d+):(\d+)(?:-(\d+))?$/);
-
-  if (!match) return null;
-
-  return {
-    book: match[1],
-    chapter: parseInt(match[2], 10),
-    startVerse: parseInt(match[3], 10),
-    endVerse: match[4] ? parseInt(match[4], 10) : parseInt(match[3], 10)
-  };
+  return "\u00A0" +
+    String.fromCharCode(parseInt(tropeInfo.unicode, 16));
 }
 
-function getPocketTorahBookCode(bookName) {
-  const bookCodes = {
-    Genesis: "GE", Exodus: "EX", Leviticus: "LE",
-    Numbers: "NU", Deuteronomy: "DE"
-  };
-  return bookCodes[bookName] || "";
-}
+function buildTropeTable() {tropeNames.forEach((name, index) => {
+  const row = document.createElement("tr");
 
-function buildPocketTorahLineName(bookName, chapter, verse) {
-  const bookCode = getPocketTorahBookCode(bookName);
-  if (!bookCode) {
-    return String(chapter).padStart(2, "0") + ":" +
-           String(verse).padStart(2, "0");
-  }
-  return bookCode + ":" +
-         String(chapter).padStart(2, "0") + ":" +
-         String(verse).padStart(2, "0");
-}
+  /* Index column */
+  const indexCell = document.createElement("td");
+  indexCell.textContent = index + 1;
 
-function getDualTropeBounds(parsed) {
-  if (!parsed) return null;
-
-  if (parsed.book === "Exodus" && parsed.chapter === 20) {
-    return { dualStart: 2, dualEnd: 14 };
-  }
-
-  if (parsed.book === "Deuteronomy" && parsed.chapter === 5) {
-   return { dualStart: 6, dualEnd: 18 };
-  }
-
-  return null;
-}
-
-function isEntirelyInsideDualTropeDomain(parsed) {
-  const bounds = getDualTropeBounds(parsed);
-  if (!bounds) return false;
-
-  return (
-    parsed.startVerse >= bounds.dualStart &&
-    parsed.endVerse <= bounds.dualEnd
-  );
-}
-
-function isMixedTropeDomain(parsed) {
-  const bounds = getDualTropeBounds(parsed);
-  if (!bounds) return false;
-
-  const overlapsDual =
-    parsed.startVerse <= bounds.dualEnd &&
-    parsed.endVerse >= bounds.dualStart;
-
-  const entirelyInsideDual = isEntirelyInsideDualTropeDomain(parsed);
-  const entirelyOutsideDual = !overlapsDual;
-
-  return !entirelyInsideDual && !entirelyOutsideDual;
-}
-
-function isSpecialDualTropeRequest(parsed) {
-  return isEntirelyInsideDualTropeDomain(parsed);
-}
-
-function setTropeSelection(tropeType) {
-  if (tropeType === "upper") {
-    selectedTropeType = "upper";
-  } else if (tropeType === "dual") {
-    selectedTropeType = "dual";
-  } else {
-    selectedTropeType = "lower";
-  }
-
-  lowerTropeBtn.classList.toggle("active", selectedTropeType === "lower");
-  upperTropeBtn.classList.toggle("active", selectedTropeType === "upper");
-  dualTropeBtn.classList.toggle("active", selectedTropeType === "dual");
-}
-function resetTropeSelectionToLower() {
-  setTropeSelection("lower");
-}
-
-function updateTropeButtonVisibility(resetToLower) {
-  const parsed = getCurrentSelectorParsedRef();
-  const tropeControl = lowerTropeBtn.closest(".control-group");
-  const showDualTropeButtons = isEntirelyInsideDualTropeDomain(parsed);
-
-  if (showDualTropeButtons) {
-    tropeControl.style.display = "flex";
-    tropeControl.style.flexDirection = "column";
-
-    /*
-      Only reset Lower/Upper when the user changes the selected book/chapter/verse.
-      Do not reset merely because the screen is refreshed or a fetch is started.
-    */
-    if (resetToLower) {
-      resetTropeSelectionToLower();
-    }
-  } else {
-    tropeControl.style.display = "none";
-    resetTropeSelectionToLower();
-  }
-}
-
-function updateGeneratedRefDisplay(resetToLower) {
-  const ref = buildSelectedRef();
-
-  generatedRefDisplay.textContent = ref;
-  titleInput.value = ref;
-
-  updateTropeButtonVisibility(resetToLower === true);
-}
-
-function getCurrentSelectorParsedRef() {
-  const book = getSelectedBook();
-
-  return {
-    book: book.sefariaBook,
-    chapter: parseInt(chapterSelect.value, 10),
-    startVerse: parseInt(startVerseSelect.value, 10),
-    endVerse: parseInt(endVerseSelect.value, 10)
-  };
-}
-    async function fetchSelectedTorahText() {
-      updateGeneratedRefDisplay(false);
-      titleInput.value = buildSelectedRef();
-      await fetchSefariaText(buildSelectedRef());
-    }
-
-    async function fetchManualRef() {
-      const manualRef = document.getElementById("manualRefInput").value.trim();
-      if (!manualRef) {
-        document.getElementById("status").textContent = "Enter a manual source reference first.";
-        return;
-      }
-      titleInput.value = manualRef;
-      await fetchSefariaText(manualRef);
-    }
-
- async function fetchSefariaText(ref) {
-  const status = document.getElementById("status");
-  const lineEditor = document.getElementById("lineEditor");
-  const jsonOutput = document.getElementById("jsonOutput");
-  const parsedRef = parseSimpleTorahRef(ref);
-
-  if (parsedRef && isMixedTropeDomain(parsedRef)) {
-    alert(
-      "Please select a verse range exclusively within a single or dual trope range domain."
-    );
+indexCell.onclick = function(event) {
+  event.stopPropagation();
+  if (!buildTableOpen) {
     return;
   }
 
-  status.textContent = "Fetching from Sefaria...";
-  lineEditor.innerHTML = "";
-  jsonOutput.textContent = "{}";
+  addTropeToCurrentBuildLine(name);
+};
+  /* Trope column */
+  const tropeCell = document.createElement("td");
+//  tropeCell.textContent = name;
+tropeCell.innerHTML = formatTropeNameForDisplay(name);
 
-  try {
-    const url = buildSefariaUrl(ref);
+tropeCell.dataset.hoverText = getHoverText(name);
 
-    console.log("FETCH URL:", url);
-    status.textContent = "Fetching: " + url;
+if (touchModeActive) {
+  const infoGlyph = document.createElement("span");
 
-    const response = await fetch(url);
+  infoGlyph.textContent = "❓";
+  infoGlyph.className = "touch-info-glyph";
+  infoGlyph.title = "Show trope information";
 
-    if (!response.ok) {
-      throw new Error("Sefaria returned HTTP " + response.status);
-    }
+infoGlyph.onclick = function(event) {
+  event.stopPropagation();
 
-    const data = await response.json();
+  const hoverBox = document.getElementById("tropeHoverBox");
+  const hoverText = getHoverText(name);
 
-if (
-  parsedRef &&
-  isSpecialDualTropeRequest(parsedRef) &&
-  (selectedTropeType === "upper" || selectedTropeType === "lower")
-) {
-  const sourceVersion = findHebrewVersion(data);
-
-  if (data.text !== undefined) {
-    data.text = flattenSefariaText(data.text)
-      .map(replaceColonWithSofPasuq);
-  } else if (sourceVersion && sourceVersion.text !== undefined) {
-    sourceVersion.text = flattenSefariaText(sourceVersion.text)
-      .map(replaceColonWithSofPasuq);
+  if (!hoverText) {
+    return;
   }
-}
 
-const textMessage =
-  "No Hebrew text was returned by Sefaria for this request. " +
-  "This usually means the selected version is not available for the requested reference.";
-
-if (responseHasNoText(data)) {
-  alert(textMessage);
-  status.textContent = textMessage;
-  lineEditor.innerHTML = "";
-  jsonOutput.textContent = "{}";
+ if (
+  hoverBox.style.display === "block" &&
+  hoverBox.textContent === hoverText
+) {
+  hoverBox.style.display = "none";
   return;
 }
 
-    if (parsedRef && isSpecialDualTropeRequest(parsedRef)) {
-      restrictSpecialLowerDualTropeResponseToRequestedRange(data, parsedRef, ref);
-    }
+hoverBox.style.display = "block";
+hoverBox.style.position = "fixed";
+hoverBox.style.left =   (touch.clientX - 80) + "px";
+hoverBox.style.top =   (touch.clientY - 60) + "px";
+hoverBox.style.transform = "";
+hoverBox.style.zIndex = "300000";
+hoverBox.style.pointerEvents = "auto";
 
-    lastFetchedRef = ref;
-    lastSefariaData = data;
-    updateSourceAttribution(data, ref);
-    console.log("Final Sefaria URL:", url);
-    console.log("Sefaria response:", data);
-
-    /*
-      Both Lower / Tahton and Upper / Elyon should now use the v3 parser.
-
-      Upper / Elyon is no longer using the old legacy /api/texts endpoint.
-      The confirmed Elyon response has Hebrew in the v3-style response,
-      not in data.he.
-    */
-    const lines = normalizeSefariaToEditorLines(ref, data);
-
-    renderEditorLines(lines);
-    rebuildJsonFromEditor();
-
-status.textContent =
-  "Loaded " +
-  ref +
-  " as " +
-  lines.length +
-  " line(s). " +
-  getTropeStatusText(parsedRef);
-  } catch (err) {
-    console.error(err);
-    status.textContent = "Load failed: " + err.message;
-  }
+};  tropeCell.appendChild(infoGlyph);
 }
 
-/*
-const specialBaseUrl =
-      "https://www.sefaria.org/api/v3/texts/" +
-      encodeURIComponent(chapterRef);
-*/
-function getTropeStatusText(parsedRef) {
-  if (parsedRef && isSpecialDualTropeRequest(parsedRef)) {
-    if (selectedTropeType === "upper") {
-      return "Using special Upper / Elyon Decalogue source.";
-    }
+  tropeCell.style.cursor = "pointer";
+tropeCell.style.fontWeight = "bold";
 
-    if (selectedTropeType === "dual") {
-      return "Using standard Dual Decalogue source.";
-    }
-
-    return "Using special Lower / Tahton Decalogue source.";
+tropeCell.onclick = function () {
+  if (buildMode === false) {
+    openTropeModal(name);
+  } else {
+    addTropeToActiveLine(name);
   }
+};
 
-  return "Using standard source.";
-}
-function buildSefariaUrl(ref) {
-  const parsed = parseSimpleTorahRef(ref);
+/* hover actions */
 
-  /*
-    Special handling only for the Exodus 20 dual-trope section.
-    All three choices (Upper / Lower / Dual) now fetch the chapter
-    and post-process the requested verse range.
-  */
-  if (parsed && isEntirelyInsideDualTropeDomain(parsed)) {
+if (!touchModeActive) {
 
-    const chapterRef = parsed.book + " " + parsed.chapter;
+ tropeCell.onmouseenter = function(event) {
 
-    const baseUrl =
-      "https://www.sefaria.org/api/v3/texts/" +
-      encodeURIComponent(chapterRef);
+  const hoverBox =
+    document.getElementById("tropeHoverBox");
 
-    const params = new URLSearchParams();
-    params.set("return_format", "text_only");
-
-    if (selectedTropeType === "upper") {
-
-      params.set(
-        "version",
-        "hebrew|Wikisource -- Upper Accents"
-      );
-
-    } else if (selectedTropeType === "lower") {
-
-      params.set(
-        "version",
-        "hebrew|Wikisource_--_Lower_Accents"
-      );
-
-      /*
-        Later we may change the version string to the
-        canonical "Wikisource -- Lower Accents"
-        after Sefaria confirms the preferred form.
-      */
-
-    }
-    /*
-      Dual uses the standard Sefaria source,
-      so no version parameter is added.
-    */
-
-    return baseUrl + "?" + params.toString();
-  }
-
-  /*
-    All non-Decalogue requests continue exactly
-    as before.
-  */
-  const encodedRef = encodeURIComponent(ref);
-  const baseUrl =
-    "https://www.sefaria.org/api/v3/texts/" +
-    encodedRef;
-
-  const params = new URLSearchParams();
-  params.set("return_format", "text_only");
-
-  if (selectedTropeType === "upper") {
-    params.set(
-      "version",
-      "hebrew|Wikisource -- Upper Accents"
-    );
-  }
-
-  return baseUrl + "?" + params.toString();
-}
-
-function restrictSpecialLowerDualTropeResponseToRequestedRange(data, parsed, requestedRef) {
-  const bounds = getDualTropeBounds(parsed);
-  if (!bounds) return;
-
-  const sourceVersion = findHebrewVersion(data);
-
-  const rawText =
-    data && data.text !== undefined
-      ? data.text
-      : (sourceVersion && sourceVersion.text !== undefined ? sourceVersion.text : []);
-
-  const textArray = flattenSefariaText(rawText);
-console.log("textArray length =", textArray.length);
-console.log(textArray);
-/*
-const firstIndex = parsed.startVerse - bounds.dualStart + 1;
-const lastIndex = parsed.endVerse - bounds.dualStart + 1;
-const selectedText = textArray.slice(firstIndex, lastIndex + 1);
-*/
-const firstIndex = parsed.startVerse - 1;
-const lastIndex = parsed.endVerse - 1;
-const selectedText = textArray.slice(firstIndex, lastIndex + 1);
-
-  if (data && data.text !== undefined) {
-    data.text = selectedText;
-  } else if (sourceVersion) {
-    sourceVersion.text = selectedText;
-  }
-
-  data.ref = requestedRef;
-}
-
-function normalizeSefariaToEditorLines(requestedRef, data) {
-  const sourceVersion = findHebrewVersion(data);
-
-  let rawText = [];
-
-  if (sourceVersion && sourceVersion.text !== undefined) {
-    rawText = sourceVersion.text;
-  } else if (data && data.text !== undefined) {
-    rawText = data.text;
-  }
-
-  const textArray = flattenSefariaText(rawText);
-
-  const cleanTextArray = textArray.map(cleanSefariaHebrewText);
-  console.log(cleanTextArray);
-  const startVerse = getStartVerseNumber(data.ref || requestedRef);
-  const parsedRef = parseSimpleTorahRef(requestedRef);
-  const sourceBook = parsedRef ? parsedRef.book : "";
-  const sourceChapter = parsedRef ? parsedRef.chapter : null;
-
-  return cleanTextArray.map(function (cleanHebrew, index) {
-    const tokens = extractHebrewWordTokens(cleanHebrew);
-    const sourceVerseNumber =
-      startVerse === null ? index + 1 : startVerse + index;
-
-    return {
-      line: index + 1,
-      lineName:
-        sourceChapter === null
-          ? String(sourceVerseNumber).padStart(2, "0")
-          : buildPocketTorahLineName(sourceBook, sourceChapter, sourceVerseNumber),
-      sourceVerseNumber: sourceVerseNumber,
-      displayHebrew: cleanHebrew,
-      words: tokens.map(function (hebrewWord) {
-        return {
-          hebrew: hebrewWord,
-          translit: roughTransliterateHebrew(hebrewWord)
-        };
-      })
-    };
-  });
-}
-
-function flattenSefariaText(rawText) {
-  if (rawText === null || rawText === undefined) {
-    return [];
-  }
-
-  if (typeof rawText === "string") {
-    return [rawText];
-  }
-
-  if (!Array.isArray(rawText)) {
-    return [String(rawText)];
-  }
-
-  const result = [];
-
-  rawText.forEach(function (item) {
-    if (Array.isArray(item)) {
-      flattenSefariaText(item).forEach(function (subItem) {
-        result.push(subItem);
-      });
-    } else if (item !== null && item !== undefined) {
-      result.push(String(item));
-    }
-  });
-
-  return result;
-}
-
-    function normalizeLegacySefariaResponse(requestedRef, data) {
-      /*
-        Legacy endpoint shape:
-          data.he contains the Hebrew text array/string.
-
-        This path is used for Upper / Elyon while testing
-          version=Torah Cantillation.
-      */
-      const rawText = data && data.he ? data.he : [];
-      const textArray = Array.isArray(rawText) ? rawText : [rawText];
-      const cleanTextArray = textArray.map(cleanSefariaHebrewText);
-      const startVerse = getStartVerseNumber(data.ref || requestedRef);
-
-      return cleanTextArray.map(function (cleanHebrew, index) {
-        const verseNumber = startVerse === null ? index + 1 : startVerse + index;
-        const tokens = extractHebrewWordTokens(cleanHebrew);
-
-        return {
-          line: index + 1,
-          sourceVerseNumber: verseNumber,
-          displayHebrew: cleanHebrew,
-          words: tokens.map(function (hebrewWord) {
-            return {
-              hebrew: hebrewWord,
-              translit: roughTransliterateHebrew(hebrewWord)
-            };
-          })
-        };
-      });
-    }
-
-    function findHebrewVersion(data) {
-      if (!data || !Array.isArray(data.versions)) return null;
-      return data.versions.find(function (version) {
-        return version.language === "he" || version.language === "hebrew";
-      }) || data.versions[0] || null;
-    }
-
-    function cleanSefariaHebrewText(rawValue) {
-      let text = stripHtml(rawValue || "");
-
-      /*
-        Sefaria Tanakh text may include paragraph markers such as:
-          {s}, {p}, {ס}, {פ}
-
-        These indicate closed/open paragraph breaks in the masoretic layout.
-        They are not Torah words and should not become JSON transliteration objects.
-
-        For the Hebrew source-line display, this temporary flag controls whether
-        they are shown visibly or removed.
-      */
-      if (paragraphMarkersVisible) {
-  text = text.replace(/\{ס\}/g, "  [ס]  ");
-  text = text.replace(/\{פ\}/g, "  [פ]  ");
-  text = text.replace(/\{s\}/gi, "  [s]  ");
-  text = text.replace(/\{p\}/gi, "  [p]  ");
-
-  text = text.replace(/\(ס\)/g, "  [ס]  ");
-  text = text.replace(/\(פ\)/g, "  [פ]  ");
-  text = text.replace(/\(s\)/gi, "  [s]  ");
-  text = text.replace(/\(p\)/gi, "  [p]  ");
-
-  text = text.replace(/\{[^}]*\}/g, " ");
-} else {
-  text = text.replace(/\{[^}]*\}/g, " ");
-  text = text.replace(/\([ספsp]\)/gi, " ");
-}
-
-      /*
-        Normalize whitespace but keep internal Hebrew punctuation such as maqaf.
-        Maqaf U+05BE belongs between connected Hebrew words and should remain
-        inside a Hebrew token, e.g. בְּכָל־לְבָבְךָ.
-      */
-      text = text.replace(/\s+/g, " ").trim();
-
-      return text;
-    }
-
-    function extractHebrewWordTokens(cleanHebrew) {
-      /*
-        We do NOT split merely on every non-letter mark because vowels and trope marks
-        are combining marks that belong with the base Hebrew letters.
-
-        A true token must contain at least one Hebrew letter U+05D0-U+05EA.
-
-        We preserve:
-          - Hebrew letters
-          - niqqud and trope marks U+0591-U+05C7
-          - maqaf U+05BE between Hebrew words
-
-        We ignore as separate JSON word objects:
-         - sof pasuk punctuation U+05C3 when standalone
-          - Latin paragraph markers already removed
-          - ordinary punctuation
-      */
-
-   const allowedInsideToken = /[\u0591-\u05C7\u05D0-\u05EA\u05BE]/;
-  const hasHebrewLetter = /[\u05D0-\u05EA]/;
-  const isPasikOnly = /^[\u05C0|׀]+$/;
-
-  const roughParts = cleanHebrew.split(/\s+/).filter(Boolean);
-  const tokens = [];
-
-  roughParts.forEach(function (part) {
-    if (/^\[[^\]]+\]$/.test(part)) return;
-
-    let token = part;
-
-   // token = token.replace(/\u05C3+$/g, "");
-    token = trimNonHebrewEdges(token);
-
-    if (!token) return;
-
-    /*
-      If pasik appears as its own separated item, attach it to the prior Hebrew word.
-      This preserves Munach-l'garmeih-style markings in the JSON Hebrew string.
-    */
-    if (isPasikOnly.test(token)) {
-      if (tokens.length > 0 && !tokens[tokens.length - 1].includes("\u05C0")) {
-        tokens[tokens.length - 1] += "\u05C0";
-      }
-      return;
-    }
-
-    if (!hasHebrewLetter.test(token)) return;
-
-    token = Array.from(token).filter(function (char) {
-      return allowedInsideToken.test(char);
-    }).join("");
-
-    token = token.replace(/^\u05BE+|\u05BE+$/g, "");
-
-    if (token && hasHebrewLetter.test(token)) {
-      tokens.push(token);
-    }
-  });
-
-  return tokens;
-}
-
-    function trimNonHebrewEdges(value) {
-      let chars = Array.from(value);
-
-      while (chars.length && !isHebrewTokenChar(chars[0])) {
-        chars.shift();
-      }
-
-      while (chars.length && !isHebrewTokenChar(chars[chars.length - 1])) {
-        chars.pop();
-      }
-
-      return chars.join("");
-    }
-
-    function isHebrewTokenChar(char) {
-      return /[\u0591-\u05C7\u05D0-\u05EA\u05BE]/.test(char);
-    }
-
-    function renderEditorLines(lines) {
-      const lineEditor = document.getElementById("lineEditor");
-      lineEditor.innerHTML = "";
-
-      lines.forEach(function (lineData) {
-        const panel = document.createElement("div");
-        panel.className = "line-panel";
-        panel.dataset.line = String(lineData.line);
-        panel.dataset.lineName = lineData.lineName || "";
-
-        const title = document.createElement("div");
-        title.className = "line-title";
-        title.textContent =
-  "Line " +
-  lineData.lineName +
-  " (Verse " +
-  lineData.sourceVerseNumber +
-  ")";
-
-        const sourceHebrew = document.createElement("div");
-        sourceHebrew.className = "source-hebrew";
-        sourceHebrew.textContent = lineData.displayHebrew;
-
-        const note = document.createElement("div");
-        note.className = "small-note";
-        if (!wordDetailsVisible) {
-          note.classList.add("details-hidden");
-        }
-        note.textContent = "The source line above may show maqaf/punctuation. The editable rows below are only the JSON word objects.";
-
-        panel.appendChild(title);
-        panel.appendChild(sourceHebrew);
-        panel.appendChild(note);
-
-        lineData.words.forEach(function (wordData, index) {
-          const row = document.createElement("div");
-          row.className = "word-grid";
-          if (!wordDetailsVisible) {
-            row.classList.add("details-hidden");
-          }
-          row.dataset.wordIndex = String(index + 1);
-
-          const hebrew = document.createElement("div");
-          hebrew.className = "word-hebrew";
-          hebrew.textContent = wordData.hebrew;
-
-          const translit = document.createElement("input");
-          translit.className = "word-translit";
-          translit.type = "text";
-          translit.value = wordData.translit || "";
-          translit.addEventListener("input", rebuildJsonFromEditor);
-
-          row.appendChild(hebrew);
-          row.appendChild(translit);
-          panel.appendChild(row);
-        });
-
-        lineEditor.appendChild(panel);
-      });
-     buildDownloadDocument(lines);
-    }
-
-    function rebuildJsonFromEditor() {
-      const panels = Array.from(document.querySelectorAll(".line-panel"));
-      const lines = panels.map(function (panel, panelIndex) {
-        const wordRows = Array.from(panel.querySelectorAll(".word-grid"));
-
-        return {
-          lineName: panel.dataset.lineName,
-          words: wordRows.map(function (row) {
-            const hebrew = row.querySelector(".word-hebrew").textContent;
-            const translit = row.querySelector(".word-translit").value;
-
-            return {
-              hebrew: hebrew,
-              translit: translit
-            };
-          })
-        };
-      });
-
-      currentLyricsJson = {
-        title: titleInput.value.trim() || buildSelectedRef(),
-        lines: lines
-      };
-
-      document.getElementById("jsonOutput").textContent =
-        JSON.stringify(currentLyricsJson, null, 2);
-    }
-
-    function stripHtml(value) {
-      const temp = document.createElement("div");
-      temp.innerHTML = value;
-      return temp.textContent || temp.innerText || "";
-    }
-
-    function getStartVerseNumber(ref) {
-      const match = ref.match(/\d+:(\d+)/);
-      return match ? parseInt(match[1], 10) : null;
-    }
-
-    function roughTransliterateHebrew(hebrew) {
-      /*
-        This is still only a placeholder for testing.
-        It gives every real Hebrew word a visible editable transliteration.
-        The real AI-generated or manually corrected value can replace it later.
-      */
-
-      const normalized = hebrew.normalize("NFC");
-
-      // Special handling for forms of the Divine Name.
-      if (containsTetragrammaton(normalized)) {
-        return "Adonai";
-      }
-
-      const consonantsOnly = normalized
-        .replace(/[\u0591-\u05BD\u05BF\u05C1-\u05C2\u05C4-\u05C5\u05C7]/g, "")
-        .replace(/\u05BE/g, "-")
-        .replace(/\u05C0/g, "")
-        .replace(/\u05C3/g, "");
-
-      const map = {
-        "א": "'", "ב": "v", "ג": "g", "ד": "d", "ה": "h", "ו": "v", "ז": "z",
-        "ח": "ch", "ט": "t", "י": "y", "כ": "ch", "ך": "ch", "ל": "l",
-        "מ": "m", "ם": "m", "נ": "n", "ן": "n", "ס": "s", "ע": "'",
-        "פ": "f", "ף": "f", "צ": "tz", "ץ": "tz", "ק": "k", "ר": "r",
-        "ש": "sh", "ת": "t"
-      };
-
-      return Array.from(consonantsOnly).map(function (char) {
-        return map[char] || char;
-      }).join("").replace(/\s+/g, " ").trim();
-    }
-
-    function containsTetragrammaton(value) {
-      /*
-        Match yod-heh-vav-heh with optional vowels/trope marks after each letter.
-      */
-      return /\u05D9[\u0591-\u05C7]*\u05D4[\u0591-\u05C7]*\u05D5[\u0591-\u05C7]*\u05D4/.test(value);
-    }
-
-    function toggleWordDetails() {
-      wordDetailsVisible = !wordDetailsVisible;
-
-      /*
-        Hide/show everything derived from the returned Hebrew source line:
-          - note text
-          - per-word Hebrew boxes
-          - transliteration input boxes
-
-        The actual returned Hebrew line remains visible.
-      */
-      document.querySelectorAll(".word-grid, .small-note").forEach(function (element) {
-        element.classList.toggle("details-hidden", !wordDetailsVisible);
-      });
-
-      document.getElementById("toggleTranslitBtn").textContent =
-        wordDetailsVisible ? "Hide Word Details" : "Show Word Details";
-    }
-
-   function toggleParagraphMarkers() {
-  paragraphMarkersVisible = !paragraphMarkersVisible;
-
-  document.getElementById("toggleParagraphBtn").textContent =
-    paragraphMarkersVisible ? "Hide Paragraphs" : "Show Paragraphs";
-
-  if (lastFetchedRef && lastSefariaData) {
-    const lines = normalizeSefariaToEditorLines(lastFetchedRef, lastSefariaData);
-
-    renderEditorLines(lines);
-    rebuildJsonFromEditor();
-  }
-}
-
-    async function copyCurrentJson() {
-      const status = document.getElementById("status");
-      rebuildJsonFromEditor();
-
-      try {
-        await navigator.clipboard.writeText(JSON.stringify(currentLyricsJson, null, 2));
-        status.textContent = "Lyrics JSON copied to clipboard.";
-      } catch (err) {
-        status.textContent = "Copy failed. You can manually copy from the JSON box.";
-      }
-    }
-
-
-
-    /* =========================================================
-       TROPE JSON EXPORT
-       Derived only when Save JSON is requested.  The source Hebrew
-       displayed in .source-hebrew is used so punctuation such as
-       paseq (U+05C0), which is not a Lyrics word object, is retained.
-       ========================================================= */
-
-    const TROPE_MARK_NAMES = {
-      "\u0591": "EtNachTah",
-      "\u0592": "Segol",
-      "\u0593": "Shalshelet",
-      "\u0594": "Katon",
-      "\u0595": "ZakefGadol",
-      "\u0596": "Tipchah",
-      "\u0597": "Rvi'i",
-      "\u0599": "PashTa",
-      "\u059A": "Y'tiv",
-      "\u059B": "Tvir",
-      "\u059C": "Geresh",
-      "\u059E": "Gershayim",
-      "\u059F": "Karne-farah",
-      "\u05A0": "T'LishaGadola",
-      "\u05A1": "Pazer",
-      "\u05A3": "Munach",
-      "\u05A4": "Mapach",
-      "\u05A5": "Merchah",
-      "\u05A6": "MerchahK'fulah",
-      "\u05A7": "Darga",
-      "\u05A8": "Kadma",
-      "\u05A9": "T'LishaK'tanah",
-      "\u05AA": "YareachBenYomo",
-      "\u05AE": "Zarka",
-      "\u05C3": "SofPaSuk"
-    };
-
-    // TropePlayer documents these marks as positional duplicates when a
-    // second copy is placed on the accented syllable.  Such a pair is one
-    // playback event, not two.
-    const POSITIONAL_DUPLICATE_MARKS = new Set([
-      "\u0592", // Segol - postpositive
-      "\u0599", // PashTa - postpositive
-      "\u05AE", // Zarka - postpositive
-      "\u05A0", // T'LishaGadola - prepositive
-      "\u05A9"  // T'LishaK'tanah - postpositive
-    ]);
-
-    function collectTropeEventsFromHebrew(sourceHebrew) {
-      const chars = Array.from(String(sourceHebrew || "").normalize("NFD"));
-      const events = [];
-
-      // Record each trope mark and whether a paseq follows the same
-      // Munach before the next Hebrew letter/trope event.  Whitespace is
-      // deliberately ignored for this test.
-      for (let i = 0; i < chars.length; i++) {
-        const ch = chars[i];
-        if (!TROPE_MARK_NAMES[ch]) continue;
-
-        let hasFollowingPaseq = false;
-        if (ch === "\u05A3") {
-          for (let j = i + 1; j < chars.length; j++) {
-            const next = chars[j];
-            if (next === "\u05C0") {
-              hasFollowingPaseq = true;
-              break;
-            }
-            if (/\s/.test(next)) continue;
-            if (TROPE_MARK_NAMES[next] || /[\u05D0-\u05EA]/.test(next)) break;
-            // Vowels and other combining marks do not end the test.
-          }
-        }
-
-        events.push({
-          mark: ch,
-          name: TROPE_MARK_NAMES[ch],
-          charIndex: i,
-          hasFollowingPaseq: hasFollowingPaseq
-        });
-      }
-
-      return suppressPositionalDuplicateTropes(chars, events);
-    }
-
-    function suppressPositionalDuplicateTropes(chars, events) {
-      if (events.length < 2) return events;
-
-      // Determine whitespace-delimited source token for each event.  This is
-      // used only to identify the documented duplicate positional marks; it
-      // does not otherwise control trope sequencing.
-      function tokenBounds(charIndex) {
-        let start = charIndex;
-        let end = charIndex;
-        while (start > 0 && !/\s/.test(chars[start - 1])) start--;
-        while (end + 1 < chars.length && !/\s/.test(chars[end + 1])) end++;
-        return start + ":" + end;
-      }
-
-      const seen = new Set();
-      return events.filter(function(event) {
-        if (!POSITIONAL_DUPLICATE_MARKS.has(event.mark)) return true;
-        const key = tokenBounds(event.charIndex) + ":" + event.mark;
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      });
-    }
-
-    function resolveTropePlaybackNames(sourceHebrew) {
-      const events = collectTropeEventsFromHebrew(sourceHebrew);
-      const result = [];
-
-      for (let i = 0; i < events.length; i++) {
-        const current = events[i];
-        const next = events[i + 1] || null;
-
-        // Explicit paseq controls Munach-l'garmeih.  Nothing following the
-        // paseq is required to establish this playback name.
-        if (current.mark === "\u05A3" && current.hasFollowingPaseq) {
-          result.push("Munach-l'garmeih");
-          continue;
-        }
-
-        // TropePlayer defines these adjacent source-trope pairs as single
-        // combo playback units.
-        if (current.mark === "\u05A8" && next && next.mark === "\u059C") {
-          result.push("Kadma-V'azlah");
-          i++;
-          continue;
-        }
-
-        if (current.mark === "\u05A3" && next && next.mark === "\u0594") {
-          result.push("Munach-Katon");
-          i++;
-          continue;
-        }
-
-        if (current.mark === "\u05A3" && next && next.mark === "\u0597") {
-          result.push("Munach-Rvi'i");
-          i++;
-          continue;
-        }
-
-        // U+059C is Geresh unless it has just been consumed with Kadma as
-        // Kadma-V'azlah.  Sof pasuq remains SofPaSuk (Sof 1 policy).
-        result.push(current.name);
-      }
-
-      return result;
-    }
-
-    function buildTropeJsonFromCurrentDisplay() {
-      const panels = Array.from(document.querySelectorAll(".line-panel"));
-
-      return {
-        name: titleInput.value.trim() || buildSelectedRef(),
-        description: "Description",
-        lines: panels.map(function(panel) {
-          const sourceHebrew = panel.querySelector(".source-hebrew");
-          return {
-            lineName: panel.dataset.lineName || "",
-            tropes: resolveTropePlaybackNames(
-              sourceHebrew ? sourceHebrew.textContent : ""
-            )
-          };
-        })
-      };
-    }
-
-    function makeSafeJsonBaseName(value) {
-      return String(value || "Sefaria")
-        .trim()
-        .replace(/[\\/:*?"<>|]+/g, "-")
-        .replace(/\s+/g, "_");
-    }
-
-    function downloadJsonObject(data, fileName) {
-      const blob = new Blob(
-        [JSON.stringify(data, null, 2)],
-        { type: "application/json" }
-      );
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    }
-
-    function saveLyricsAndTropeJson() {
-      const status = document.getElementById("status");
-      rebuildJsonFromEditor();
-
-      if (!currentLyricsJson.lines || currentLyricsJson.lines.length === 0) {
-        status.textContent = "No Lyrics JSON is available to save.";
-        return;
-      }
-
-      const tropeJson = buildTropeJsonFromCurrentDisplay();
-      const baseName = makeSafeJsonBaseName(
-        currentLyricsJson.title || tropeJson.name || "Sefaria"
-      );
-
-      downloadJsonObject(currentLyricsJson, baseName + "_lyrics.json");
-
-      // A short delay lets browsers register two separate user-initiated
-      // downloads reliably from the same Save JSON action.
-      setTimeout(function() {
-        downloadJsonObject(tropeJson, baseName + ".json");
-      }, 150);
-
-      status.textContent =
-        "Saved Lyrics JSON and trope JSON: " +
-        baseName + "_lyrics.json and " + baseName + ".json";
-    }
-
-function buildDownloadDocument(lines) {
-  const docDiv = document.getElementById("downloadDocument");
-  docDiv.innerHTML = "";
-
-  const title = document.createElement("div");
-  title.textContent = titleInput.value.trim() || buildSelectedRef();
-  title.style.fontFamily = "Arial, sans-serif";
-  title.style.fontSize = "24px";
-  title.style.fontWeight = "bold";
-  title.style.textAlign = "center";
-  title.style.marginBottom = "24px";
-
-  docDiv.appendChild(title);
-const attribution = document.createElement("div");
-attribution.textContent =
-  lastSefariaData
-    ? getSourceAttributionText(lastSefariaData, lastFetchedRef)
-    : document.getElementById("sourceAttribution").textContent;attribution.style.fontFamily = "Arial, sans-serif";
-attribution.style.fontSize = "13px";
-attribution.style.textAlign = "center";
-attribution.style.marginBottom = "22px";
-attribution.style.color = "#555";
-
-docDiv.appendChild(attribution);
-  const table = document.createElement("table");
-  table.style.width = "100%";
-  table.style.borderCollapse = "collapse";
-  table.style.direction = "rtl";
-  table.style.tableLayout = "fixed";
-
-  lines.forEach(function(lineData) {
-    const tr = document.createElement("tr");
-
-    const verseTd = document.createElement("td");
-    verseTd.textContent =
-      String(lineData.sourceVerseNumber).padStart(2, "0") + ":";
-  verseTd.style.width = "70px";
-verseTd.style.direction = "ltr";
-verseTd.style.unicodeBidi = "isolate";
-verseTd.style.textAlign = "right";
-verseTd.style.fontFamily = "Arial, sans-serif";
-verseTd.style.fontSize = "24px";
-verseTd.style.fontWeight = "bold";
-verseTd.style.color = "black";
-verseTd.style.verticalAlign = "middle";
-verseTd.style.paddingTop = "0px";
-verseTd.style.paddingBottom = "6px";
-verseTd.style.paddingLeft = "24px";
-
-/* Optical alignment adjustment */
-verseTd.style.position = "relative";
-verseTd.style.top = "5px";
-
-    const hebrewTd = document.createElement("td");
-    hebrewTd.textContent = lineData.displayHebrew;
-    hebrewTd.style.verticalAlign = "top";
-    hebrewTd.style.direction = "rtl";
-    hebrewTd.style.textAlign = "right";
-    hebrewTd.style.fontFamily = '"Times New Roman", Times, serif';
-    hebrewTd.style.fontSize = "30px";
-    hebrewTd.style.lineHeight = "1.8";
-    hebrewTd.style.color = "royalblue";
-    hebrewTd.style.paddingBottom = "12px";
-
-    tr.appendChild(verseTd);
-    tr.appendChild(hebrewTd);
-
-    table.appendChild(tr);
-  });
-
-  docDiv.appendChild(table);
-}
-
-function downloadHebrewDocument() {
-  const docDiv = document.getElementById("downloadDocument");
-
-  if (!docDiv || !docDiv.innerHTML.trim()) {
-    alert("No Hebrew document is available. Click Get Hebrew first.");
+  if (!this.dataset.hoverText) {
     return;
   }
 
-  const title = titleInput.value.trim() || buildSelectedRef();
-  const safeName = title.replace(/[\\/:*?"<>|]/g, "_");
+  const rect =
+    this.getBoundingClientRect();
 
-  const html =
-`<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>${escapeHtml(title)}</title>
-</head>
-<body>
-${docDiv.innerHTML}
-</body>
-</html>`;
+  hoverBox.textContent =
+    this.dataset.hoverText;
 
- const blob = new Blob([html], { type: "application/msword;charset=utf-8" });
+  hoverBox.style.left =
+    (rect.right + 12) + "px";
+
+  hoverBox.style.top =
+    rect.top + "px";
+
+  hoverBox.style.display = "block";
+};
+
+tropeCell.onmousemove = function(event) {
+  // fixed position
+};
+
+tropeCell.onmouseleave = function() {
+  document.getElementById("tropeHoverBox").style.display = "none";
+};
+
+}
+
+
+  /* Symbol column */
+const symbolCell = document.createElement("td");
+symbolCell.textContent = buildTropeUnicodeDisplay(name);
+symbolCell.style.fontFamily = "'Times New Roman', serif";
+symbolCell.style.fontSize = "28px";
+symbolCell.style.fontWeight = "bold";
+symbolCell.style.direction = "rtl";
+symbolCell.style.unicodeBidi = "isolate";
+symbolCell.style.textAlign = "center";
+symbolCell.style.color = "maroon";
+
+  /* Family column */
+  const familyCell = document.createElement("td");
+  familyCell.innerHTML = buildFamilyGlyphString(name);
+
+  /* Empty columns */
+  const hebrewCell = document.createElement("td");
+  const notesCell = document.createElement("td");
+
+  row.appendChild(indexCell);
+  row.appendChild(tropeCell);
+row.appendChild(symbolCell);
+  row.appendChild(familyCell);
+
+
+  table.appendChild(row);
+});
+
+}
+
+function buildFamilyGlyphString(tropeName) {
+  const familyMap = tropeFamilyMap[tropeName];
+
+  if (!familyMap) return "";
+
+  let html = "";
+
+  if (familyMap.EtNachTah === true) html += FAMILY_GLYPHS.EtNachTah + "&nbsp;";
+  if (familyMap.SofPasuk === true)  html += FAMILY_GLYPHS.SofPasuk  + "&nbsp;";
+  if (familyMap.Katon === true)     html += FAMILY_GLYPHS.Katon     + "&nbsp;";
+  if (familyMap.Segol === true)     html += FAMILY_GLYPHS.Segol     + "&nbsp;";
+  if (familyMap.Tvir === true)      html += FAMILY_GLYPHS.Tvir      + "&nbsp;";
+  if (familyMap["Rvi'i"] === true)  html += FAMILY_GLYPHS["Rvi'i"]  + "&nbsp;";
+
+  return html.trim();
+}
+
+let currentModalTrope = "";
+
+async function openTropeModal(tropeName) {
+
+  const tropeInfo = findTropeInfo(tropeName);
+
+  let tropeWave = tropeName + ".wav";
+let noteImageName = tropeName + ".jpg";
+
+ if (tropeName === "Munach") {
+  tropeWave = await openMunachChoiceModal();
+
+  if (!tropeWave) {
+    return;
+  }
+
+  noteImageName = tropeWave.replace(".wav", ".jpg");
+
+  if (currentMunachFollowingTrope === "Segol") {
+    noteImageName = "Munach4S.jpg";
+  }
+}
+
+ currentModalTrope = tropeName;
+currentModalTropeWave = tropeWave;
+
+document.getElementById("modalTropeName").textContent = tropeName;
+
+  document.getElementById("modalTropeName").textContent = tropeName;
+ const symbolBox =
+  document.getElementById("modalSymbolBox");
+
+const imageBox =
+  document.getElementById("modalTropeImageBox");
+const noteBox =
+  document.getElementById("modalNoteBox");
+
+if (tropeInfo && tropeInfo.unicode) {
+
+  if (tropeInfo.name === "SofPaSuk") {
+
+   symbolBox.textContent =
+    "\u05C3" +
+    "\u00A0" +
+    "\u05BD";
+  } else if (tropeInfo.name === "Munach-l'garmeih") {
+
+    symbolBox.textContent =
+      String.fromCharCode(parseInt("05C0", 16)) +
+      "\u00A0" +
+      "\u00A0" +
+      String.fromCharCode(parseInt(tropeInfo.unicode, 16));
+
+  } else {
+
+    symbolBox.textContent =
+      "\u00A0" +
+      String.fromCharCode(parseInt(tropeInfo.unicode, 16));
+
+  }
+
+} else {
+
+  symbolBox.textContent = "";
+
+}
+/* Large trope image */
+
+const hebrewName =
+  hebrewTropeNames[tropeName] || tropeName;
+
+imageBox.innerHTML =
+  `<div
+      style="
+        width:100%;
+        height:100%;
+
+        display:flex;
+        justify-content:center;
+        align-items:center;
+
+        direction:rtl;
+        unicode-bidi:isolate;
+
+        font-family:'Times New Roman', serif;
+        font-size:28px;
+        font-weight:bold;
+        color:maroon;
+
+        white-space:nowrap;
+
+        box-sizing:border-box;
+        padding:0 12px;
+
+        text-align:center;
+      "
+    >
+      ${hebrewName}
+    </div>`;
+
+const comboMessage =
+  document.getElementById("comboNoteMessage");
+
+if (comboTropeNames.includes(tropeName)) {
+
+  comboMessage.textContent =
+    tropeName +
+    " is not an actual trope name but has been used to group several actual trope names, as indicated by the lyrics in the music score above, for enhanced audio playback. The actual text portion would be marked with these distinct trope symbols.";
+
+  comboMessage.style.display = "inline-block";
+
+} else {
+
+  comboMessage.textContent = "";
+  comboMessage.style.display = "none";
+
+}
+
+
+document.querySelector(".tropeModalBox")
+  .classList.remove("modalExpanded");
+
+document.getElementById("modalSizeButton")
+  .textContent = "⊕";
+
+document.getElementById("tropeModal").style.display = "block";
+
+const noteImageFile =
+  imagePath +
+  encodeURIComponent(noteImageName) +
+  "?v=" +
+  Date.now();
+
+noteBox.innerHTML =
+  `<div
+      style="
+        width:100%;
+        height:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+      "
+    >
+      <img
+        src="${noteImageFile}"
+        style="
+          max-width:90%;
+          max-height:67%;
+          object-fit:contain;
+        "
+      >
+    </div>`;
+
+
+
+}
+
+function closeTropeModal() {
+  document.getElementById("tropeModal").style.display = "none";
+}
+
+function findTropeInfo(tropeName) {
+  return cleanNames.find(t => t.name === tropeName) ||
+         dirtyNames.find(t => t.name === tropeName) ||
+         null;
+}
+
+document.getElementById("modalCloseButton").onclick = closeTropeModal;
+
+document.getElementById("modalPlayButton").onclick = function () {
+  const wavFile =
+    audioPath +
+    encodeURIComponent(currentModalTropeWave) +
+    "?v=" +
+    Date.now();
+
+  player.src = wavFile;
+
+  player.play();
+};
+/* ==========================================================================
+     3. THE JAVASCRIPT LOGIC ENGINE
+     Add this directly into your global script file or within open <script> tags.
+     ========================================================================== */
+/* Blue panel global state */
+ buildMode = false;
+ lineItems = [];
+let lineCounter = 0;
+
+/* Blue panel DOM references */
+
+let bluePanel = null;
+let dynamicContainer = null;
+let minimizeBtn = null;
+let resetBtn = null;
+let saveBtn = null;
+
+/* Initialize after page elements exist */
+
+function initializeBluePanel() {
+  bluePanel = document.getElementById("blueFormPanel");
+  dynamicContainer = document.getElementById("dynamicLinesContainer");
+  minimizeBtn = document.getElementById("minimizePanelBtn");
+  resetBtn = document.getElementById("resetPanelBtn");
+  saveBtn = document.getElementById("savePanelBtn");
+  addLineBtn = document.getElementById("addLineBtn");
+  minimizeBtn.onclick = minimizeBluePanel;
+  resetBtn.onclick = resetBluePanel;
+  saveBtn.onclick = saveBluePanelData;
+  addLineBtn.onclick = addNewBluePanelLine;
+ if (lineItems.length === 0) {
+  addNewBluePanelLine();
+} else {
+  renderBluePanel();
+}
+}
+
+/* Render panel contents */
+
+function renderBluePanel() {
+ if (!dynamicContainer) {
+    console.error("dynamicContainer is not defined or #dynamicLinesContainer was not found.");
+    return;
+  }
+
+  dynamicContainer.innerHTML = "";
+
+ 
+  lineItems.forEach(renderLineItemRow);
+}
+
+
+function renderLineItemRow(item, index) {
+  const lineDiv = document.createElement("div");
+  lineDiv.className = "data-line-row";
+
+  if (index === activeLineIndex) {
+    lineDiv.classList.add("active-line-row");
+  }
+
+  lineDiv.dataset.id = item.id;
+
+  const lineNumber = document.createElement("span");
+  lineNumber.className = "line-number";
+  lineNumber.textContent = "Line " + (index + 1) + ":";
+
+  const valueInput = document.createElement("div");
+  valueInput.className = "line-value-input";
+  valueInput.contentEditable = "true";
+  valueInput.spellcheck = false;
+
+valueInput.onclick = function(event) {
+  event.stopPropagation();
+
+  activeLineIndex = index;
+
+  document
+    .querySelectorAll(".data-line-row")
+    .forEach(function(row) {
+      row.classList.remove("active-line-row");
+    });
+
+  lineDiv.classList.add("active-line-row");
+};
+
+valueInput.onfocus = function() {
+  activeLineIndex = index;
+
+  document
+    .querySelectorAll(".data-line-row")
+    .forEach(function(row) {
+      row.classList.remove("active-line-row");
+    });
+
+  lineDiv.classList.add("active-line-row");
+};
+
+  valueInput.innerHTML = item.tropes
+    .map(function (tropeName) {
+      return formatTropeNameForDisplay(tropeName);
+    })
+    .join('<span class="trope-delimiter">+</span>');
+
+  valueInput.onblur = function () {
+    const editedText =
+      valueInput.innerText.trim();
+
+    item.tropes =
+      editedText
+        .split("+")
+        .map(function(name) {
+          return name.trim();
+        })
+        .filter(function(name) {
+          return name.length > 0;
+        });
+
+    renderBluePanel();
+  };
+
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className = "delete-line-btn";
+  deleteButton.textContent = "✕";
+
+  deleteButton.onclick = function () {
+    removeLineItem(item.id);
+  };
+
+  lineDiv.appendChild(lineNumber);
+  lineDiv.appendChild(valueInput);
+  lineDiv.appendChild(deleteButton);
+
+  dynamicContainer.appendChild(lineDiv);
+}
+
+/* Data updates */
+
+function addLineItem(cellText) {
+  lineCounter++;
+
+  lineItems.push({
+    id: lineCounter,
+    value: cellText,
+    note: ""
+  });
+
+  renderBluePanel();
+}
+
+function removeLineItem(id) {
+
+  lineItems = lineItems.filter(function (item) {
+    return item.id !== id;
+  });
+
+  if (lineItems.length === 0) {
+    addNewBluePanelLine();
+    return;
+  }
+
+  if (activeLineIndex >= lineItems.length) {
+    activeLineIndex = lineItems.length - 1;
+  }
+
+  renderBluePanel();
+}
+
+function resetBluePanel() {
+  if (confirm("Are you sure you want to completely discard current modifications?")) {
+    lineItems = [];
+   activeLineIndex = 0;
+   addNewBluePanelLine();
+    lineCounter = 0;
+    renderBluePanel();
+  }
+}
+
+function saveBluePanelData() {
+  if (lineItems.length === 0) {
+    alert("Save operation canceled: The workspace is completely blank.");
+    return;
+  }
+
+downloadBluePanelData();
+  console.log(
+    "Transmitting dataset to structural repository database:",
+    JSON.stringify(lineItems)
+  );
+
+  alert("Dataset safely committed to data repository.");
+
+ lineItems = [];
+activeLineIndex = 0;
+addNewBluePanelLine();
+}
+
+/* Mode and panel visibility */
+
+function togglePanelMode() {
+if (!startupModeSelected) {
+return;
+}
+  buildMode = !buildMode;
+
+  if (buildMode) {
+    showBluePanel();
+buildTableOpen = true;
+  } else {
+    hideBluePanel();
+buildTableOpen = false;
+  }
+
+  return buildMode;
+}
+function downloadBluePanelData() {
+
+  const fileBaseName = prompt(
+    "Enter repository name for this trope file:",
+    "NewTropeFile"
+  );
+
+  if (!fileBaseName) {
+    alert("Save canceled: no file name entered.");
+    return;
+  }
+
+  const repositoryData = {
+    name: fileBaseName,
+    description: "Description",
+    lines: lineItems.map(function(item, index) {
+      return {
+        lineName: "Line-" + (index + 1),
+        tropes: item.tropes
+      };
+    })
+  };
+
+  const jsonText =
+    JSON.stringify(repositoryData, null, 2);
+
+  const blob = new Blob(
+    [jsonText],
+    { type: "application/json" }
+  );
+
   const url = URL.createObjectURL(blob);
 
   const link = document.createElement("a");
   link.href = url;
-  link.download = safeName + ".doc";
+  link.download = fileBaseName + ".json";
+
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
 
   URL.revokeObjectURL(url);
 }
+function setBuildMode(newMode) {
+  buildMode = newMode === true;
 
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-function getSourceAttributionText(data, requestedRef) {
-  const version = findHebrewVersion(data);
-
-  const refText = requestedRef || (data && data.ref) || buildSelectedRef();
-//if (selectedTropeType === "dual") {
-  //return "Source: Standard Sefaria Hebrew text with dual accents, retrieved via the Sefaria API";
-//}
-  let versionTitle = "";
-  let versionSource = "";
-
-  if (version) {
-    versionTitle = version.versionTitle || "";
-    versionSource = version.versionSource || "";
+  if (buildMode) {
+    showBluePanel();
+    buildTableOpen = true;
   } else {
-    versionTitle = data.versionTitle || "";
-    versionSource = data.versionSource || "";
+    hideBluePanel();
+    buildTableOpen = false;
   }
 
-  let sourceName = versionTitle || "Default Hebrew text";
+  return buildMode;
+}
+function showBluePanel() {
+  renderBluePanel();
+  bluePanel.classList.remove("hidden");
+}
 
-  if (versionSource.includes("he.wikisource.org")) {
-    sourceName = sourceName
-      .replace("Wikisource -- ", "")
-      .replace("Wikisource_--_", "")
-      .replace(/_/g, " ");
+function hideBluePanel() {
+  bluePanel.classList.add("hidden");
+}
 
-  return "Source: Hebrew Wikisource, " +
-  sourceName +
-  ", retrieved via the Sefaria API";
+function minimizeBluePanel() {
+  setBuildMode(false);
+}
+
+/* Table click helper */
+
+function handleTropeCellClick(tropeName) {
+  if (isBuildModeActive()) {
+    addLineItem(tropeName);
+  } else {
+    openTropeModal(tropeName);
+  }
+}
+
+/* =========================================================
+   BLUE PANEL LINE MANAGEMENT
+   ========================================================= */
+
+lineItems = [];
+let activeLineIndex = 0;
+
+/* Add a brand new empty line and make it active */
+
+function addNewBluePanelLine() {
+
+  lineItems.push({
+   id: Date.now() + Math.random(),
+  tropes: [],
+  });
+
+  activeLineIndex = lineItems.length - 1;
+
+  renderBluePanel();
+}
+
+/* Add a trope/name to the currently active line */
+
+function addTropeToActiveLine(name) {
+
+  /* Safety check in case no line exists yet */
+
+  if (lineItems.length === 0) {
+    addNewBluePanelLine();
   }
 
- return "Source: " +
-  sourceName +
-  ", retrieved via the Sefaria API";
+  const activeLine = lineItems[activeLineIndex];
+
+activeLine.tropes.push(name);
+
+  renderBluePanel();
 }
 
-function updateSourceAttribution(data, requestedRef) {
-  const attributionDiv = document.getElementById("sourceAttribution");
-  if (!attributionDiv) return;
+/* Optional helper to clear all lines */
 
-  attributionDiv.textContent = getSourceAttributionText(data, requestedRef);
+function resetBluePanelLines() {
+
+  lineItems = [];
+  activeLineIndex = 0;
+
+  renderBluePanel();
 }
-function responseHasNoText(data) {
-  const sourceVersion = findHebrewVersion(data);
+const munachChoices = [
+  "Mapach",
+  "Darga",
+  "EtNachTah",
+  "PashTa",
+  "Segol",
+  "T'LishaGadola",
+  "T'LishaK'tanah",
+  "Katon",
+  "Zarka"
+];
 
-  const rawText =
-    data && data.text !== undefined
-      ? data.text
-      : (sourceVersion && sourceVersion.text !== undefined ? sourceVersion.text : null);
+const munachFollowingTropeMap = {
+  Mapach: "Munach4.wav",
+  Darga: "Munach4.wav",
 
-  if (rawText === null || rawText === undefined) return true;
+  EtNachTah: "Munach3.wav",
+  PashTa: "Munach3.wav",
+  Segol: "Munach3.wav",
+  "T'LishaGadola": "Munach3.wav",
+  "T'LishaK'tanah": "Munach3.wav",
+  Katon: "Munach3.wav",
+  Zarka: "Munach3.wav"
+};
 
-  const textArray = flattenSefariaText(rawText);
-  return textArray.length === 0 || textArray.every(function (item) {
-    return !String(item).trim();
+let pendingMunachTropeInfo = null;
+
+function buildMunachChoiceButtons() {
+  const buttonContainer = document.getElementById("munachChoiceButtons");
+
+  if (!buttonContainer) {
+    alert("munachChoiceButtons container not found.");
+    return;
+  }
+
+  buttonContainer.innerHTML = "";
+
+  munachChoices.forEach(function(tropeName) {
+    const btn = document.createElement("button");
+
+    btn.type = "button";
+    btn.textContent = tropeName;
+
+    btn.onclick = function() {
+      selectMunachFollowingTrope(tropeName);
+    };
+
+    buttonContainer.appendChild(btn);
   });
 }
-function replaceColonWithSofPasuq(text) {
-  return text.replace(/:/g, "\u05C3");
+
+function openMunachChoiceModal() {
+  buildMunachChoiceButtons();
+
+  document.getElementById("munachChoiceOverlay").style.display = "flex";
+
+  return new Promise(function(resolve) {
+    resolveMunachChoice = resolve;
+  });
 }
-window.addEventListener("load", () => {
-    const splash = document.getElementById("splash-screen");
-    const mainDOM = document.getElementById("main-app-dom");
 
-    setTimeout(() => {
-        splash.style.opacity = "0";
-        mainDOM.classList.add("visible");
+function closeMunachChoiceModal() {
+  document.getElementById("munachChoiceOverlay").style.display = "none";
+  pendingMunachTropeInfo = null;
+}
 
-        setTimeout(() => {
-            splash.remove();
-        }, 2000);
+function selectMunachFollowingTrope(followingTropeName) {
+  currentMunachFollowingTrope = followingTropeName;
+  let selectedWav;
+  if (followingTropeName === "Darga" || followingTropeName === "Mapach") {
+    selectedWav = "Munach4.wav";
+  } else {
+    selectedWav = "Munach3.wav";
+  }
 
-    }, 5000);
+  document.getElementById("munachChoiceOverlay").style.display = "none";
+
+  if (resolveMunachChoice) {
+    resolveMunachChoice(selectedWav);
+    resolveMunachChoice = null;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+
+console.log("DOMContentLoaded reached for edit button test");
+const editExistingBtn =    document.getElementById("editExistingBtn");
+
+if (editExistingBtn) {
+  editExistingBtn.onclick = function() {
+    //alert("Edit Existing clicked");
+    openActiveFilesSelector(true);
+  };
+}
+  const cancelButton = document.getElementById("munachChoiceCancel");
+
+  if (cancelButton) {
+    cancelButton.onclick = function() {
+      document.getElementById("munachChoiceOverlay").style.display = "none";
+
+      if (resolveMunachChoice) {
+        resolveMunachChoice(null);
+        resolveMunachChoice = null;
+      }
+    };
+  }
+  buildMunachChoiceButtons();
+  initializeBluePanel();
+  initializeTropeHoverBoxClickClose();
+const modalSizeButton =
+  document.getElementById("modalSizeButton");
+
+if (modalSizeButton) {
+
+  modalSizeButton.onclick = function() {
+
+    const modalBox =
+      document.querySelector(".tropeModalBox");
+
+    modalBox.classList.toggle("modalExpanded");
+
+    this.textContent =
+      modalBox.classList.contains("modalExpanded")
+        ? "⊖"
+        : "⊕";
+  };
+
+}
+
+const tropeNoteInfoButton =
+  document.getElementById("tropeNoteInfoButton");
+
+if (tropeNoteInfoButton) {
+
+  tropeNoteInfoButton.onclick =
+    async function(event) {
+
+      event.stopPropagation();
+
+    await openInfoPopupFromJson(
+  "TropeNoteInfo.json"
+);
+
+const popup =
+  document.getElementById("activeFileInfoPopup");
+
+popup.style.display = "block";
+popup.style.zIndex = "400000";
+popup.style.background = "yellow";
+
+      document.getElementById("activeFileInfoPopup")
+        .style.zIndex = "300000";
+
+    };
+
+}const activeFileTitleBox =
+  document.getElementById("activeFileViewerTitle");
+
+ // loadParshaRepositoryIndex();
 });
+
+document.addEventListener("click", function(event) {
+
+  const titleBox =
+    event.target.closest("#activeFileViewerTitle");
+
+  if (!titleBox) {
+    return;
+  }
+
+  viewLyricsMode = !viewLyricsMode;
+
+  toggleLyricsDisplayRows();
+
+});
+async function loadParshaRepositoryIndex() {
+ ipadTrace("ENTER loadParshaDirectory");
+  try {
+    const url =
+      "ParshaRepository/index.json?v=" +
+      new Date().getTime();
+
+    const response = await fetch(url, {
+      cache: "no-store"
+    });
+ipadTrace("FETCH returned status=" + response.status + " ok=" + response.ok);
+    if (!response.ok) {
+      alert("Could not load ParshaRepository/index.json. Status: " + response.status);
+      return;
+    }
+ipadTrace("ABOUT TO parse index.json");
+    activeFiles = await response.json();
+
+  } catch (err) {
+    console.error(err);
+    alert("Error loading Parsha repository index: " + err.message);
+  }
+}
+
+function populateActiveFilesSelect(fileNames, includeLocalChoice) {
+  const select = document.getElementById("activeFilesSelect");
+  select.innerHTML = "";
+
+  fileNames.forEach(function(fileName) {
+    const opt = document.createElement("option");
+    opt.value = fileName;
+    opt.textContent = fileName;
+    select.appendChild(opt);
+  });
+
+  if (includeLocalChoice) {
+    const localOpt = document.createElement("option");
+    localOpt.value = "__LOCAL__";
+    localOpt.textContent = "Local";
+    select.appendChild(localOpt);
+  }
+}
+
+async function chooseLocalParshaRepositoryFolder() {
+  if (!("showDirectoryPicker" in window)) {
+    alert(
+      "Local folder selection requires a browser that supports the directory picker."
+    );
+    return null;
+  }
+
+  try {
+    return await window.showDirectoryPicker({
+      mode: "read"
+    });
+  } catch (err) {
+    if (err && err.name === "AbortError") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+async function getLocalParshaRepositoryHandle(selectedHandle) {
+  if (!selectedHandle) {
+    return null;
+  }
+
+  // Allow either the ParshaRepository folder itself or its parent/root.
+  if (selectedHandle.name === "ParshaRepository") {
+    return selectedHandle;
+  }
+
+  try {
+    return await selectedHandle.getDirectoryHandle("ParshaRepository");
+  } catch (err) {
+    if (err && err.name === "NotFoundError") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+async function buildLocalParshaFileMap(parshaDirectoryHandle) {
+  const fileMap = new Map();
+
+  for await (const [name, handle] of parshaDirectoryHandle.entries()) {
+    if (handle.kind === "file") {
+      fileMap.set(name, handle);
+    }
+  }
+
+  return fileMap;
+}
+
+function getLocalParshaNames(fileMap) {
+  return Array.from(fileMap.keys())
+    .filter(function(fileName) {
+      return fileName.toLowerCase().endsWith(".json") &&
+             fileName.toLowerCase() !== "index.json" &&
+             !fileName.toLowerCase().endsWith("_lyrics.json");
+    })
+    .map(function(fileName) {
+      return fileName.slice(0, -5);
+    })
+    .sort(function(a, b) {
+      return a.localeCompare(b);
+    });
+}
+
+async function activateLocalParshaRepository() {
+  const selectedHandle = await chooseLocalParshaRepositoryFolder();
+
+  if (!selectedHandle) {
+    return false;
+  }
+
+  const parshaDirectoryHandle =
+    await getLocalParshaRepositoryHandle(selectedHandle);
+
+  if (!parshaDirectoryHandle) {
+    alert(
+      "ParshaRepository was not found in the selected folder. " +
+      "Select the folder containing ParshaRepository, or select ParshaRepository itself."
+    );
+    return false;
+  }
+
+  const candidateMap =
+    await buildLocalParshaFileMap(parshaDirectoryHandle);
+
+  const localNames = getLocalParshaNames(candidateMap);
+
+  if (localNames.length === 0) {
+    alert("No Parsha JSON files were found in ParshaRepository.");
+    return false;
+  }
+
+  localParshaFiles = candidateMap;
+  parshaRepositorySource = "local";
+  activeFiles = localNames;
+  populateActiveFilesSelect(activeFiles, false);
+
+  console.log("Local ParshaRepository selected.");
+  console.log("Local Parsha files:", activeFiles);
+  return true;
+}
+
+async function readParshaRepositoryJson(fileName, optionalFile) {
+  if (parshaRepositorySource === "local") {
+    const localFile = localParshaFiles.get(fileName);
+
+    if (!localFile) {
+      if (optionalFile) {
+        return null;
+      }
+      throw new Error("Could not find local file " + fileName);
+    }
+
+    const file = await localFile.getFile();
+    return JSON.parse(await file.text());
+  }
+
+  const response = await fetch(
+    "ParshaRepository/" +
+    encodeURIComponent(fileName) +
+    "?v=" +
+    Date.now(),
+    { cache: "no-store" }
+  );
+
+  if (!response.ok) {
+    if (optionalFile) {
+      return null;
+    }
+    throw new Error(
+      "Could not load " + fileName + ". Status: " + response.status
+    );
+  }
+
+  return await response.json();
+}
+
+async function openActiveFilesSelector(
+  useEditMode = false
+) {
+
+  editExistingMode = useEditMode;
+
+  if (!startupModeSelected) {
+    return;
+  }
+
+  ipadTrace(
+    "ENTER openActiveFilesSelector"
+  );
+
+  const popup =
+    document.getElementById(
+      "activeFilesPopup"
+    );
+
+  const select =
+    document.getElementById(
+      "activeFilesSelect"
+    );
+
+  /*
+    If Local has already been selected during
+    this page load, keep using the existing
+    local directory and local Parsha list.
+  */
+  if (parshaRepositorySource === "local") {
+
+    populateActiveFilesSelect(
+      activeFiles,
+      false
+    );
+
+    popup.style.display = "block";
+    return;
+  }
+
+  /*
+    We have not selected Local during this
+    page load, so show the normal GitHub
+    repository plus the Local choice.
+  */
+  await loadParshaRepositoryIndex();
+
+  if (
+    !activeFiles ||
+    activeFiles.length === 0
+  ) {
+    alert(
+      "No active files were loaded from index.json."
+    );
+    return;
+  }
+
+  populateActiveFilesSelect(
+    activeFiles,
+    true
+  );
+
+  select.onchange =
+    async function() {
+
+      if (
+        select.value !== "__LOCAL__"
+      ) {
+        return;
+      }
+
+      const localActivated =
+        await activateLocalParshaRepository();
+
+      /*
+        If the user cancels the directory
+        picker, remain in GitHub mode.
+      */
+      if (!localActivated) {
+
+        parshaRepositorySource =
+          "github";
+
+        await loadParshaRepositoryIndex();
+
+        populateActiveFilesSelect(
+          activeFiles,
+          true
+        );
+      }
+    };
+
+  popup.style.display = "block";
+}
+
+function closeActiveFilesSelector() {
+  document.getElementById("activeFilesPopup").style.display = "none";
+}
+function populateBluePanelFromFile(data) {
+
+  const sourceLines =
+    data.lines || data.lineItems || data;
+
+  if (!sourceLines || sourceLines.length === 0) {
+    alert("Selected file does not contain editable line data.");
+    return;
+  }
+
+  lineItems = sourceLines.map(function(lineItem, index) {
+    return {
+      id: Date.now() + index + Math.random(),
+      tropes: lineItem.tropes || []
+    };
+  });
+
+  activeLineIndex = 0;
+
+  showBluePanel();
+  renderBluePanel();
+
+  console.log(
+    "Blue panel populated from existing file."
+  );
+}
+async function loadPocketTorahAudioDurationFromElement(audioPath) {
+  return await new Promise(function(resolve, reject) {
+    const audio = document.createElement("audio");
+
+    audio.preload = "metadata";
+    audio.src = audioPath;
+
+    audio.onloadedmetadata = function() {
+      resolve(audio.duration);
+    };
+
+    audio.onerror = function() {
+      reject(
+        new Error(
+          "Could not load Pocket Torah audio metadata: " +
+          audioPath
+        )
+      );
+    };
+  });
+}
+
+async function loadSelectedActiveFile() {
+ ipadTrace("ENTER SelectedActiveFile");
+  const selectedFile = document.getElementById("activeFilesSelect").value;
+
+  if (!selectedFile) {
+    alert("No file selected.");
+    return;
+  }
+ const jsonFile =
+    selectedFile.endsWith(".json")
+      ? selectedFile
+      : selectedFile + ".json";
+
+  try {
+console.log("selectedFile =", selectedFile);
+console.log("jsonFile =", jsonFile);
+    const data =
+      await readParshaRepositoryJson(jsonFile, false);
+// Test Diag
+
+const lyricsData =
+  await loadMatchingLyricsFile(selectedFile);
+
+if (!editExistingMode) {
+  displayVowels = confirm(
+    "Confirm displaying vowels on YHVH if contained in source reference.\n\nClick Cancel to omit vowels."
+  );
+}
+
+ptEnabled = false;
+usePocketTorah = false;
+ptParshaName = "";
+ptLineData = [];
+ptPlaybackSegments = [];
+pocketTorahCheckbox.checked = false;
+pocketTorahControl.style.display = "none";
+
+if (
+  lyricsData &&
+  typeof lyricsData.title === "string" &&
+  lyricsData.title.endsWith("-PT")
+) {
+  ptEnabled = true;
+  ptParshaName = lyricsData.title.slice(0, -3);
+
+  // A newly loaded PT Lyrics file defines a new Pocket Torah reading.
+  // PT.js owns the reset/source policy; TropePlayer owns this reset trigger.
+  await PocketTorah.resetSourceForNewReading();
+
+  const preparedPocketTorah =
+    await PocketTorah.runWithSourceFallback(function() {
+      return PocketTorah.preparePlaybackData(
+        ptParshaName,
+        lyricsData.lines,
+        loadPocketTorahAudioDurationFromElement
+      );
+    });
+
+  ptLineData = preparedPocketTorah.lineData;
+  ptPlaybackSegments = preparedPocketTorah.playbackSegments;
+
+  pocketTorahControl.style.display = "";
+
+  console.log(
+    "Pocket Torah portion:",
+    ptParshaName
+  );
+
+  console.log(
+    "Pocket Torah lines:",
+    ptLineData
+  );
+}
+
+buildActiveLyricsLines(lyricsData);
+if (editExistingMode) {
+
+  populateBluePanelFromFile(data);
+
+  editExistingMode = false;
+
+} else {
+
+  openActiveFileViewer(selectedFile, data);
+
+}
+
+closeActiveFilesSelector();
+
+  } catch (err) {
+    console.error(err);
+    alert("Error loading selected active file.");
+  }
+}
+async function loadMatchingLyricsFile(selectedFile) {
+
+ipadTrace("ENTER loadMatchingLyrcsFile");
+const baseName =
+  selectedFile.endsWith(".json")
+    ? selectedFile.replace(".json", "")
+    : selectedFile;
+
+
+  const lyricsFile =
+  baseName + "_Lyrics.json";
+
+console.log("selectedFile for lyrics =", selectedFile);
+console.log("lyricsFile =", lyricsFile);
+
+  try {
+    const lyricsData =
+      await readParshaRepositoryJson(lyricsFile, true);
+
+    if (!lyricsData) {
+      console.warn("No matching lyrics file found:", lyricsFile);
+      return null;
+    }
+
+    return lyricsData;
+
+  } catch (err) {
+    console.warn("Error loading lyrics file:", lyricsFile, err);
+    return null;
+  }
+}
+
+function buildActiveLyricsLines(lyricsData) {
+  activeLyricsLines = [];
+
+  if (!lyricsData || !lyricsData.lines) {
+    return;
+  }
+
+  lyricsData.lines.forEach(function(lineItem, lineIndex) {
+    const lineNumber = lineItem.line || lineIndex + 1;
+
+    activeLyricsLines[lineNumber] =
+      lineItem.words || [];
+  });
+}
+
+function normalizeHebrewDisplayWord(hebrew) {
+
+  if (!hebrew) return "";
+
+  return String(hebrew)
+    .trim()
+    .replace(/\s*\u05C0/g, " \u05C0");   // pasik
+}
+
+function openActiveFileViewer(fileName, data) {
+  viewLyricsMode = false;
+  const overlay =
+    document.getElementById("activeFileViewerOverlay");
+
+  const titleBox =
+    document.getElementById("activeFileViewerTitle");
+
+  const linesContainer =
+    document.getElementById("activeFileLinesContainer");
+  titleBox.textContent =
+    fileName.replace(".json", "");
+document.getElementById("activeFileInfoIconHolder").innerHTML =
+  buildInfoIconSvg();
+
+document.getElementById("activeFileInfoIcon").onclick = function(event) {
+  event.stopPropagation();
+
+ openActiveFileInfoPopup();
+
+};
+
+  linesContainer.innerHTML = "";
+
+  buildActiveFileLines(data);
+
+  for (let lineNumber = 1; lineNumber < activeFileLines.length; lineNumber++) {
+
+    if (!activeFileLines[lineNumber]) {
+      continue;
+    }
+
+    const lineRow = document.createElement("div");
+lineRow.className = "active-file-line-row";
+
+lineRow.style.cursor = "pointer";
+
+lineRow.onclick = function() {
+
+  if (audioPlaybackMode !== null) {
+    return;
+  }
+
+  audioPlaybackMode = "trope";
+
+  if (document.getElementById("notePlaybackCheckbox").checked) {
+
+    playActiveFileLine(lineNumber);
+
+  } else {
+
+    playSmooth(lineNumber);
+
+  }
+
+};
+    const lineNumberBox = document.createElement("div");
+    lineNumberBox.className = "active-file-line-number";
+    lineNumberBox.textContent = lineNumber;
+
+    const lineBox = document.createElement("div");
+    lineBox.className = "active-file-line-box";
+
+   lineBox.innerHTML =
+  activeFileLines[lineNumber]
+    .map(function(item) {
+
+      return item.displayNames
+        .map(function(name) {
+          return formatTropeNameForDisplay(name);
+        })
+        .join("");
+
+    })
+    .join(" + ");
+
+    lineRow.appendChild(lineNumberBox);
+    lineRow.appendChild(lineBox);
+
+    linesContainer.appendChild(lineRow);
+const lyricsRow = document.createElement("div");
+lyricsRow.className = "active-file-lyrics-row";
+lyricsRow.dataset.lineNumber = lineNumber;
+
+lyricsRow.onclick = function(event) {
+
+  event.stopPropagation();
+  if (audioPlaybackMode !== null) {
+    return;
+  }
+
+  audioPlaybackMode = "lyrics";
+if (usePocketTorah) {
+  playPocketTorahAudio(lineNumber);
+  return;
+}
+
+lyricsBox.classList.add("lyrics-playing");
+
+  showTropeTrainerCreditLine(lineNumber);
+
+  const sectionName =
+    document.getElementById("activeFileViewerTitle")
+      .textContent
+      .trim();
+
+  const wavPath =
+    audioPath +
+    encodeURIComponent(sectionName) +
+    "/" +
+    encodeURIComponent(sectionName + "_line" + lineNumber + ".wav");
+
+  playTropeTrainerLineAudio(wavPath, lineNumber);
+
+};
+
+const lyricsBox = document.createElement("div");
+lyricsBox.className = "active-file-lyrics-box";
+
+lyricsBox.innerHTML = "";
+
+if (activeLyricsLines[lineNumber]) {
+
+  activeLyricsLines[lineNumber].forEach(function(wordItem, wordIndex) {
+
+    const wordSpan = document.createElement("span");
+
+    wordSpan.className = "lyrics-hebrew-word";
+
+wordSpan.textContent =
+  normalizeHebrewDisplayWord(
+   displayVowels
+          ? (wordItem.hebrew || "")
+            : stripYHVHVowelsOnly(wordItem.hebrew || "")
+  );
+
+if (isYHVH(wordItem.hebrew)) {
+  wordSpan.classList.add("yhvh-highlight");
+}
+    wordSpan.dataset.translit =
+      wordItem.translit || "";
+
+    wordSpan.dataset.wordIndex = wordIndex;if (!touchModeActive) {
+
+wordSpan.onmouseenter = function(event) {
+  const hoverBox = document.getElementById("tropeHoverBox");
+  const rect = wordSpan.getBoundingClientRect();
+
+  hoverBox.textContent =
+    wordItem.translit || "[no transliteration]";
+
+  hoverBox.style.position = "fixed";
+  hoverBox.style.left =
+    (rect.left + rect.width / 2) + "px";
+  hoverBox.style.top =
+    (rect.bottom + 8) + "px";
+
+  hoverBox.style.transform = "translateX(-50%)";
+  hoverBox.style.zIndex = "300000";
+  hoverBox.style.display = "block";
+};
+
+wordSpan.onmousemove = function(event) {
+  // Do nothing. Position stays centered under the word.
+};
+
+wordSpan.onmouseleave = function() {
+  document.getElementById("tropeHoverBox").style.display = "none";
+};}
+if (touchModeActive) {
+
+  let lyricsTouchTimer = null;
+
+  wordSpan.addEventListener("touchstart", function(event) {
+
+    const touch = event.touches[0];
+
+    lyricsTouchTimer = setTimeout(function() {
+    //alert("Touch timer fired");
+
+ const hoverBox =
+ document.getElementById("tropeHoverBox");
+
+ hoverBox.textContent =
+  "Translit: " + (wordItem.translit || "[blank]");
+
+hoverBox.style.display = "block";
+hoverBox.style.position = "fixed";
+
+hoverBox.style.left =
+  Math.max(10, touch.clientX - 120) + "px";
+
+hoverBox.style.top =
+  Math.max(10, touch.clientY - 90) + "px";
+
+hoverBox.style.transform = "";
+hoverBox.style.zIndex = "300000";
+hoverBox.style.pointerEvents = "auto";
+    }, 300);
+
+  });
+
+}
+
+    lyricsBox.appendChild(wordSpan);
+
+if (wordIndex < activeLyricsLines[lineNumber].length - 1) {
+
+  const MAQAF = "\u05BE";
+
+  const currentHebrew =
+    (wordItem.hebrew || "").trim();
+
+  const nextHebrew =
+    (activeLyricsLines[lineNumber][wordIndex + 1].hebrew || "").trim();
+
+  const suppressSpace =
+    currentHebrew.endsWith(MAQAF) ||
+    nextHebrew.startsWith(MAQAF);
+
+  if (!suppressSpace) {
+    lyricsBox.appendChild(
+      document.createTextNode(" ")
+    );
+  }
+}
+  });
+}
+
+lyricsRow.appendChild(lyricsBox);
+linesContainer.appendChild(lyricsRow);
+  }
+toggleLyricsDisplayRows();
+  overlay.style.display = "block";
+}
+
+function playPocketTorahAll() {
+  if (playPocketTorahAll.stopHandler) {
+
+    player.pause();
+
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAll.stopHandler
+    );
+
+       playPocketTorahAll.stopHandler = null;
+
+    clearLyricsPlayingHighlight();
+
+    document.getElementById(
+      "hebrewLinePopup"
+    ).style.display = "none";
+
+    audioPlaybackMode = null;
+    setPlayAllButtonStopped();
+
+    return;
+  }
+
+audioPlaybackMode = "playAll";
+  const segment =
+    ptPlaybackSegments[0];
+
+  if (!segment) {
+    console.error(
+      "Pocket Torah playback segment not found."
+    );
+audioPlaybackMode = null;
+    return;
+  }
+
+  /*
+    Remove an individual-verse stop handler
+    if one is still attached.
+  */
+  if (playPocketTorahAudio.stopHandler) {
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAudio.stopHandler
+    );
+
+    playPocketTorahAudio.stopHandler = null;
+  }
+
+  player.pause();
+
+  player.src =
+    segment.audioPath;
+
+  player.currentTime =
+    segment.startTime;
+  highlightLyricsLineForPlayAll(1);
+  scrollLyricsLineIntoView(1);
+  showTropeTrainerCreditLine(1);
+
+let currentLineNumber = 1;
+playPocketTorahAll.stopHandler =
+  function() {
+    for (
+      let lineIndex = currentLineNumber;
+      lineIndex < ptLineData.length;
+      lineIndex++
+    ) {
+      const nextLine =
+        ptLineData[lineIndex];
+
+      if (
+        player.currentTime >=
+        nextLine.startTime
+      ) {
+        currentLineNumber =
+          lineIndex + 1;
+
+        highlightLyricsLineForPlayAll(
+          currentLineNumber
+        );
+
+        scrollLyricsLineIntoView(
+          currentLineNumber
+        );
+
+        showTropeTrainerCreditLine(
+          currentLineNumber
+        );
+      } else {
+        break;
+      }
+    }
+    if (
+      player.currentTime >=
+      segment.endTime
+    ) {
+      player.pause();
+
+player.removeEventListener(
+  "timeupdate",
+  playPocketTorahAll.stopHandler
+);
+
+playPocketTorahAll.stopHandler = null;
+
+clearLyricsPlayingHighlight();
+
+document.getElementById(
+  "hebrewLinePopup"
+).style.display = "none";
+
+audioPlaybackMode = null;
+setPlayAllButtonStopped();
+    }  };
+
+player.addEventListener(
+  "timeupdate",
+  playPocketTorahAll.stopHandler
+);
+setPlayAllButtonRunning();
+  player.play();
+
+  console.log(
+    "Pocket Torah Play All started:",
+    segment
+  );
+}
+function closeActiveFileViewer() {
+
+  // Stop any playback using the normal audio player.
+  stopPlayAllLyrics();
+
+  // Remove any Pocket Torah individual-line stop handler.
+  if (playPocketTorahAudio.stopHandler) {
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAudio.stopHandler
+    );
+
+    playPocketTorahAudio.stopHandler = null;
+  }
+
+  // Remove any Pocket Torah Play All stop handler.
+  if (playPocketTorahAll.stopHandler) {
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAll.stopHandler
+    );
+
+    playPocketTorahAll.stopHandler = null;
+  }
+
+  // Stop Smooth trope playback if it is active.
+  if (smoothSourceNode) {
+    try {
+      smoothSourceNode.stop();
+    } catch (err) {
+      console.warn(
+        "Could not stop Smooth playback:",
+        err
+      );
+    }
+
+    smoothSourceNode = null;
+  }
+
+  // Clear any remaining audio callbacks.
+  player.onended = null;
+  player.onerror = null;
+
+  // Restore playback to the idle state.
+  audioPlaybackMode = null;
+
+  clearLyricsPlayingHighlight();
+  setPlayAllButtonStopped();
+
+  document.getElementById(
+    "hebrewLinePopup"
+  ).style.display = "none";
+
+  lineCount = 0;
+
+  document.getElementById(
+    "activeFileViewerOverlay"
+  ).style.display = "none";
+}
+async function loadParshaFile(fileName) {
+  try {
+    const data =
+      await readParshaRepositoryJson(fileName, false);
+
+    // action here with the loaded file data
+    console.log(data);
+    return data;
+
+  } catch (err) {
+    console.error(err);
+    alert("Could not load " + fileName);
+    return null;
+  }
+}
+
+function toggleLyricsDisplayRows() {
+
+  lineCount = 0;
+
+  const playBtn =
+    document.getElementById("playAllLyricsBtn");
+
+  document
+    .querySelectorAll(".active-file-lyrics-row")
+    .forEach(function(row) {
+
+      if (viewLyricsMode) {
+        row.style.display = "block";
+        lineCount++;
+      } else {
+        row.style.display = "none";
+      }
+
+    });
+
+  if (playBtn) {
+    playBtn.style.display =
+      viewLyricsMode ? "inline-block" : "none";
+  }
+}
+
+function buildActiveFileLines(data) {
+  const sourceLines = data.lines || data.lineItems || data;
+  activeFileLines = [];
+  sourceLines.forEach(function(item, lineIndex) {
+    const lineNumber = lineIndex + 1;
+    activeFileLines[lineNumber] = [];
+    const tropes = item.tropes || item.value || item.line || [];
+    for (let i = 0; i < tropes.length; i++) {
+      let tropeName = tropes[i];
+      if (tropeName.endsWith("*")) {
+        const firstName =
+          tropeName.replace("*", "");
+        const secondName =
+          tropes[i + 1];
+
+        activeFileLines[lineNumber].push({
+          displayNames: [firstName, secondName],
+          playbackName: firstName + secondName
+        });
+
+        i++;
+
+      } else {
+
+        activeFileLines[lineNumber].push({
+          displayNames: [tropeName],
+          playbackName: tropeName
+        });
+
+      }
+
+    }
+
+  });
+
+}
+
+function playActiveFileLine(lineNumber) {
+
+  const tropes = activeFileLines[lineNumber];
+
+  if (!tropes || tropes.length === 0) {
+    return;
+  }
+
+  showHebrewLineForPlayback(tropes);
+
+  playTropeSequence(tropes)
+    .then(function() {
+
+      document.getElementById(
+        "hebrewLinePopup"
+      ).style.display = "none";
+audioPlaybackMode = null;
+    });
+}
+
+async function playTropeSequence(tropes) {
+
+  console.log("Starting trope sequence. Count:", tropes.length);
+  console.log("Tropes array:", tropes);
+
+  for (let i = 0; i < tropes.length; i++) {
+
+    highlightHebrewTrope(i);
+
+    const playbackName =
+      tropes[i].playbackName;
+
+   const wavFile =
+  audioPath +
+  encodeURIComponent(playbackName + ".wav") +
+  "?v=" +
+  Date.now();
+
+    console.log(
+      "About to play index:",
+      i,
+      "playbackName:",
+      playbackName,
+      "wavFile:",
+      wavFile
+    );
+
+    await playOneWav(wavFile);
+
+    console.log(
+      "Finished playing index:",
+      i,
+      "playbackName:",
+      playbackName
+    );
+  }
+
+  console.log("Completed full trope sequence.");
+
+  highlightHebrewTrope(-1);
+}
+
+function playOneWav(wavFile) {
+  return new Promise(function(resolve) {
+
+    player.pause();
+
+    player.onended = null;
+    player.onerror = null;
+
+    player.src = wavFile;
+    player.load();
+
+    player.onended = function() {
+      resolve();
+    };
+
+    player.onerror = function() {
+      console.error("Could not play:", wavFile, player.error);
+      resolve();
+    };
+
+    const playPromise = player.play();
+
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(function(err) {
+        console.error("player.play() failed:", wavFile, err);
+        resolve();
+      });
+    }
+  });
+}
+function showHebrewLineForPlayback(tropes) {
+
+  const hebrewText =
+    tropes
+      .map(function(tropeName) {
+        return hebrewTropeNames[tropeName] || tropeName;
+      })
+      .join("\u00A0\u00A0");
+
+ const hebrewLineBox =
+  document.getElementById("hebrewLineText");
+hebrewLineBox.style.fontSize = "34px";
+hebrewLineBox.innerHTML = "";
+
+tropes.forEach(function(item, index) {
+  const span = document.createElement("span");
+
+span.textContent =
+  item.displayNames
+    .map(function(name) {
+      return hebrewTropeNames[name] || name;
+    })
+    .join("");
+  span.dataset.tropeIndex = index;
+
+  span.className = "hebrew-trope-span";
+
+  hebrewLineBox.appendChild(span);
+
+  if (index < tropes.length - 1) {
+    hebrewLineBox.appendChild(
+      document.createTextNode("\u00A0\u00A0")
+    );
+  }
+
+});
+
+  document.getElementById("hebrewLinePopup").style.display =
+    "block";
+}
+
+function highlightHebrewTrope(index) {
+
+  document
+    .querySelectorAll(".hebrew-trope-span")
+    .forEach(function(span) {
+      span.classList.remove("hebrew-trope-active");
+    });
+
+  const activeSpan =
+    document.querySelector(
+      '.hebrew-trope-span[data-trope-index="' + index + '"]'
+    );
+
+  if (activeSpan) {
+    activeSpan.classList.add("hebrew-trope-active");
+  }
+}
+const notePlaybackCheckbox =
+  document.getElementById("notePlaybackCheckbox");
+
+const smoothPlaybackCheckbox =
+  document.getElementById("smoothPlaybackCheckbox");
+
+const pocketTorahControl =
+  document.getElementById("pocketTorahControl");
+
+const pocketTorahCheckbox =
+  document.getElementById("pocketTorahCheckbox");
+
+pocketTorahCheckbox.addEventListener("change", function() {
+  usePocketTorah = pocketTorahCheckbox.checked;
+});
+
+function playPocketTorahAudio(lineNumber) {
+
+  const lineData =
+    ptLineData[lineNumber - 1];
+
+  if (!lineData) {
+    console.error(
+      "Pocket Torah line data not found:",
+      lineNumber
+    );
+    return;
+  }
+
+  /*
+    Remove the stop monitor from any previous
+    Pocket Torah line playback.
+  */
+  if (playPocketTorahAudio.stopHandler) {
+    player.removeEventListener(
+      "timeupdate",
+      playPocketTorahAudio.stopHandler
+    );
+
+    playPocketTorahAudio.stopHandler = null;
+  }
+
+  player.pause();
+
+  player.src =
+    lineData.audioPath;
+
+  player.currentTime =
+    lineData.startTime;
+
+  /*
+    Stop when this verse reaches its prepared
+    Pocket Torah end time.
+  */
+
+  highlightLyricsLineForPlayAll(lineNumber);
+  scrollLyricsLineIntoView(lineNumber);
+  showTropeTrainerCreditLine(lineNumber);
+  playPocketTorahAudio.stopHandler =
+    function() {
+
+      if (
+        player.currentTime >=
+        lineData.endTime
+      ) {
+        player.pause();
+
+        player.removeEventListener(
+          "timeupdate",
+          playPocketTorahAudio.stopHandler
+        );
+
+               playPocketTorahAudio.stopHandler = null;
+
+        clearLyricsPlayingHighlight();
+
+        document.getElementById(
+          "hebrewLinePopup"
+        ).style.display = "none";
+
+        audioPlaybackMode = null;
+      }
+    };
+
+  player.addEventListener(
+    "timeupdate",
+    playPocketTorahAudio.stopHandler
+  );
+
+  player.play();
+
+  console.log(
+    "Pocket Torah line playback:",
+    lineNumber,
+    lineData
+  );
+}
+
+notePlaybackCheckbox.addEventListener("change", function() {
+
+  if (notePlaybackCheckbox.checked) {
+    smoothPlaybackCheckbox.checked = false;
+  } else {
+    smoothPlaybackCheckbox.checked = true;
+  }
+
+});
+
+smoothPlaybackCheckbox.addEventListener("change", function() {
+
+  if (smoothPlaybackCheckbox.checked) {
+    notePlaybackCheckbox.checked = false;
+  } else {
+    notePlaybackCheckbox.checked = true;
+  }
+
+});
+
+async function playSmooth(lineNumber) {
+ipadTrace("ENTER playSmooth");
+  const lineItems = activeFileLines[lineNumber];
+
+  if (!lineItems || lineItems.length === 0) {
+    return;
+  }
+
+  showHebrewLineForPlayback(lineItems);
+
+  if (!smoothAudioContext) {
+    smoothAudioContext = new AudioContext();
+  }
+
+  if (smoothSourceNode) {
+    smoothSourceNode.stop();
+    smoothSourceNode = null;
+  }
+
+  const buffers = [];
+
+  for (let i = 0; i < lineItems.length; i++) {
+
+    const playbackName = lineItems[i].playbackName;
+
+    const wavPath =
+      audioPath +
+      encodeURIComponent(playbackName + ".wav");
+
+    const response = await fetch(
+  wavPath + "?v=" + Date.now(),
+  { cache: "no-store" }
+);
+
+    if (!response.ok) {
+      alert("Could not load " + wavPath);
+audioPlaybackMode = null;
+      return;
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+
+    const audioBuffer =
+      await smoothAudioContext.decodeAudioData(arrayBuffer);
+
+    buffers.push(audioBuffer);
+  }
+
+  const mergedBuffer =
+    mergeAudioBuffers(buffers, smoothAudioContext);
+
+  smoothSourceNode =
+    smoothAudioContext.createBufferSource();
+
+  smoothSourceNode.buffer = mergedBuffer;
+
+  smoothSourceNode.connect(
+    smoothAudioContext.destination
+  );
+
+ smoothSourceNode.onended = function() {
+  document.getElementById("hebrewLinePopup").style.display = "none";
+  smoothSourceNode = null;
+  audioPlaybackMode = null;
+};
+
+  smoothSourceNode.start();
+}
+
+function mergeAudioBuffers(buffers, audioContext) {
+
+  const numberOfChannels =
+    buffers[0].numberOfChannels;
+
+  const sampleRate =
+    buffers[0].sampleRate;
+
+  let totalLength = 0;
+
+  buffers.forEach(function(buffer) {
+    totalLength += buffer.length;
+  });
+
+  const mergedBuffer =
+    audioContext.createBuffer(
+      numberOfChannels,
+      totalLength,
+      sampleRate
+    );
+
+  let offset = 0;
+
+  buffers.forEach(function(buffer) {
+
+    for (let channel = 0; channel < numberOfChannels; channel++) {
+
+      const outputData =
+        mergedBuffer.getChannelData(channel);
+
+      const inputData =
+        buffer.getChannelData(channel);
+
+      outputData.set(inputData, offset);
+    }
+
+    offset += buffer.length;
+  });
+
+  return mergedBuffer;
+}
+function downloadAudioBufferAsWav(audioBuffer, fileName) {
+
+  const wavBlob =
+    audioBufferToWavBlob(audioBuffer);
+
+  const url =
+    URL.createObjectURL(wavBlob);
+
+  const link =
+    document.createElement("a");
+
+  link.href = url;
+  link.download = fileName;
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}
+function audioBufferToWavBlob(buffer) {
+
+  const numberOfChannels =
+    buffer.numberOfChannels;
+
+  const sampleRate =
+    buffer.sampleRate;
+
+  const format = 1;
+  const bitDepth = 16;
+
+  let result;
+
+  if (numberOfChannels === 2) {
+
+    result = interleave(
+      buffer.getChannelData(0),
+      buffer.getChannelData(1)
+    );
+
+  } else {
+
+    result = buffer.getChannelData(0);
+
+  }
+
+  const bytesPerSample =
+    bitDepth / 8;
+
+  const blockAlign =
+    numberOfChannels * bytesPerSample;
+
+  const wavBuffer =
+    new ArrayBuffer(
+      44 + result.length * bytesPerSample
+    );
+
+  const view =
+    new DataView(wavBuffer);
+
+  writeString(view, 0, "RIFF");
+
+  view.setUint32(
+    4,
+    36 + result.length * bytesPerSample,
+    true
+  );
+
+  writeString(view, 8, "WAVE");
+
+  writeString(view, 12, "fmt ");
+
+  view.setUint32(16, 16, true);
+
+  view.setUint16(20, format, true);
+
+  view.setUint16(22, numberOfChannels, true);
+
+  view.setUint32(24, sampleRate, true);
+
+  view.setUint32(
+    28,
+    sampleRate * blockAlign,
+    true
+  );
+
+  view.setUint16(32, blockAlign, true);
+
+  view.setUint16(34, bitDepth, true);
+
+  writeString(view, 36, "data");
+
+  view.setUint32(
+    40,
+    result.length * bytesPerSample,
+    true
+  );
+
+  floatTo16BitPCM(view, 44, result);
+
+  return new Blob(
+    [view],
+    { type: "audio/wav" }
+  );
+}
+function writeString(view, offset, string) {
+
+  for (let i = 0; i < string.length; i++) {
+
+    view.setUint8(
+      offset + i,
+      string.charCodeAt(i)
+    );
+
+  }
+
+}
+function floatTo16BitPCM(output, offset, input) {
+
+  for (let i = 0; i < input.length; i++, offset += 2) {
+
+    let s =
+      Math.max(-1, Math.min(1, input[i]));
+
+    output.setInt16(
+      offset,
+      s < 0 ? s * 0x8000 : s * 0x7FFF,
+      true
+    );
+
+  }
+
+}
+function interleave(left, right) {
+
+  const length =
+    left.length + right.length;
+
+  const result =
+    new Float32Array(length);
+
+  let inputIndex = 0;
+
+  for (let index = 0; index < length;) {
+
+    result[index++] = left[inputIndex];
+    result[index++] = right[inputIndex];
+
+    inputIndex++;
+  }
+
+  return result;
+}
+function buildInfoIconSvg() {
+  return `
+    <svg
+      id="activeFileInfoIcon"
+      class="active-file-info-icon"
+      fill="currentColor"
+      width="22"
+      height="22"
+      viewBox="0 0 16 16"
+      xmlns="http://www.w3.org/2000/svg"
+      title="Information"
+    >
+      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+      <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"></path>
+    </svg>
+  `;
+}
+async function openActiveFileInfoPopup() {
+await loadInfoPopupText(
+  "TropeLyricsInfo.json"
+);
+  document.getElementById("activeFileInfoPopup").style.display = "block";
+}
+function closeActiveFileInfoPopup() {
+  document.getElementById("activeFileInfoPopup").style.display = "none";
+}
+
+function showTropeTrainerCreditLine(lineNumber) {
+
+  const popup = document.getElementById("hebrewLinePopup");
+  const messageBox = document.getElementById("hebrewLineText");
+
+  messageBox.style.fontSize = "24px";
+
+   if (usePocketTorah) {
+    messageBox.innerHTML =
+      "Audio playback for line " +
+      lineNumber +
+      " is from an API connection to PocketTorah.com";
+  } else {
+    messageBox.innerHTML =
+      "Audio playback for line " +
+      lineNumber +
+      " is derived from a recording of an audio segment originally generated by TropeTrainer.com";
+  }
+  if (lineNumber === 1) {
+    popup.style.top = "420px";
+  } else {
+    popup.style.top = "200px";
+  }
+
+  popup.style.display = "block";
+}
+
+function getHoverText(tropeName) {
+  const tropeInfo = findTropeInfo(tropeName);
+
+  if (tropeInfo && tropeInfo.hover) {
+    return tropeInfo.hover;
+  }
+
+  if (comboHoverText[tropeName]) {
+    return comboHoverText[tropeName];
+  }
+
+  return "";
+}
+
+function initializeTropeHoverBoxClickClose() {
+  const hoverBox = document.getElementById("tropeHoverBox");
+
+  if (!hoverBox) {
+    return;
+  }
+
+  hoverBox.style.cursor = "pointer";
+
+  hoverBox.onclick = function(event) {
+    event.stopPropagation();
+    hoverBox.style.display = "none";
+  };
+}
+
+
+function playTropeTrainerLineAudio(wavPath, lineNumber) {
+  console.log("Playing TropeTrainer audio:");
+  console.log("Line:", lineNumber);
+  console.log("WAV path:", wavPath);
+
+  player.pause();
+
+  player.onended = null;
+  player.onerror = null;
+
+  player.src = wavPath + "?v=" + Date.now();
+  player.load();
+
+  player.onended = function() {
+    clearLyricsPlayingHighlight();
+
+    document.getElementById("hebrewLinePopup").style.display =
+      "none";
+  audioPlaybackMode = null;
+  };
+
+  player.onerror = function() {
+    clearLyricsPlayingHighlight();
+
+    console.error(
+      "Could not play TropeTrainer line audio:",
+      wavPath,
+      player.error
+    );
+
+    document.getElementById("hebrewLinePopup").style.display =
+      "none";
+  audioPlaybackMode = null;
+  };
+
+  const playPromise = player.play();
+
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(function(err) {
+      clearLyricsPlayingHighlight();
+audioPlaybackMode = null;
+      console.error(
+        "player.play() failed:",
+        wavPath,
+        err
+      );
+
+      document.getElementById("hebrewLinePopup").style.display =
+        "none";
+    });
+  }
+}
+function clearLyricsPlayingHighlight() {
+  document
+    .querySelectorAll(".lyrics-playing")
+    .forEach(function(box) {
+      box.classList.remove("lyrics-playing");
+    });
+}
+function ipadTrace(msg) {
+  const box = document.getElementById("ipadDebugBox");
+  if (box) box.innerHTML += msg + "<br>";
+  console.log(msg);
+}
+document.getElementById("desktopModeBtn").onclick =
+  function() {
+  startupModeSelected = true;
+    isTouchDevice = false;
+    touchModeActive = false;
+buildTropeTable();
+    document.getElementById("startupModeBox").style.display = "none";
+ document.getElementById("buildVersionBanner").style.display = "none";
+   console.log(
+  "Desktop selected:",
+  isTouchDevice,
+  touchModeActive
+);
+};
+
+document.getElementById("touchModeBtn").onclick =
+  function() {
+   startupModeSelected = true;
+    isTouchDevice = true;
+    touchModeActive = true;
+buildTropeTable();
+    document.getElementById("startupModeBox").style.display =   "none";
+ document.getElementById("buildVersionBanner").style.display = "none";
+
+   console.log(
+  "Touch selected:",
+  isTouchDevice,
+  touchModeActive
+);
+};
+function addTropeToCurrentBuildLine(tropeName) {
+
+  if (lineItems.length === 0) {
+    return;
+  }
+
+  lineItems[activeBuildLineIndex].tropes.push(tropeName);
+
+  renderBluePanel();
+}
+
+async function loadInfoPopupText(jsonFileName) {
+
+  const target =
+    document.getElementById("activeFileInfoText");
+
+  if (!target) {
+    console.error(
+      "activeFileInfoText element not found."
+    );
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      jsonFileName + "?v=" + Date.now(),
+      { cache: "no-store" }
+    );
+
+    console.log(
+      "Info popup response:",
+      response.status,
+      response.ok
+    );
+
+    if (!response.ok) {
+
+      target.textContent =
+        "Information Content will be added here.";
+
+      return;
+    }
+
+    const data =
+      await response.json();
+
+    console.log(
+      "Info popup JSON:",
+      data
+    );
+
+    target.textContent =
+      data.text ||
+      "Information Content will be added here.";
+
+  } catch (err) {
+
+    console.error(
+      "Info popup load error:",
+      err
+    );
+
+    target.textContent =
+      "Information Content will be added here.";
+  }
+}
+
+async function openInfoPopupFromJson(jsonFileName) {
+
+  await loadInfoPopupText(jsonFileName);
+
+  const popup =
+    document.getElementById("activeFileInfoPopup");
+
+  popup.style.display = "block";
+  popup.style.zIndex = "400000";
+
+}
+
+function formatTropeNameForDisplay(tropeName) {
+  let colorToUse = comboColor;
+
+  if (cleanNames.some(function(item) {
+    return item.name === tropeName;
+  })) {
+
+    colorToUse = cleanColor;
+
+  } else if (dirtyNames.some(function(item) {
+    return item.name === tropeName;
+  })) {
+
+    colorToUse = dirtyColor;
+  }
+
+  return '<span style="color:' + colorToUse + ';">' + tropeName + '</span>';
+}
+
+
+document.getElementById("playAllLyricsBtn").onclick = function(event) {
+  event.stopPropagation();
+  if (
+    audioPlaybackMode !== null &&
+    audioPlaybackMode !== "playAll"
+  ) {
+    return;
+  }
+if (usePocketTorah) {
+  playPocketTorahAll();
+  return;
+}
+  if (playAllEnable) {
+    stopPlayAllLyrics();
+    return;
+  }
+
+  playAllLyricsLines();
+};
+
+function setPlayAllButtonRunning() {
+  const btn = document.getElementById("playAllLyricsBtn");
+  if (!btn) return;
+
+  btn.style.background = "pink";
+  btn.title = "Stop Play All";
+}
+
+function setPlayAllButtonStopped() {
+  const btn = document.getElementById("playAllLyricsBtn");
+  if (!btn) return;
+
+  btn.style.background = "lightgreen";
+  btn.title = "Play All Lyrics";
+}
+
+function stopPlayAllLyrics() {
+  playAllEnable = false;
+
+  player.pause();
+  player.currentTime = 0;
+
+  if (playAllResolve) {
+    const resolveNow = playAllResolve;
+    playAllResolve = null;
+    resolveNow();
+  }
+
+  clearLyricsPlayingHighlight();
+  setPlayAllButtonStopped();
+
+  document.getElementById("hebrewLinePopup").style.display = "none";
+}
+
+async function playAllLyricsLines() {
+  playAllEnable = true;
+audioPlaybackMode = "playAll";
+  setPlayAllButtonRunning();
+
+  const sectionName =
+    document.getElementById("activeFileViewerTitle")
+      .textContent
+      .trim();
+
+  try {
+    for (let lineNumber = 1; lineNumber <= lineCount; lineNumber++) {
+
+      if (!playAllEnable) {
+        return;
+      }
+
+      const wavPath =
+        audioPath +
+        encodeURIComponent(sectionName) +
+        "/" +
+        encodeURIComponent(sectionName + "_line" + lineNumber + ".wav");
+
+      highlightLyricsLineForPlayAll(lineNumber);
+      scrollLyricsLineIntoView(lineNumber);
+      showTropeTrainerCreditLine(lineNumber);
+
+      await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+
+      if (!playAllEnable) {
+        return;
+      }
+    }
+
+  } finally {
+    playAllEnable = false;
+audioPlaybackMode = null;
+    playAllResolve = null;
+    setPlayAllButtonStopped();
+    clearLyricsPlayingHighlight();
+
+    document.getElementById("hebrewLinePopup").style.display = "none";
+  }
+}
+
+function highlightLyricsLineForPlayAll(lineNumber) {
+  clearLyricsPlayingHighlight();
+
+  const lyricsRow =
+    document.querySelector(
+      '.active-file-lyrics-row[data-line-number="' +
+      lineNumber +
+      '"]'
+    );
+
+  if (!lyricsRow) return;
+
+  const lyricsBox =
+    lyricsRow.querySelector(".active-file-lyrics-box");
+
+  if (lyricsBox) {
+    lyricsBox.classList.add("lyrics-playing");
+  }
+}
+
+function playTropeTrainerLineAudioAndWait(wavPath, lineNumber) {
+  return new Promise(function(resolve) {
+
+    let alreadyResolved = false;
+
+    function finishPlayback() {
+      if (alreadyResolved) return;
+
+      alreadyResolved = true;
+      playAllResolve = null;
+
+      clearLyricsPlayingHighlight();
+
+      document.getElementById("hebrewLinePopup").style.display =
+        "none";
+
+      resolve();
+    }
+
+    playAllResolve = finishPlayback;
+
+    player.pause();
+    player.onended = null;
+    player.onerror = null;
+
+    player.src = wavPath + "?v=" + Date.now();
+    player.load();
+
+    player.onended = finishPlayback;
+    player.onerror = finishPlayback;
+
+    const playPromise = player.play();
+
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(function() {
+        finishPlayback();
+      });
+    }
+  });
+}
+
+function scrollLyricsLineIntoView(lineNumber) {
+  const lyricsRow =
+    document.querySelector(
+      '.active-file-lyrics-row[data-line-number="' +
+      lineNumber +
+      '"]'
+    );
+
+  if (!lyricsRow) return;
+
+  lyricsRow.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function isYHVH(hebrewText) {
+  const consonants =
+    String(hebrewText || "").replace(/[\u0591-\u05C7]/g, "");
+
+  return (
+    consonants.includes("יהוה") ||
+    consonants.includes("יי")
+  );
+}
+
+function stripYHVHVowelsOnly(hebrew) {
+
+  if (!hebrew) return "";
+
+  const YHVH_PATTERN =
+    /י[\u0591-\u05C7]*ה[\u0591-\u05C7]*ו[\u0591-\u05C7]*ה/g;
+
+  return String(hebrew).replace(
+    YHVH_PATTERN,
+    function(match) {
+      return match.replace(
+        /[\u05B0-\u05BC\u05C7]/g,
+        ""
+      );
+    }
+  );
+}
