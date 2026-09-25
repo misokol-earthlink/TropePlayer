@@ -1497,53 +1497,54 @@ function populateActiveFilesSelect(fileNames, includeLocalChoice) {
   }
 }
 
-function chooseLocalParshaRepositoryFolder() {
-  return new Promise(function(resolve) {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.multiple = true;
-    input.setAttribute("webkitdirectory", "");
-    input.style.display = "none";
+async function chooseLocalParshaRepositoryFolder() {
+  if (!("showDirectoryPicker" in window)) {
+    alert(
+      "Local folder selection requires a browser that supports the directory picker."
+    );
+    return null;
+  }
 
-    input.onchange = function() {
-      const files = Array.from(input.files || []);
-      input.remove();
-      resolve(files);
-    };
-
-    document.body.appendChild(input);
-    input.click();
-  });
+  try {
+    return await window.showDirectoryPicker({
+      mode: "read"
+    });
+  } catch (err) {
+    if (err && err.name === "AbortError") {
+      return null;
+    }
+    throw err;
+  }
 }
 
-function buildLocalParshaFileMap(files) {
+async function getLocalParshaRepositoryHandle(selectedHandle) {
+  if (!selectedHandle) {
+    return null;
+  }
+
+  // Allow either the ParshaRepository folder itself or its parent/root.
+  if (selectedHandle.name === "ParshaRepository") {
+    return selectedHandle;
+  }
+
+  try {
+    return await selectedHandle.getDirectoryHandle("ParshaRepository");
+  } catch (err) {
+    if (err && err.name === "NotFoundError") {
+      return null;
+    }
+    throw err;
+  }
+}
+
+async function buildLocalParshaFileMap(parshaDirectoryHandle) {
   const fileMap = new Map();
 
-  files.forEach(function(file) {
-    const relativePath = String(file.webkitRelativePath || file.name)
-      .replace(/\\/g, "/");
-    const parts = relativePath.split("/");
-    const parshaFolderIndex = parts.lastIndexOf("ParshaRepository");
-
-    // Accept either the repository root (containing ParshaRepository)
-    // or the ParshaRepository folder itself.
-    let isParshaRepositoryFile = false;
-    if (parshaFolderIndex >= 0) {
-      isParshaRepositoryFile =
-        parshaFolderIndex === parts.length - 2;
-    } else {
-      // When ParshaRepository itself is selected, the browser path normally
-      // begins with ParshaRepository. This fallback also supports browsers
-      // that expose only the selected folder's files.
-      isParshaRepositoryFile = parts.length <= 2;
+  for await (const [name, handle] of parshaDirectoryHandle.entries()) {
+    if (handle.kind === "file") {
+      fileMap.set(name, handle);
     }
-
-    if (!isParshaRepositoryFile) {
-      return;
-    }
-
-    fileMap.set(file.name, file);
-  });
+  }
 
   return fileMap;
 }
@@ -1564,20 +1565,30 @@ function getLocalParshaNames(fileMap) {
 }
 
 async function activateLocalParshaRepository() {
-  const files = await chooseLocalParshaRepositoryFolder();
+  const selectedHandle = await chooseLocalParshaRepositoryFolder();
 
-  if (!files || files.length === 0) {
+  if (!selectedHandle) {
     return false;
   }
 
-  const candidateMap = buildLocalParshaFileMap(files);
+  const parshaDirectoryHandle =
+    await getLocalParshaRepositoryHandle(selectedHandle);
+
+  if (!parshaDirectoryHandle) {
+    alert(
+      "ParshaRepository was not found in the selected folder. " +
+      "Select the folder containing ParshaRepository, or select ParshaRepository itself."
+    );
+    return false;
+  }
+
+  const candidateMap =
+    await buildLocalParshaFileMap(parshaDirectoryHandle);
+
   const localNames = getLocalParshaNames(candidateMap);
 
   if (localNames.length === 0) {
-    alert(
-      "No Parsha JSON files were found. Select the folder containing " +
-      "ParshaRepository, or select the ParshaRepository folder itself."
-    );
+    alert("No Parsha JSON files were found in ParshaRepository.");
     return false;
   }
 
@@ -1602,7 +1613,8 @@ async function readParshaRepositoryJson(fileName, optionalFile) {
       throw new Error("Could not find local file " + fileName);
     }
 
-    return JSON.parse(await localFile.text());
+    const file = await localFile.getFile();
+    return JSON.parse(await file.text());
   }
 
   const response = await fetch(
