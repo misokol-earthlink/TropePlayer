@@ -1732,42 +1732,6 @@ async function openActiveFilesSelector(
   popup.style.display = "block";
 }
 
-ipadTrace("ENTER openActiveFilesSelector");
-
-  // Each newly opened selector starts with the built-in GitHub collection.
-  // Choosing Local switches only this ParshaRepository selection to local files.
-  parshaRepositorySource = "github";
-  localParshaFiles = new Map();
-  await loadParshaRepositoryIndex();
-
-  const popup = document.getElementById("activeFilesPopup");
-  const select = document.getElementById("activeFilesSelect");
-
-  if (!activeFiles || activeFiles.length === 0) {
-    alert("No active files were loaded from index.json.");
-    return;
-  }
-
-  populateActiveFilesSelect(activeFiles, true);
-
-  select.onchange = async function() {
-    if (select.value !== "__LOCAL__") {
-      return;
-    }
-
-    const localActivated = await activateLocalParshaRepository();
-
-    if (!localActivated) {
-      // Restore the GitHub list if folder selection was canceled or invalid.
-      parshaRepositorySource = "github";
-      localParshaFiles = new Map();
-      await loadParshaRepositoryIndex();
-      populateActiveFilesSelect(activeFiles, true);
-    }
-  };
-
-  popup.style.display = "block";
-}
 function closeActiveFilesSelector() {
   document.getElementById("activeFilesPopup").style.display = "none";
 }
