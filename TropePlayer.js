@@ -100,6 +100,12 @@ let smoothAudioContext = null;
 let smoothSourceNode = null;
 let activeFileLines = [];
 let activeFiles = [];
+
+/* Parsha repository source state.
+   GitHub remains the default. Local mode affects only ParshaRepository files;
+   ./Trope/ and Pocket Torah source/fallback handling remain unchanged. */
+let parshaRepositorySource = "github";
+let localParshaFiles = new Map();
 let ptEnabled = false;
 let usePocketTorah = false;
 let ptParshaName = "";
@@ -1471,6 +1477,154 @@ ipadTrace("ABOUT TO parse index.json");
     alert("Error loading Parsha repository index: " + err.message);
   }
 }
+
+function populateActiveFilesSelect(fileNames, includeLocalChoice) {
+  const select = document.getElementById("activeFilesSelect");
+  select.innerHTML = "";
+
+  fileNames.forEach(function(fileName) {
+    const opt = document.createElement("option");
+    opt.value = fileName;
+    opt.textContent = fileName;
+    select.appendChild(opt);
+  });
+
+  if (includeLocalChoice) {
+    const localOpt = document.createElement("option");
+    localOpt.value = "__LOCAL__";
+    localOpt.textContent = "Local";
+    select.appendChild(localOpt);
+  }
+}
+
+function chooseLocalParshaRepositoryFolder() {
+  return new Promise(function(resolve) {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = true;
+    input.setAttribute("webkitdirectory", "");
+    input.style.display = "none";
+
+    input.onchange = function() {
+      const files = Array.from(input.files || []);
+      input.remove();
+      resolve(files);
+    };
+
+    document.body.appendChild(input);
+    input.click();
+  });
+}
+
+function buildLocalParshaFileMap(files) {
+  const fileMap = new Map();
+
+  files.forEach(function(file) {
+    const relativePath = String(file.webkitRelativePath || file.name)
+      .replace(/\\/g, "/");
+    const parts = relativePath.split("/");
+    const parshaFolderIndex = parts.lastIndexOf("ParshaRepository");
+
+    // Accept either the repository root (containing ParshaRepository)
+    // or the ParshaRepository folder itself.
+    let isParshaRepositoryFile = false;
+    if (parshaFolderIndex >= 0) {
+      isParshaRepositoryFile =
+        parshaFolderIndex === parts.length - 2;
+    } else {
+      // When ParshaRepository itself is selected, the browser path normally
+      // begins with ParshaRepository. This fallback also supports browsers
+      // that expose only the selected folder's files.
+      isParshaRepositoryFile = parts.length <= 2;
+    }
+
+    if (!isParshaRepositoryFile) {
+      return;
+    }
+
+    fileMap.set(file.name, file);
+  });
+
+  return fileMap;
+}
+
+function getLocalParshaNames(fileMap) {
+  return Array.from(fileMap.keys())
+    .filter(function(fileName) {
+      return fileName.toLowerCase().endsWith(".json") &&
+             fileName.toLowerCase() !== "index.json" &&
+             !fileName.toLowerCase().endsWith("_lyrics.json");
+    })
+    .map(function(fileName) {
+      return fileName.slice(0, -5);
+    })
+    .sort(function(a, b) {
+      return a.localeCompare(b);
+    });
+}
+
+async function activateLocalParshaRepository() {
+  const files = await chooseLocalParshaRepositoryFolder();
+
+  if (!files || files.length === 0) {
+    return false;
+  }
+
+  const candidateMap = buildLocalParshaFileMap(files);
+  const localNames = getLocalParshaNames(candidateMap);
+
+  if (localNames.length === 0) {
+    alert(
+      "No Parsha JSON files were found. Select the folder containing " +
+      "ParshaRepository, or select the ParshaRepository folder itself."
+    );
+    return false;
+  }
+
+  localParshaFiles = candidateMap;
+  parshaRepositorySource = "local";
+  activeFiles = localNames;
+  populateActiveFilesSelect(activeFiles, false);
+
+  console.log("Local ParshaRepository selected.");
+  console.log("Local Parsha files:", activeFiles);
+  return true;
+}
+
+async function readParshaRepositoryJson(fileName, optionalFile) {
+  if (parshaRepositorySource === "local") {
+    const localFile = localParshaFiles.get(fileName);
+
+    if (!localFile) {
+      if (optionalFile) {
+        return null;
+      }
+      throw new Error("Could not find local file " + fileName);
+    }
+
+    return JSON.parse(await localFile.text());
+  }
+
+  const response = await fetch(
+    "ParshaRepository/" +
+    encodeURIComponent(fileName) +
+    "?v=" +
+    Date.now(),
+    { cache: "no-store" }
+  );
+
+  if (!response.ok) {
+    if (optionalFile) {
+      return null;
+    }
+    throw new Error(
+      "Could not load " + fileName + ". Status: " + response.status
+    );
+  }
+
+  return await response.json();
+}
+
 async function openActiveFilesSelector(useEditMode = false) {
   editExistingMode = useEditMode;
 if (!startupModeSelected) {
@@ -1478,24 +1632,38 @@ return;
 }
 
 ipadTrace("ENTER openActiveFilesSelector");
+
+  // Each newly opened selector starts with the built-in GitHub collection.
+  // Choosing Local switches only this ParshaRepository selection to local files.
+  parshaRepositorySource = "github";
+  localParshaFiles = new Map();
   await loadParshaRepositoryIndex();
 
   const popup = document.getElementById("activeFilesPopup");
   const select = document.getElementById("activeFilesSelect");
-
-  select.innerHTML = "";
 
   if (!activeFiles || activeFiles.length === 0) {
     alert("No active files were loaded from index.json.");
     return;
   }
 
-  activeFiles.forEach(function(fileName) {
-    const opt = document.createElement("option");
-    opt.value = fileName;
-    opt.textContent = fileName;
-    select.appendChild(opt);
-  });
+  populateActiveFilesSelect(activeFiles, true);
+
+  select.onchange = async function() {
+    if (select.value !== "__LOCAL__") {
+      return;
+    }
+
+    const localActivated = await activateLocalParshaRepository();
+
+    if (!localActivated) {
+      // Restore the GitHub list if folder selection was canceled or invalid.
+      parshaRepositorySource = "github";
+      localParshaFiles = new Map();
+      await loadParshaRepositoryIndex();
+      populateActiveFilesSelect(activeFiles, true);
+    }
+  };
 
   popup.style.display = "block";
 }
@@ -1566,21 +1734,8 @@ async function loadSelectedActiveFile() {
   try {
 console.log("selectedFile =", selectedFile);
 console.log("jsonFile =", jsonFile);
-    const response =
-     await fetch(
-  "ParshaRepository/" +
-  encodeURIComponent(jsonFile) +
-  "?v=" +
-  Date.now(),
-  { cache: "no-store" }
-);
-
-    if (!response.ok) {
-      alert("Could not load " + jsonFile);
-      return;
-    }
-
-    const data = await response.json();
+    const data =
+      await readParshaRepositoryJson(jsonFile, false);
 // Test Diag
 
 const lyricsData =
@@ -1673,21 +1828,15 @@ console.log("selectedFile for lyrics =", selectedFile);
 console.log("lyricsFile =", lyricsFile);
 
   try {
-    const response =
-      await fetch(
-        "ParshaRepository/" +
-        encodeURIComponent(lyricsFile) +
-        "?v=" +
-        Date.now(),
-        { cache: "no-store" }
-      );
+    const lyricsData =
+      await readParshaRepositoryJson(lyricsFile, true);
 
-    if (!response.ok) {
+    if (!lyricsData) {
       console.warn("No matching lyrics file found:", lyricsFile);
       return null;
     }
 
-    return await response.json();
+    return lyricsData;
 
   } catch (err) {
     console.warn("Error loading lyrics file:", lyricsFile, err);
@@ -2143,24 +2292,19 @@ function closeActiveFileViewer() {
   ).style.display = "none";
 }
 async function loadParshaFile(fileName) {
+  try {
+    const data =
+      await readParshaRepositoryJson(fileName, false);
 
-  const response = await fetch(
-    "ParshaRepository/" +
-    encodeURIComponent(fileName) +
-    "?v=" +
-    Date.now(),
-    { cache: "no-store" }
-  );
+    // action here with the loaded file data
+    console.log(data);
+    return data;
 
-  if (!response.ok) {
+  } catch (err) {
+    console.error(err);
     alert("Could not load " + fileName);
-    return;
+    return null;
   }
-
-  const data = await response.json();
-
-  // action here with the loaded file data
-  console.log(data);
 }
 
 function toggleLyricsDisplayRows() {
