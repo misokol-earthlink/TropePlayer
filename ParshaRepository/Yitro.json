@@ -8,7 +8,8 @@
         "Munach",
         "Katon",
         "Tvir",
-        "Kadma-V'azlah",
+        "Merchah",
+        "Tipchah",
         "SofPaSuk"
       ]
     },
@@ -16,13 +17,11 @@
       "lineName": "20:02",
       "tropes": [
         "PashTa",
-        "Munach",
-        "Katon",
+        "Munach-Katon",
         "Munach",
         "T'LishaK'tanah",
         "Kadma-V'azlah",
-        "Munach",
-        "Rvi'i"
+        "Munach-Rvi'i"
       ]
     },
     {
@@ -49,8 +48,7 @@
         "Kadma-V'azlah",
         "Merchah",
         "Munach-L'garmeih",
-        "Munach",
-        "Rvi'i"
+        "Munach-Rvi'i"
       ]
     },
     {
@@ -64,8 +62,7 @@
         "Gershayim",
         "Mapach",
         "Kadma",
-        "Munach",
-        "Katon",
+        "Munach-Katon",
         "T'LishaGadola",
         "Kadma",
         "Darga",
@@ -125,22 +122,18 @@
     {
       "lineName": "20:10",
       "tropes": [
-        "PashTa",
-        "V'azlah",
+        "Kadma-V'azlah",
         "Munach",
-        "Munach",
-        "Rvi'i",
+        "Munach-Rvi'i",
         "Munach",
         "Munach",
         "Pazer",
-        "Munach",
         "Munach",
         "T'LishaGadola",
         "Kadma-V'azlah",
         "Rvi'i",
         "Kadma",
-        "Munach",
-        "Katon"
+        "Munach-Katon"
       ]
     },
     {
@@ -149,8 +142,7 @@
         "Munach",
         "T'LishaK'tanah",
         "Kadma-V'azlah",
-        "Munach",
-        "Rvi'i",
+        "Munach-Rvi'i",
         "PashTa",
         "Katon",
         "Tipchah",
@@ -160,7 +152,8 @@
         "Darga",
         "Tvir",
         "Merchah",
-        "Tipchah"
+        "Tipchah",
+        "SofPaSuk"
       ]
     },
     {
@@ -169,9 +162,8 @@
         "Merchah",
         "Tipchah",
         "EtNachTah",
-        "Kadma",
-        "Munach",
-        "Katon",
+        "Pashta",
+        "Munach-Katon",
         "Y'tiv",
         "Katon",
         "Merchah",
@@ -203,12 +195,10 @@
         "Munach",
         "EtNachTah",
         "Gershayim",
-        "Munach",
-        "Riv'i",
+        "Munach-Rvi'i",
         "Y'tiv",
-        "Kadma",
-        "Munach",
-        "Katon",
+        "Pashta",
+        "Munach-Katon",
         "Tipchah",
         "Merchah",
         "SofPaSuk"
