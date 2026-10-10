@@ -106,6 +106,9 @@ let activeFiles = [];
    ./Trope/ and Pocket Torah source/fallback handling remain unchanged. */
 let parshaRepositorySource = "github";
 let localParshaFiles = new Map();
+let localAudioDirectoryHandle = null;
+let localLineAudioFiles = new Map();
+let localAudioObjectUrl = null;
 let ptEnabled = false;
 let usePocketTorah = false;
 let ptParshaName = "";
@@ -1592,6 +1595,14 @@ async function activateLocalParshaRepository() {
     return false;
   }
 
+  // Keep the outer folder for local line WAV playback.
+  localAudioDirectoryHandle = selectedHandle;
+  localLineAudioFiles = new Map();
+  for await (const [name, handle] of selectedHandle.entries()) {
+    if (handle.kind === "file" && name.toLowerCase().endsWith(".wav")) {
+      localLineAudioFiles.set(name.toLowerCase(), handle);
+    }
+  }
   localParshaFiles = candidateMap;
   parshaRepositorySource = "local";
   activeFiles = localNames;
@@ -1599,6 +1610,7 @@ async function activateLocalParshaRepository() {
 
   console.log("Local ParshaRepository selected.");
   console.log("Local Parsha files:", activeFiles);
+  console.log("[Audio] Local WAV directory:", selectedHandle.name, "files:", localLineAudioFiles.size);
   return true;
 }
 
@@ -1614,7 +1626,9 @@ async function readParshaRepositoryJson(fileName, optionalFile) {
     }
 
     const file = await localFile.getFile();
-    return JSON.parse(await file.text());
+    const parsed = JSON.parse(await file.text());
+    console.log("[Parsha] Source: LOCAL; Loaded:", fileName);
+    return parsed;
   }
 
   const response = await fetch(
@@ -1634,7 +1648,9 @@ async function readParshaRepositoryJson(fileName, optionalFile) {
     );
   }
 
-  return await response.json();
+  const parsed = await response.json();
+  console.log("[Parsha] Source: GITHUB; Loaded: ParshaRepository/" + fileName);
+  return parsed;
 }
 
 async function openActiveFilesSelector(
@@ -1661,27 +1677,16 @@ async function openActiveFilesSelector(
       "activeFilesSelect"
     );
 
-  /*
-    If Local has already been selected during
-    this page load, keep using the existing
-    local directory and local Parsha list.
-  */
-  if (parshaRepositorySource === "local") {
-
-    populateActiveFilesSelect(
-      activeFiles,
-      false
-    );
-
-    popup.style.display = "block";
-    return;
+  // Each new Active Files session begins with GitHub and the Local option.
+  // The local folder remains active only during the current loading session.
+  parshaRepositorySource = "github";
+  localParshaFiles = new Map();
+  localAudioDirectoryHandle = null;
+  localLineAudioFiles = new Map();
+  if (localAudioObjectUrl) {
+    URL.revokeObjectURL(localAudioObjectUrl);
+    localAudioObjectUrl = null;
   }
-
-  /*
-    We have not selected Local during this
-    page load, so show the normal GitHub
-    repository plus the Local choice.
-  */
   await loadParshaRepositoryIndex();
 
   if (
@@ -3052,7 +3057,31 @@ function initializeTropeHoverBoxClickClose() {
 }
 
 
-function playTropeTrainerLineAudio(wavPath, lineNumber) {
+// Resolve local line WAV files from the selected outer directory.
+// Prefer an unsuffixed recording; otherwise accept a source suffix (_TINR etc.).
+async function resolveLineAudioUrl(wavPath, lineNumber) {
+  if (parshaRepositorySource !== "local") return wavPath;
+  const sectionName = document.getElementById("activeFileViewerTitle").textContent.trim();
+  const stem = (sectionName + "_line" + lineNumber).toLowerCase();
+  const exact = stem + ".wav";
+  const matches = Array.from(localLineAudioFiles.keys()).filter(name =>
+    name === exact || (name.startsWith(stem + "_") && name.endsWith(".wav"))
+  );
+  const chosen = matches.includes(exact) ? exact : matches.sort()[0];
+  if (!chosen) {
+    console.warn("[Audio] LOCAL WAV missing:", stem);
+    return null;
+  }
+  const file = await localLineAudioFiles.get(chosen).getFile();
+  if (localAudioObjectUrl) URL.revokeObjectURL(localAudioObjectUrl);
+  localAudioObjectUrl = URL.createObjectURL(file);
+  console.log("[Audio] Source: LOCAL; Loaded:", chosen);
+  return localAudioObjectUrl;
+}
+
+async function playTropeTrainerLineAudio(wavPath, lineNumber) {
+  const resolvedPath = await resolveLineAudioUrl(wavPath, lineNumber);
+  if (!resolvedPath) { clearLyricsPlayingHighlight(); audioPlaybackMode = null; return; }
   console.log("Playing TropeTrainer audio:");
   console.log("Line:", lineNumber);
   console.log("WAV path:", wavPath);
@@ -3062,7 +3091,7 @@ function playTropeTrainerLineAudio(wavPath, lineNumber) {
   player.onended = null;
   player.onerror = null;
 
-  player.src = wavPath + "?v=" + Date.now();
+  player.src = parshaRepositorySource === "local" ? resolvedPath : wavPath + "?v=" + Date.now();
   player.load();
 
   player.onended = function() {
@@ -3365,7 +3394,9 @@ function highlightLyricsLineForPlayAll(lineNumber) {
   }
 }
 
-function playTropeTrainerLineAudioAndWait(wavPath, lineNumber) {
+async function playTropeTrainerLineAudioAndWait(wavPath, lineNumber) {
+  const resolvedPath = await resolveLineAudioUrl(wavPath, lineNumber);
+  if (!resolvedPath) return;
   return new Promise(function(resolve) {
 
     let alreadyResolved = false;
@@ -3390,7 +3421,7 @@ function playTropeTrainerLineAudioAndWait(wavPath, lineNumber) {
     player.onended = null;
     player.onerror = null;
 
-    player.src = wavPath + "?v=" + Date.now();
+    player.src = parshaRepositorySource === "local" ? resolvedPath : wavPath + "?v=" + Date.now();
     player.load();
 
     player.onended = finishPlayback;
