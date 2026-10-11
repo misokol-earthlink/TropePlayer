@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "sources": {
+    "TS": {
+      "name": "Temple Sinai",
+      "location": "Sharon, MA",
+      "cantor": "Cantor R. Khitrik"
+    },
+    "CBS": {
+      "name": "Congregation Beth Shalom",
+      "location": "Arlington, TX",
+      "cantor": "Cantor E. Cohen"
+    },
+    "SWFS": {
+      "name": "Stephen Wise Free Synagogue",
+      "location": "New York, NY",
+      "cantor": "Cantor D. Singer"
+    },
+    "TINR": {
+      "name": "Temple Israel of New Rochelle",
+      "location": "Westchester, NY",
+      "cantor": ""
+    }
+  }
+}
