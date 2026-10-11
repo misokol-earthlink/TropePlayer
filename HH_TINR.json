@@ -1,0 +1,268 @@
+{
+  "source": "TINR",
+  "playbackType": "mp3-sequential-segments",
+  "readings": [
+    {
+      "id": "Yitro",
+      "name": "Yitro",
+      "book": "Exodus",
+      "displayRange": "Exodus 20:1–14",
+      "aliyot": [
+        {
+          "num": "1",
+          "reference": "Exodus 20:1–7",
+          "tracks": [
+            {
+              "ref": "Exodus 20:1",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 7,
+              "end": 21,
+              "lineNumber": 1,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:2",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 23.2,
+              "end": 44.4,
+              "lineNumber": 2,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:3",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 49,
+              "end": 62,
+              "lineNumber": 3,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:4",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 64.5,
+              "end": 103.2,
+              "lineNumber": 4,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:5",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 110,
+              "end": 149,
+              "lineNumber": 5,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:6",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 157,
+              "end": 171,
+              "lineNumber": 6,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:7",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 174,
+              "end": null,
+              "lineNumber": 7,
+              "aliyah": "1"
+            }
+          ]
+        },
+        {
+          "num": "2",
+          "reference": "Exodus 20:8–11",
+          "tracks": [
+            {
+              "ref": "Exodus 20:8",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-2nd-aliyah.mp3",
+              "start": 6.5,
+              "end": 15.8,
+              "lineNumber": 8,
+              "aliyah": "2"
+            },
+            {
+              "ref": "Exodus 20:9",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-2nd-aliyah.mp3",
+              "start": 16.5,
+              "end": 31.5,
+              "lineNumber": 9,
+              "aliyah": "2"
+            },
+            {
+              "ref": "Exodus 20:10",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-2nd-aliyah.mp3",
+              "start": 32.6,
+              "end": 75.5,
+              "lineNumber": 10,
+              "aliyah": "2"
+            },
+            {
+              "ref": "Exodus 20:11",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-2nd-aliyah.mp3",
+              "start": 76.5,
+              "end": null,
+              "lineNumber": 11,
+              "aliyah": "2"
+            }
+          ]
+        },
+        {
+          "num": "3",
+          "reference": "Exodus 20:12–13",
+          "tracks": [
+            {
+              "ref": "Exodus 20:12",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-3rd-aliyah.mp3",
+              "start": 3.8,
+              "end": 23,
+              "lineNumber": 12,
+              "aliyah": "3"
+            },
+            {
+              "ref": "Exodus 20:13",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-3rd-aliyah.mp3",
+              "start": 24,
+              "end": 44.5,
+              "lineNumber": 13,
+              "aliyah": "3"
+            }
+          ]
+        },
+        {
+          "num": "4",
+          "reference": "Exodus 20:14–14",
+          "tracks": [
+            {
+              "ref": "Exodus 20:14",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-4th-aliyah.mp3",
+              "start": 21.5,
+              "end": null,
+              "lineNumber": 14,
+              "aliyah": "4"
+            }
+          ]
+        },
+        {
+          "num": "Full",
+          "reference": "Exodus 20:1–14",
+          "tracks": [
+            {
+              "ref": "Exodus 20:1",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 7,
+              "end": 21,
+              "lineNumber": 1,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:2",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 23.2,
+              "end": 44.4,
+              "lineNumber": 2,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:3",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 49,
+              "end": 62,
+              "lineNumber": 3,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:4",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 64.5,
+              "end": 103.2,
+              "lineNumber": 4,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:5",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 110,
+              "end": 149,
+              "lineNumber": 5,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:6",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 157,
+              "end": 171,
+              "lineNumber": 6,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:7",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/yitro-1st-aliyah.mp3",
+              "start": 174,
+              "end": null,
+              "lineNumber": 7,
+              "aliyah": "1"
+            },
+            {
+              "ref": "Exodus 20:8",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-2nd-aliyah.mp3",
+              "start": 6.5,
+              "end": 15.8,
+              "lineNumber": 8,
+              "aliyah": "2"
+            },
+            {
+              "ref": "Exodus 20:9",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-2nd-aliyah.mp3",
+              "start": 16.5,
+              "end": 31.5,
+              "lineNumber": 9,
+              "aliyah": "2"
+            },
+            {
+              "ref": "Exodus 20:10",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-2nd-aliyah.mp3",
+              "start": 32.6,
+              "end": 75.5,
+              "lineNumber": 10,
+              "aliyah": "2"
+            },
+            {
+              "ref": "Exodus 20:11",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-2nd-aliyah.mp3",
+              "start": 76.5,
+              "end": null,
+              "lineNumber": 11,
+              "aliyah": "2"
+            },
+            {
+              "ref": "Exodus 20:12",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-3rd-aliyah.mp3",
+              "start": 3.8,
+              "end": 23,
+              "lineNumber": 12,
+              "aliyah": "3"
+            },
+            {
+              "ref": "Exodus 20:13",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-3rd-aliyah.mp3",
+              "start": 24,
+              "end": 44.5,
+              "lineNumber": 13,
+              "aliyah": "3"
+            },
+            {
+              "ref": "Exodus 20:14",
+              "audioUrl": "https://music.tinr.org/wp-content/uploads/2018/08/Yitro-4th-aliyah.mp3",
+              "start": 21.5,
+              "end": null,
+              "lineNumber": 14,
+              "aliyah": "4"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

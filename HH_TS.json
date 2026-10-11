@@ -1,0 +1,351 @@
+{
+  "source": "TS",
+  "sourceName": "Temple Sinai",
+  "playbackType": "whole-aliyah-audio",
+  "readings": [
+    {
+      "id": "rosh-hashanah-1",
+      "name": "Rosh Hashanah 1",
+      "book": "Genesis",
+      "displayRange": "Genesis 22:1–22:19",
+      "aliyot": [
+        {
+          "num": "1",
+          "reference": "Genesis 22:1–22:3",
+          "tracks": [
+            {
+              "ref": "Genesis 22:1–22:3",
+              "aliyah": "1",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_1-3_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "2",
+          "reference": "Genesis 22:4–22:7",
+          "tracks": [
+            {
+              "ref": "Genesis 22:4–22:7",
+              "aliyah": "2",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_4-7_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "3",
+          "reference": "Genesis 22:8–22:11",
+          "tracks": [
+            {
+              "ref": "Genesis 22:8–22:11",
+              "aliyah": "3",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_8-11_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "4",
+          "reference": "Genesis 22:12–22:15",
+          "tracks": [
+            {
+              "ref": "Genesis 22:12–22:15",
+              "aliyah": "4",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_12-15_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "5",
+          "reference": "Genesis 22:16–22:19",
+          "tracks": [
+            {
+              "ref": "Genesis 22:16–22:19",
+              "aliyah": "5",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_16-19_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "Full",
+          "reference": "Genesis 22:1–22:19",
+          "tracks": [
+            {
+              "ref": "Genesis 22:1–22:3",
+              "aliyah": "1",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_1-3_hhd_trope.m4a"
+            },
+            {
+              "ref": "Genesis 22:4–22:7",
+              "aliyah": "2",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_4-7_hhd_trope.m4a"
+            },
+            {
+              "ref": "Genesis 22:8–22:11",
+              "aliyah": "3",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_8-11_hhd_trope.m4a"
+            },
+            {
+              "ref": "Genesis 22:12–22:15",
+              "aliyah": "4",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_12-15_hhd_trope.m4a"
+            },
+            {
+              "ref": "Genesis 22:16–22:19",
+              "aliyah": "5",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_22_16-19_hhd_trope.m4a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rosh-hashanah-2",
+      "name": "Rosh Hashanah 2",
+      "book": "Genesis",
+      "displayRange": "Genesis 1:1–2:3",
+      "aliyot": [
+        {
+          "num": "1",
+          "reference": "Genesis 1:1–1:8",
+          "tracks": [
+            {
+              "ref": "Genesis 1:1–1:8",
+              "aliyah": "1",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_1_1-8_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "2",
+          "reference": "Genesis 1:9–1:13",
+          "tracks": [
+            {
+              "ref": "Genesis 1:9–1:13",
+              "aliyah": "2",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_1_9-13_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "3",
+          "reference": "Genesis 1:14–1:23",
+          "tracks": [
+            {
+              "ref": "Genesis 1:14–1:23",
+              "aliyah": "3",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_1_14-23_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "4",
+          "reference": "Genesis 1:24–1:31",
+          "tracks": [
+            {
+              "ref": "Genesis 1:24–1:31",
+              "aliyah": "4",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_1_24-31_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "5",
+          "reference": "Genesis 2:1–2:3",
+          "tracks": [
+            {
+              "ref": "Genesis 2:1–2:3",
+              "aliyah": "5",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_2_1-3_hhd_trope.m4a"
+            }
+          ]
+        },
+        {
+          "num": "Full",
+          "reference": "Genesis 1:1–2:3",
+          "tracks": [
+            {
+              "ref": "Genesis 1:1–1:8",
+              "aliyah": "1",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_1_1-8_hhd_trope.m4a"
+            },
+            {
+              "ref": "Genesis 1:9–1:13",
+              "aliyah": "2",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_1_9-13_hhd_trope.m4a"
+            },
+            {
+              "ref": "Genesis 1:14–1:23",
+              "aliyah": "3",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_1_14-23_hhd_trope.m4a"
+            },
+            {
+              "ref": "Genesis 1:24–1:31",
+              "aliyah": "4",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_1_24-31_hhd_trope.m4a"
+            },
+            {
+              "ref": "Genesis 2:1–2:3",
+              "aliyah": "5",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/genesis_2_1-3_hhd_trope.m4a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yom-kippur-morning",
+      "name": "Yom Kippur Morning",
+      "book": "Deuteronomy",
+      "displayRange": "Deuteronomy 29:9–30:20",
+      "aliyot": [
+        {
+          "num": "1",
+          "reference": "Deuteronomy 29:9–29:11",
+          "tracks": [
+            {
+              "ref": "Deuteronomy 29:9–29:11",
+              "aliyah": "1",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_29_9-11.m4a"
+            }
+          ]
+        },
+        {
+          "num": "2",
+          "reference": "Deuteronomy 29:12–29:14",
+          "tracks": [
+            {
+              "ref": "Deuteronomy 29:12–29:14",
+              "aliyah": "2",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_29_12-14.m4a"
+            }
+          ]
+        },
+        {
+          "num": "3",
+          "reference": "Deuteronomy 30:11–30:14",
+          "tracks": [
+            {
+              "ref": "Deuteronomy 30:11–30:14",
+              "aliyah": "3",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_30_11-14.m4a"
+            }
+          ]
+        },
+        {
+          "num": "4",
+          "reference": "Deuteronomy 30:15–30:17",
+          "tracks": [
+            {
+              "ref": "Deuteronomy 30:15–30:17",
+              "aliyah": "4",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_30_15-17.m4a"
+            }
+          ]
+        },
+        {
+          "num": "5",
+          "reference": "Deuteronomy 30:18–30:20",
+          "tracks": [
+            {
+              "ref": "Deuteronomy 30:18–30:20",
+              "aliyah": "5",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_30_18-20.m4a"
+            }
+          ]
+        },
+        {
+          "num": "Full",
+          "reference": "Deuteronomy 29:9–30:20",
+          "tracks": [
+            {
+              "ref": "Deuteronomy 29:9–29:11",
+              "aliyah": "1",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_29_9-11.m4a"
+            },
+            {
+              "ref": "Deuteronomy 29:12–29:14",
+              "aliyah": "2",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_29_12-14.m4a"
+            },
+            {
+              "ref": "Deuteronomy 30:11–30:14",
+              "aliyah": "3",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_30_11-14.m4a"
+            },
+            {
+              "ref": "Deuteronomy 30:15–30:17",
+              "aliyah": "4",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_30_15-17.m4a"
+            },
+            {
+              "ref": "Deuteronomy 30:18–30:20",
+              "aliyah": "5",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/deuteronomy_30_18-20.m4a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yom-kippur-afternoon",
+      "name": "Yom Kippur Afternoon",
+      "book": "Leviticus",
+      "displayRange": "Leviticus 19:1–19:18",
+      "aliyot": [
+        {
+          "num": "1",
+          "reference": "Leviticus 19:1–19:4",
+          "tracks": [
+            {
+              "ref": "Leviticus 19:1–19:4",
+              "aliyah": "1",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/leviticus_19_1-4.m4a"
+            }
+          ]
+        },
+        {
+          "num": "2",
+          "reference": "Leviticus 19:9–19:13",
+          "tracks": [
+            {
+              "ref": "Leviticus 19:9–19:13",
+              "aliyah": "2",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/leviticus_19_9-13.m4a"
+            }
+          ]
+        },
+        {
+          "num": "3",
+          "reference": "Leviticus 19:14–19:18",
+          "tracks": [
+            {
+              "ref": "Leviticus 19:14–19:18",
+              "aliyah": "3",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/leviticus_19_14-18.m4a"
+            }
+          ]
+        },
+        {
+          "num": "Full",
+          "reference": "Leviticus 19:1–19:18",
+          "tracks": [
+            {
+              "ref": "Leviticus 19:1–19:4",
+              "aliyah": "1",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/leviticus_19_1-4.m4a"
+            },
+            {
+              "ref": "Leviticus 19:9–19:13",
+              "aliyah": "2",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/leviticus_19_9-13.m4a"
+            },
+            {
+              "ref": "Leviticus 19:14–19:18",
+              "aliyah": "3",
+              "audioUrl": "https://images.shulcloud.com/13710/uploads/uploaded_images/leviticus_19_14-18.m4a"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
