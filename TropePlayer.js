@@ -1638,7 +1638,31 @@ function getLocalFullTracks() {
   return Array.isArray(full?.tracks) && full.tracks.length ? full.tracks : null;
 }
 
-function localNoAudio() { alert("Audio Playback files not present; Please use Pocket Torah."); }
+function resetLocalPlaybackAfterFailure() {
+  // Local-mode only: leave portion, verse text, and directory handles intact.
+  if (parshaRepositorySource !== "local") return;
+  playAllEnable = false;
+  if (localMp3StopTimer) clearInterval(localMp3StopTimer);
+  localMp3StopTimer = null;
+  player.pause();
+  player.onended = null;
+  player.onerror = null;
+  player.onloadedmetadata = null;
+  if (playAllResolve) {
+    const resolvePending = playAllResolve;
+    playAllResolve = null;
+    resolvePending();
+  }
+  clearLyricsPlayingHighlight();
+  const popup = document.getElementById("hebrewLinePopup");
+  if (popup) popup.style.display = "none";
+  setPlayAllButtonStopped();
+  audioPlaybackMode = null;
+}
+function localNoAudio() {
+  resetLocalPlaybackAfterFailure();
+  alert("Audio Playback files not present; Please use Pocket Torah.");
+}
 function localMp3Credit(lineNumber) {
   const box = document.getElementById("hebrewLineText");
   if (box) box.textContent = "Audio playback for line " + lineNumber + " — " +
@@ -1689,28 +1713,35 @@ async function playLocalLyricsLine(lineNumber) {
   const track = tracks?.find(t => Number(t.lineNumber) === lineNumber);
   const sectionName = document.getElementById("activeFileViewerTitle").textContent.trim();
   const wavPath = audioPath + encodeURIComponent(sectionName) + "/" + encodeURIComponent(sectionName + "_line" + lineNumber + ".wav");
-  if (!tracks) {
-    if (!getLocalLineAudioFilename(lineNumber)) { localNoAudio(); audioPlaybackMode = null; return; }
-    showTropeTrainerCreditLine(lineNumber);
-    await playTropeTrainerLineAudio(wavPath, lineNumber);
-    return;
-  }
   try {
-    if (!track) throw new Error("Line missing from Full catalog");
-    localMp3Credit(lineNumber);
-    await playLocalMp3Track(track);
-  } catch (err) {
-    console.error("Local MP3 playback failed:", err);
-    if (getLocalLineAudioFilename(lineNumber) && confirm("MP3 playback failed. Local WAV files are available. Use WAV playback instead?")) {
+    if (!tracks) {
+      if (!getLocalLineAudioFilename(lineNumber)) { localNoAudio(); return; }
       showTropeTrainerCreditLine(lineNumber);
       await playTropeTrainerLineAudio(wavPath, lineNumber);
+      return; // WAV event handlers finish playback asynchronously.
+    }
+    try {
+      if (!track) throw new Error("Line missing from Full catalog");
+      localMp3Credit(lineNumber);
+      await playLocalMp3Track(track);
+    } catch (err) {
+      console.error("Local MP3 playback failed:", err);
+      if (getLocalLineAudioFilename(lineNumber) &&
+          confirm("MP3 playback failed. Local WAV files are available. Use WAV playback instead?")) {
+        showTropeTrainerCreditLine(lineNumber);
+        await playTropeTrainerLineAudio(wavPath, lineNumber);
+        return;
+      }
+      localNoAudio();
       return;
     }
+    clearLyricsPlayingHighlight();
+    document.getElementById("hebrewLinePopup").style.display = "none";
+    audioPlaybackMode = null;
+  } catch (err) {
+    console.error("Local line playback error:", err);
     localNoAudio();
   }
-  clearLyricsPlayingHighlight();
-  document.getElementById("hebrewLinePopup").style.display = "none";
-  audioPlaybackMode = null;
 }
 
 async function readParshaRepositoryJson(fileName, optionalFile) {
@@ -3226,7 +3257,7 @@ async function resolveLineAudioUrl(wavPath, lineNumber) {
 
 async function playTropeTrainerLineAudio(wavPath, lineNumber) {
   const resolvedPath = await resolveLineAudioUrl(wavPath, lineNumber);
-  if (!resolvedPath) { clearLyricsPlayingHighlight(); audioPlaybackMode = null; return; }
+  if (!resolvedPath) { if (parshaRepositorySource === "local") localNoAudio(); else { clearLyricsPlayingHighlight(); audioPlaybackMode = null; } return; }
   console.log("Playing TropeTrainer audio:");
   console.log("Line:", lineNumber);
   console.log("WAV path:", wavPath);
@@ -3248,6 +3279,7 @@ async function playTropeTrainerLineAudio(wavPath, lineNumber) {
   };
 
   player.onerror = function() {
+    if (parshaRepositorySource === "local") { localNoAudio(); return; }
     clearLyricsPlayingHighlight();
 
     console.error(
@@ -3265,6 +3297,7 @@ async function playTropeTrainerLineAudio(wavPath, lineNumber) {
 
   if (playPromise && typeof playPromise.catch === "function") {
     playPromise.catch(function(err) {
+      if (parshaRepositorySource === "local") { console.error("Local WAV play failed:", err); localNoAudio(); return; }
       clearLyricsPlayingHighlight();
 audioPlaybackMode = null;
       console.error(
@@ -3473,6 +3506,7 @@ function stopPlayAllLyrics() {
   setPlayAllButtonStopped();
 
   document.getElementById("hebrewLinePopup").style.display = "none";
+  if (parshaRepositorySource === "local") audioPlaybackMode = null;
 }
 
 async function playAllLyricsLines() {
@@ -3527,6 +3561,13 @@ audioPlaybackMode = "playAll";
       }
     }
 
+  } catch (err) {
+    if (parshaRepositorySource === "local") {
+      console.error("Local Play All error:", err);
+      localNoAudio();
+    } else {
+      throw err;
+    }
   } finally {
     playAllEnable = false;
 audioPlaybackMode = null;
