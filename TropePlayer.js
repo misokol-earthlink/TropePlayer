@@ -109,6 +109,10 @@ let localParshaFiles = new Map();
 let localAudioDirectoryHandle = null;
 let localLineAudioFiles = new Map();
 let localAudioObjectUrl = null;
+let localSourceCatalog = null;
+let localPortionHandles = new Map();
+let localSelectedPortion = null;
+let localMp3StopTimer = null;
 let ptEnabled = false;
 let usePocketTorah = false;
 let ptParshaName = "";
@@ -1569,49 +1573,144 @@ function getLocalParshaNames(fileMap) {
 
 async function activateLocalParshaRepository() {
   const selectedHandle = await chooseLocalParshaRepositoryFolder();
-
-  if (!selectedHandle) {
-    return false;
-  }
-
-  const parshaDirectoryHandle =
-    await getLocalParshaRepositoryHandle(selectedHandle);
-
-  if (!parshaDirectoryHandle) {
-    alert(
-      "ParshaRepository was not found in the selected folder. " +
-      "Select the folder containing ParshaRepository, or select ParshaRepository itself."
-    );
-    return false;
-  }
-
-  const candidateMap =
-    await buildLocalParshaFileMap(parshaDirectoryHandle);
-
-  const localNames = getLocalParshaNames(candidateMap);
-
-  if (localNames.length === 0) {
-    alert("No Parsha JSON files were found in ParshaRepository.");
-    return false;
-  }
-
-  // Keep the outer folder for local line WAV playback.
-  localAudioDirectoryHandle = selectedHandle;
-  localLineAudioFiles = new Map();
+  if (!selectedHandle) return false;
+  // New source-root layout: HH_TINR.json and one directory per portion.
+  const portions = new Map();
+  let catalog = null;
   for await (const [name, handle] of selectedHandle.entries()) {
-    if (handle.kind === "file" && name.toLowerCase().endsWith(".wav")) {
-      localLineAudioFiles.set(name.toLowerCase(), handle);
+    if (handle.kind === "file" && /^HH_[^/]+\.json$/i.test(name)) {
+      try {
+        const candidate = JSON.parse(await (await handle.getFile()).text());
+        if (candidate.readings && Array.isArray(candidate.readings)) catalog = candidate;
+      } catch (err) { console.warn("Invalid local HH catalog", name, err); }
+    }
+    if (handle.kind === "directory" && name !== "ParshaRepository") {
+      if (await getLocalParshaRepositoryHandle(handle)) portions.set(name, handle);
     }
   }
-  localParshaFiles = candidateMap;
-  parshaRepositorySource = "local";
+  if (portions.size) {
+    localSourceCatalog = catalog;
+    localPortionHandles = portions;
+    localSelectedPortion = null;
+    parshaRepositorySource = "local";
+    activeFiles = [...portions.keys()].sort((a,b) => a.localeCompare(b));
+    populateActiveFilesSelect(activeFiles, false);
+    console.log("[Local] Source root:", selectedHandle.name, "portions:", activeFiles);
+    return true;
+  }
+  // Preserve the existing single-portion local selection behavior.
+  const parshaDirectoryHandle = await getLocalParshaRepositoryHandle(selectedHandle);
+  if (!parshaDirectoryHandle) {
+    alert("No portion folders or ParshaRepository found in the selected directory.");
+    return false;
+  }
+  const candidateMap = await buildLocalParshaFileMap(parshaDirectoryHandle);
+  const localNames = getLocalParshaNames(candidateMap);
+  if (!localNames.length) { alert("No Parsha JSON files were found in ParshaRepository."); return false; }
+  localSourceCatalog = null;
+  localPortionHandles = new Map();
+  localSelectedPortion = null;
+  await setLocalPortionFiles(selectedHandle, candidateMap);
   activeFiles = localNames;
   populateActiveFilesSelect(activeFiles, false);
-
-  console.log("Local ParshaRepository selected.");
-  console.log("Local Parsha files:", activeFiles);
-  console.log("[Audio] Local WAV directory:", selectedHandle.name, "files:", localLineAudioFiles.size);
   return true;
+}
+
+async function setLocalPortionFiles(portionHandle, knownMap = null) {
+  const repository = await getLocalParshaRepositoryHandle(portionHandle);
+  if (!repository) throw new Error("ParshaRepository missing in " + portionHandle.name);
+  localParshaFiles = knownMap || await buildLocalParshaFileMap(repository);
+  localAudioDirectoryHandle = portionHandle;
+  localLineAudioFiles = new Map();
+  for await (const [name, handle] of portionHandle.entries()) {
+    if (handle.kind === "file" && name.toLowerCase().endsWith(".wav"))
+      localLineAudioFiles.set(name.toLowerCase(), handle);
+  }
+  localSelectedPortion = portionHandle.name;
+  parshaRepositorySource = "local";
+}
+
+function getLocalFullTracks() {
+  if (parshaRepositorySource !== "local" || !localSourceCatalog || !localSelectedPortion) return null;
+  const reading = localSourceCatalog.readings.find(r =>
+    String(r.id || r.name).toLowerCase() === localSelectedPortion.toLowerCase());
+  const full = reading?.aliyot?.find(a => String(a.num).toLowerCase() === "full");
+  return Array.isArray(full?.tracks) && full.tracks.length ? full.tracks : null;
+}
+
+function localNoAudio() { alert("Audio Playback files not present; Please use Pocket Torah."); }
+function localMp3Credit(lineNumber) {
+  const box = document.getElementById("hebrewLineText");
+  if (box) box.textContent = "Audio playback for line " + lineNumber + " — " +
+    (localSourceCatalog?.sourceName || "Temple Israel of New Rochelle");
+  const popup = document.getElementById("hebrewLinePopup");
+  if (popup) popup.style.display = "block";
+}
+function stopLocalMp3Segment() {
+  if (localMp3StopTimer) clearInterval(localMp3StopTimer);
+  localMp3StopTimer = null;
+  player.pause();
+  player.onended = null;
+  player.onerror = null;
+}
+async function playLocalMp3Track(track) {
+  if (!track || !track.audioUrl || !Number.isFinite(Number(track.start))) throw new Error("Invalid MP3 track");
+  stopLocalMp3Segment();
+  return new Promise((resolve,reject) => {
+    let finished = false;
+    function finish(error) {
+      if (finished) return;
+      finished = true;
+      if (localMp3StopTimer) clearInterval(localMp3StopTimer);
+      localMp3StopTimer = null;
+      player.pause(); player.onended = null; player.onerror = null;
+      error ? reject(error) : resolve();
+    }
+    player.onerror = () => finish(new Error("MP3 playback failed"));
+    player.onended = () => finish();
+    player.src = track.audioUrl;
+    player.load();
+    const begin = () => {
+      try { player.currentTime = Number(track.start); }
+      catch (err) { finish(err); return; }
+      player.play().catch(finish);
+      if (track.end != null && Number.isFinite(Number(track.end))) {
+        localMp3StopTimer = setInterval(() => {
+          if (player.currentTime >= Number(track.end)) finish();
+        }, 60);
+      }
+    };
+    if (player.readyState >= 1) begin();
+    else player.addEventListener("loadedmetadata", begin, {once:true});
+  });
+}
+async function playLocalLyricsLine(lineNumber) {
+  const tracks = getLocalFullTracks();
+  const track = tracks?.find(t => Number(t.lineNumber) === lineNumber);
+  const sectionName = document.getElementById("activeFileViewerTitle").textContent.trim();
+  const wavPath = audioPath + encodeURIComponent(sectionName) + "/" + encodeURIComponent(sectionName + "_line" + lineNumber + ".wav");
+  if (!tracks) {
+    if (!getLocalLineAudioFilename(lineNumber)) { localNoAudio(); audioPlaybackMode = null; return; }
+    showTropeTrainerCreditLine(lineNumber);
+    await playTropeTrainerLineAudio(wavPath, lineNumber);
+    return;
+  }
+  try {
+    if (!track) throw new Error("Line missing from Full catalog");
+    localMp3Credit(lineNumber);
+    await playLocalMp3Track(track);
+  } catch (err) {
+    console.error("Local MP3 playback failed:", err);
+    if (getLocalLineAudioFilename(lineNumber) && confirm("MP3 playback failed. Local WAV files are available. Use WAV playback instead?")) {
+      showTropeTrainerCreditLine(lineNumber);
+      await playTropeTrainerLineAudio(wavPath, lineNumber);
+      return;
+    }
+    localNoAudio();
+  }
+  clearLyricsPlayingHighlight();
+  document.getElementById("hebrewLinePopup").style.display = "none";
+  audioPlaybackMode = null;
 }
 
 async function readParshaRepositoryJson(fileName, optionalFile) {
@@ -1683,6 +1782,9 @@ async function openActiveFilesSelector(
   localParshaFiles = new Map();
   localAudioDirectoryHandle = null;
   localLineAudioFiles = new Map();
+  localSourceCatalog = null;
+  localPortionHandles = new Map();
+  localSelectedPortion = null;
   if (localAudioObjectUrl) {
     URL.revokeObjectURL(localAudioObjectUrl);
     localAudioObjectUrl = null;
@@ -1802,6 +1904,9 @@ async function loadSelectedActiveFile() {
       : selectedFile + ".json";
 
   try {
+    if (parshaRepositorySource === "local" && localPortionHandles.has(selectedFile)) {
+      await setLocalPortionFiles(localPortionHandles.get(selectedFile));
+    }
 console.log("selectedFile =", selectedFile);
 console.log("jsonFile =", jsonFile);
     const data =
@@ -2050,7 +2155,8 @@ lyricsBox.classList.add("lyrics-playing");
     "/" +
     encodeURIComponent(sectionName + "_line" + lineNumber + ".wav");
 
-  playTropeTrainerLineAudio(wavPath, lineNumber);
+  if (parshaRepositorySource === "local") playLocalLyricsLine(lineNumber);
+  else playTropeTrainerLineAudio(wavPath, lineNumber);
 
 };
 
@@ -3354,6 +3460,7 @@ function stopPlayAllLyrics() {
   playAllEnable = false;
 
   player.pause();
+  if (localMp3StopTimer) { clearInterval(localMp3StopTimer); localMp3StopTimer = null; }
   player.currentTime = 0;
 
   if (playAllResolve) {
@@ -3395,7 +3502,25 @@ audioPlaybackMode = "playAll";
       scrollLyricsLineIntoView(lineNumber);
       showTropeTrainerCreditLine(lineNumber);
 
-      await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+      if (parshaRepositorySource === "local") {
+        const tracks = getLocalFullTracks();
+        if (tracks) {
+          const track = tracks.find(t => Number(t.lineNumber) === lineNumber);
+          try {
+            localMp3Credit(lineNumber);
+            await playLocalMp3Track(track);
+          } catch (err) {
+            console.error("Local MP3 Play All failed", err);
+            if (getLocalLineAudioFilename(lineNumber) && confirm("MP3 playback failed. Local WAV files are available. Continue using WAV playback?")) {
+              await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+            } else { localNoAudio(); break; }
+          }
+        } else if (getLocalLineAudioFilename(lineNumber)) {
+          await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+        } else { localNoAudio(); break; }
+      } else {
+        await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+      }
 
       if (!playAllEnable) {
         return;
