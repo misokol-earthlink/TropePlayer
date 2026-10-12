@@ -2279,7 +2279,7 @@ lyricsRow.onclick = function(event) {
     return;
   }
   if (!usePocketTorah && parshaRepositorySource === "github" && !onlineHHCatalog) {
-    // No licensed source configured: ordinary click is intentionally silent.
+    selectedAudioUnavailable();
     return;
   }
   if (!usePocketTorah && parshaRepositorySource === "local" && !getLocalFullTracks() && !getLocalLineAudioFilename(lineNumber)) {
