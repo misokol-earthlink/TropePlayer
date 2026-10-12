@@ -2246,6 +2246,25 @@ lyricsRow.onclick = function(event) {
     return;
   }
 
+  // Deliberate private WAV override for a single lyrics line.
+  // Ordinary clicks never initiate TropeTrainer WAV playback.
+  if (event.ctrlKey) {
+    audioPlaybackMode = "lyrics";
+    const sectionName = document.getElementById("activeFileViewerTitle").textContent.trim();
+    const wavPath = audioPath + encodeURIComponent(sectionName) + "/" +
+      encodeURIComponent(sectionName + "_line" + lineNumber + ".wav");
+    lyricsBox.classList.add("lyrics-playing");
+    showTropeTrainerCreditLine(lineNumber);
+    playTropeTrainerLineAudio(wavPath, lineNumber);
+    return;
+  }
+  if (!usePocketTorah && parshaRepositorySource === "github" && !onlineHHCatalog) {
+    // No licensed source configured: ordinary click is intentionally silent.
+    return;
+  }
+  if (!usePocketTorah && parshaRepositorySource === "local" && !getLocalFullTracks()) {
+    return;
+  }
   audioPlaybackMode = "lyrics";
 if (usePocketTorah) {
   playPocketTorahAudio(lineNumber);
@@ -2269,7 +2288,7 @@ lyricsBox.classList.add("lyrics-playing");
 
   if (parshaRepositorySource === "local") playLocalLyricsLine(lineNumber);
   else if (onlineHHCatalog) playOnlineHHLine(lineNumber);
-  else playTropeTrainerLineAudio(wavPath, lineNumber);
+  else { audioPlaybackMode = null; clearLyricsPlayingHighlight(); }
 
 };
 
@@ -3543,16 +3562,23 @@ document.getElementById("playAllLyricsBtn").onclick = function(event) {
   ) {
     return;
   }
-if (usePocketTorah) {
-  playPocketTorahAll();
-  return;
-}
+// Stopping never requires Ctrl, including a Ctrl-started WAV sequence.
   if (playAllEnable) {
     stopPlayAllLyrics();
     return;
   }
+  if (event.ctrlKey) {
+    playAllLyricsLines(true);
+    return;
+  }
+  if (usePocketTorah) {
+    playPocketTorahAll();
+    return;
+  }
+  if (parshaRepositorySource === "github" && !onlineHHCatalog) return;
+  if (parshaRepositorySource === "local" && !getLocalFullTracks()) return;
 
-  playAllLyricsLines();
+  playAllLyricsLines(false);
 };
 
 function setPlayAllButtonRunning() {
@@ -3593,7 +3619,7 @@ function stopPlayAllLyrics() {
   if (parshaRepositorySource === "local" || onlineHHCatalog) audioPlaybackMode = null;
 }
 
-async function playAllLyricsLines() {
+async function playAllLyricsLines(forceWav = false) {
   playAllEnable = true;
 audioPlaybackMode = "playAll";
   setPlayAllButtonRunning();
@@ -3618,9 +3644,11 @@ audioPlaybackMode = "playAll";
 
       highlightLyricsLineForPlayAll(lineNumber);
       scrollLyricsLineIntoView(lineNumber);
-      if (!onlineHHCatalog) showTropeTrainerCreditLine(lineNumber);
+      if (forceWav || (!onlineHHCatalog && parshaRepositorySource !== "local")) showTropeTrainerCreditLine(lineNumber);
 
-      if (parshaRepositorySource === "local") {
+      if (forceWav) {
+        await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+      } else if (parshaRepositorySource === "local") {
         const tracks = getLocalFullTracks();
         if (tracks) {
           const track = tracks.find(t => Number(t.lineNumber) === lineNumber);
@@ -3629,12 +3657,8 @@ audioPlaybackMode = "playAll";
             await playLocalMp3Track(track);
           } catch (err) {
             console.error("Local MP3 Play All failed", err);
-            if (getLocalLineAudioFilename(lineNumber) && confirm("MP3 playback failed. Local WAV files are available. Continue using WAV playback?")) {
-              await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
-            } else { localNoAudio(); break; }
+            localNoAudio(); break;
           }
-        } else if (getLocalLineAudioFilename(lineNumber)) {
-          await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
         } else { localNoAudio(); break; }
       } else if (onlineHHCatalog) {
         if (!onlineHHIsTimed()) {
@@ -3653,7 +3677,7 @@ audioPlaybackMode = "playAll";
           break;
         }
       } else {
-        await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+        break; // No WAV Play All in ordinary playback.
       }
 
       if (!playAllEnable) {
