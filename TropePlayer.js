@@ -1682,7 +1682,11 @@ function setSourcePlaybackCredit(lineNumber, sourceId, fallback) {
   const box = document.getElementById("hebrewLineText");
   if (box) box.textContent = "Audio playback for line " + lineNumber + " — " + sourceCredit(sourceId, fallback);
   const popup = document.getElementById("hebrewLinePopup");
-  if (popup) popup.style.display = "block";
+  if (popup) {
+    // Match the established Pocket Torah/WAV credit placement.
+    popup.style.top = lineNumber === 1 ? "420px" : "200px";
+    popup.style.display = "block";
+  }
   // Refresh if the asynchronous shared catalog has not yet arrived.
   if (!lyricsSourcesCatalog) lyricsSourcesReady.then(() => {
     if (popup?.style.display === "block") {
