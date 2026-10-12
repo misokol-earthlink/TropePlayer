@@ -111,6 +111,7 @@ let localLineAudioFiles = new Map();
 let localAudioObjectUrl = null;
 let localSourceCatalog = null;
 let onlineHHSource = null;
+let onlineHHDisplayName = null;
 let onlineHHCatalog = null;
 let onlineHHReading = null;
 let onlinePlaybackGeneration = 0;
@@ -1697,7 +1698,7 @@ async function playLocalMp3Track(track) {
       player.pause(); player.onended = null; player.onerror = null;
       error ? reject(error) : resolve();
     }
-    if (parshaRepositorySource === "github" && onlineHHCatalog) onlineMp3Cancel = () => finish(new Error("Playback stopped"));
+    if (parshaRepositorySource === "github" && onlineHHCatalog) onlineMp3Cancel = () => finish();
     player.onerror = () => finish(new Error("MP3 playback failed"));
     player.onended = () => finish();
     player.src = track.audioUrl;
@@ -1757,6 +1758,7 @@ async function loadOnlineHHForPortion(portionName) {
   onlinePlaybackGeneration++;
   if (onlineMp3Cancel) onlineMp3Cancel();
   onlineHHSource = null;
+  onlineHHDisplayName = null;
   onlineHHCatalog = null;
   onlineHHReading = null;
   if (parshaRepositorySource !== "github") return;
@@ -1772,6 +1774,7 @@ async function loadOnlineHHForPortion(portionName) {
   const reading = catalog.readings.find(r => String(r.id || r.name || "").toLowerCase() === portionName.toLowerCase());
   if (!reading) throw new Error("Reading " + portionName + " not found in HH_" + source + ".json");
   onlineHHSource = source;
+  onlineHHDisplayName = String(pointer.sourceName || catalog.sourceName || source).trim();
   onlineHHCatalog = catalog;
   onlineHHReading = reading;
   console.log("[HH Online]", portionName, source, catalog.playbackType);
@@ -1817,7 +1820,7 @@ async function playOnlineHHLine(lineNumber) {
 function localMp3CreditOnline(lineNumber) {
   const box = document.getElementById("hebrewLineText");
   if (box) box.textContent = "Audio playback for line " + lineNumber + " — " +
-    (onlineHHCatalog?.sourceName || onlineHHSource);
+    (onlineHHDisplayName || onlineHHSource);
   const popup = document.getElementById("hebrewLinePopup");
   if (popup) popup.style.display = "block";
 }
@@ -3673,6 +3676,7 @@ audioPlaybackMode = "playAll";
           await playLocalMp3Track(track);
           if (generation !== onlinePlaybackGeneration) break;
         } catch (err) {
+          if (!playAllEnable || generation !== onlinePlaybackGeneration) break;
           onlineHHUnavailable("Online HH audio failed: " + err.message);
           break;
         }
