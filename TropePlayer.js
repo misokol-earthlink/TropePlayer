@@ -1668,15 +1668,32 @@ function resetLocalPlaybackAfterFailure() {
 }
 function localNoAudio() {
   resetLocalPlaybackAfterFailure();
-  alert("Audio Playback files not present; Please use Pocket Torah.");
+  alert("Selected audio playback not available. Please select Pocket Torah.");
 }
-function localMp3Credit(lineNumber) {
+function selectedAudioUnavailable() {
+  resetLocalPlaybackAfterFailure();
+  alert("Selected audio playback not available. Please select Pocket Torah.");
+}
+function sourceCredit(sourceId, fallback) {
+  const source = sourceId && lyricsSourcesCatalog?.[String(sourceId).toUpperCase()];
+  return source ? [source.name, source.location].filter(Boolean).join(" — ") : (fallback || sourceId || "");
+}
+function setSourcePlaybackCredit(lineNumber, sourceId, fallback) {
   const box = document.getElementById("hebrewLineText");
-  if (box) box.textContent = "Audio playback for line " + lineNumber + " — " +
-    (localSourceCatalog?.sourceName || "Temple Israel of New Rochelle");
+  if (box) box.textContent = "Audio playback for line " + lineNumber + " — " + sourceCredit(sourceId, fallback);
   const popup = document.getElementById("hebrewLinePopup");
   if (popup) popup.style.display = "block";
+  // Refresh if the asynchronous shared catalog has not yet arrived.
+  if (!lyricsSourcesCatalog) lyricsSourcesReady.then(() => {
+    if (popup?.style.display === "block") {
+      if (box) box.textContent = "Audio playback for line " + lineNumber + " — " + sourceCredit(sourceId, fallback);
+    }
+  });
 }
+function localMp3Credit(lineNumber) {
+  setSourcePlaybackCredit(lineNumber, localSourceCatalog?.source, localSourceCatalog?.sourceName);
+}
+
 function stopLocalMp3Segment() {
   if (localMp3StopTimer) clearInterval(localMp3StopTimer);
   localMp3StopTimer = null;
@@ -1818,11 +1835,7 @@ async function playOnlineHHLine(lineNumber) {
   }
 }
 function localMp3CreditOnline(lineNumber) {
-  const box = document.getElementById("hebrewLineText");
-  if (box) box.textContent = "Audio playback for line " + lineNumber + " — " +
-    (onlineHHDisplayName || onlineHHSource);
-  const popup = document.getElementById("hebrewLinePopup");
-  if (popup) popup.style.display = "block";
+  setSourcePlaybackCredit(lineNumber, onlineHHSource, onlineHHDisplayName || onlineHHCatalog?.sourceName);
 }
 
 async function readParshaRepositoryJson(fileName, optionalFile) {
@@ -2265,7 +2278,8 @@ lyricsRow.onclick = function(event) {
     // No licensed source configured: ordinary click is intentionally silent.
     return;
   }
-  if (!usePocketTorah && parshaRepositorySource === "local" && !getLocalFullTracks()) {
+  if (!usePocketTorah && parshaRepositorySource === "local" && !getLocalFullTracks() && !getLocalLineAudioFilename(lineNumber)) {
+    selectedAudioUnavailable();
     return;
   }
   audioPlaybackMode = "lyrics";
@@ -3295,7 +3309,7 @@ function showTropeTrainerCreditLine(lineNumber) {
   const sourceId = getLineAudioSourceId(lineNumber);
   const source = sourceId && lyricsSourcesCatalog && lyricsSourcesCatalog[sourceId];
   if (source) {
-    const details = [source.name, source.location, source.cantor].filter(Boolean);
+    const details = [source.name, source.location].filter(Boolean);
     messageBox.textContent = "Audio playback for line " + lineNumber +
       " — " + details.join(" — ");
     console.log("[Lyrics Audio] Source:", sourceId, details.join(" — "));
@@ -3361,7 +3375,7 @@ async function resolveLineAudioUrl(wavPath, lineNumber) {
 
 async function playTropeTrainerLineAudio(wavPath, lineNumber) {
   const resolvedPath = await resolveLineAudioUrl(wavPath, lineNumber);
-  if (!resolvedPath) { if (parshaRepositorySource === "local") localNoAudio(); else { clearLyricsPlayingHighlight(); audioPlaybackMode = null; } return; }
+  if (!resolvedPath) { selectedAudioUnavailable(); return; }
   console.log("Playing TropeTrainer audio:");
   console.log("Line:", lineNumber);
   console.log("WAV path:", wavPath);
@@ -3383,7 +3397,8 @@ async function playTropeTrainerLineAudio(wavPath, lineNumber) {
   };
 
   player.onerror = function() {
-    if (parshaRepositorySource === "local") { localNoAudio(); return; }
+    if (parshaRepositorySource === "local") { selectedAudioUnavailable(); return; }
+    selectedAudioUnavailable();
     clearLyricsPlayingHighlight();
 
     console.error(
@@ -3401,7 +3416,8 @@ async function playTropeTrainerLineAudio(wavPath, lineNumber) {
 
   if (playPromise && typeof playPromise.catch === "function") {
     playPromise.catch(function(err) {
-      if (parshaRepositorySource === "local") { console.error("Local WAV play failed:", err); localNoAudio(); return; }
+      if (parshaRepositorySource === "local") { console.error("Local WAV play failed:", err); selectedAudioUnavailable(); return; }
+      selectedAudioUnavailable();
       clearLyricsPlayingHighlight();
 audioPlaybackMode = null;
       console.error(
@@ -3578,8 +3594,8 @@ document.getElementById("playAllLyricsBtn").onclick = function(event) {
     playPocketTorahAll();
     return;
   }
-  if (parshaRepositorySource === "github" && !onlineHHCatalog) return;
-  if (parshaRepositorySource === "local" && !getLocalFullTracks()) return;
+  if (parshaRepositorySource === "github" && !onlineHHCatalog) { selectedAudioUnavailable(); return; }
+  if (parshaRepositorySource === "local" && !getLocalFullTracks()) { selectedAudioUnavailable(); return; }
 
   playAllLyricsLines(false);
 };
@@ -3650,7 +3666,8 @@ audioPlaybackMode = "playAll";
       if (forceWav || (!onlineHHCatalog && parshaRepositorySource !== "local")) showTropeTrainerCreditLine(lineNumber);
 
       if (forceWav) {
-        await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+        const wavPlayed = await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
+        if (wavPlayed === false) break;
       } else if (parshaRepositorySource === "local") {
         const tracks = getLocalFullTracks();
         if (tracks) {
@@ -3729,7 +3746,7 @@ function highlightLyricsLineForPlayAll(lineNumber) {
 
 async function playTropeTrainerLineAudioAndWait(wavPath, lineNumber) {
   const resolvedPath = await resolveLineAudioUrl(wavPath, lineNumber);
-  if (!resolvedPath) return;
+  if (!resolvedPath) { selectedAudioUnavailable(); return false; }
   return new Promise(function(resolve) {
 
     let alreadyResolved = false;
@@ -3758,12 +3775,13 @@ async function playTropeTrainerLineAudioAndWait(wavPath, lineNumber) {
     player.load();
 
     player.onended = finishPlayback;
-    player.onerror = finishPlayback;
+    player.onerror = function() { if (playAllEnable) selectedAudioUnavailable(); finishPlayback(); };
 
     const playPromise = player.play();
 
     if (playPromise && typeof playPromise.catch === "function") {
       playPromise.catch(function() {
+        if (playAllEnable) selectedAudioUnavailable();
         finishPlayback();
       });
     }
