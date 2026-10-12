@@ -110,6 +110,11 @@ let localAudioDirectoryHandle = null;
 let localLineAudioFiles = new Map();
 let localAudioObjectUrl = null;
 let localSourceCatalog = null;
+let onlineHHSource = null;
+let onlineHHCatalog = null;
+let onlineHHReading = null;
+let onlinePlaybackGeneration = 0;
+let onlineMp3Cancel = null;
 let localPortionHandles = new Map();
 let localSelectedPortion = null;
 let localMp3StopTimer = null;
@@ -1608,6 +1613,7 @@ async function activateLocalParshaRepository() {
   const localNames = getLocalParshaNames(candidateMap);
   if (!localNames.length) { alert("No Parsha JSON files were found in ParshaRepository."); return false; }
   localSourceCatalog = null;
+  onlineHHSource = null; onlineHHCatalog = null; onlineHHReading = null;
   localPortionHandles = new Map();
   localSelectedPortion = null;
   await setLocalPortionFiles(selectedHandle, candidateMap);
@@ -1685,11 +1691,13 @@ async function playLocalMp3Track(track) {
     function finish(error) {
       if (finished) return;
       finished = true;
+      onlineMp3Cancel = null;
       if (localMp3StopTimer) clearInterval(localMp3StopTimer);
       localMp3StopTimer = null;
       player.pause(); player.onended = null; player.onerror = null;
       error ? reject(error) : resolve();
     }
+    if (parshaRepositorySource === "github" && onlineHHCatalog) onlineMp3Cancel = () => finish(new Error("Playback stopped"));
     player.onerror = () => finish(new Error("MP3 playback failed"));
     player.onended = () => finish();
     player.src = track.audioUrl;
@@ -1742,6 +1750,76 @@ async function playLocalLyricsLine(lineNumber) {
     console.error("Local line playback error:", err);
     localNoAudio();
   }
+}
+
+// Online HH lookup is optional; only the explicitly selected portion can enable it.
+async function loadOnlineHHForPortion(portionName) {
+  onlinePlaybackGeneration++;
+  if (onlineMp3Cancel) onlineMp3Cancel();
+  onlineHHSource = null;
+  onlineHHCatalog = null;
+  onlineHHReading = null;
+  if (parshaRepositorySource !== "github") return;
+  const pointer = await readParshaRepositoryJson(portionName + "_Source.json", true);
+  if (!pointer) return; // Existing WAV route, unchanged.
+  const source = String(pointer.source || "").trim().toUpperCase();
+  if (!/^[A-Z0-9_-]+$/.test(source)) throw new Error("Invalid source pointer for " + portionName);
+  const response = await fetch("HH_" + source + ".json?v=" + Date.now(), {cache:"no-store"});
+  if (!response.ok) throw new Error("HH_" + source + ".json unavailable (HTTP " + response.status + ")");
+  const catalog = await response.json();
+  if (String(catalog.source || "").toUpperCase() !== source || !Array.isArray(catalog.readings))
+    throw new Error("Invalid HH catalog for " + source);
+  const reading = catalog.readings.find(r => String(r.id || r.name || "").toLowerCase() === portionName.toLowerCase());
+  if (!reading) throw new Error("Reading " + portionName + " not found in HH_" + source + ".json");
+  onlineHHSource = source;
+  onlineHHCatalog = catalog;
+  onlineHHReading = reading;
+  console.log("[HH Online]", portionName, source, catalog.playbackType);
+}
+function onlineHHTracks() {
+  if (!onlineHHReading) return null;
+  const full = onlineHHReading.aliyot?.find(a => String(a.num).toLowerCase() === "full");
+  return Array.isArray(full?.tracks) ? full.tracks : null;
+}
+function onlineHHIsTimed() {
+  return !!onlineHHCatalog && onlineHHCatalog.playbackType === "mp3-sequential-segments";
+}
+function onlineHHUnavailable(message) {
+  console.error("[HH Online]", message);
+  clearLyricsPlayingHighlight();
+  const popup = document.getElementById("hebrewLinePopup");
+  if (popup) popup.style.display = "none";
+  audioPlaybackMode = null;
+  alert(message);
+}
+async function playOnlineHHLine(lineNumber) {
+  if (!onlineHHIsTimed()) {
+    onlineHHUnavailable("The " + onlineHHSource + " playback engine is not yet implemented in TropePlayer.");
+    return;
+  }
+  const track = onlineHHTracks()?.find(t => Number(t.lineNumber) === lineNumber);
+  if (!track) { onlineHHUnavailable("No " + onlineHHSource + " recording for line " + lineNumber); return; }
+  const generation = ++onlinePlaybackGeneration;
+  try {
+    localMp3CreditOnline(lineNumber);
+    await playLocalMp3Track(track);
+  } catch (err) {
+    if (generation === onlinePlaybackGeneration) onlineHHUnavailable("Online HH audio failed: " + err.message);
+  } finally {
+    if (generation === onlinePlaybackGeneration) {
+      clearLyricsPlayingHighlight();
+      const popup = document.getElementById("hebrewLinePopup");
+      if (popup) popup.style.display = "none";
+      audioPlaybackMode = null;
+    }
+  }
+}
+function localMp3CreditOnline(lineNumber) {
+  const box = document.getElementById("hebrewLineText");
+  if (box) box.textContent = "Audio playback for line " + lineNumber + " — " +
+    (onlineHHCatalog?.sourceName || onlineHHSource);
+  const popup = document.getElementById("hebrewLinePopup");
+  if (popup) popup.style.display = "block";
 }
 
 async function readParshaRepositoryJson(fileName, optionalFile) {
@@ -1946,6 +2024,9 @@ console.log("jsonFile =", jsonFile);
 
 const lyricsData =
   await loadMatchingLyricsFile(selectedFile);
+
+// Resolve optional online source pointer only; local directory behavior is unchanged.
+await loadOnlineHHForPortion(selectedFile.replace(/\.json$/i, ""));
 
 if (!editExistingMode) {
   displayVowels = confirm(
@@ -2173,7 +2254,7 @@ if (usePocketTorah) {
 
 lyricsBox.classList.add("lyrics-playing");
 
-  showTropeTrainerCreditLine(lineNumber);
+  if (!onlineHHCatalog) showTropeTrainerCreditLine(lineNumber);
 
   const sectionName =
     document.getElementById("activeFileViewerTitle")
@@ -2187,6 +2268,7 @@ lyricsBox.classList.add("lyrics-playing");
     encodeURIComponent(sectionName + "_line" + lineNumber + ".wav");
 
   if (parshaRepositorySource === "local") playLocalLyricsLine(lineNumber);
+  else if (onlineHHCatalog) playOnlineHHLine(lineNumber);
   else playTropeTrainerLineAudio(wavPath, lineNumber);
 
 };
@@ -3492,6 +3574,8 @@ function setPlayAllButtonStopped() {
 function stopPlayAllLyrics() {
   playAllEnable = false;
 
+  onlinePlaybackGeneration++;
+  if (onlineMp3Cancel) onlineMp3Cancel();
   player.pause();
   if (localMp3StopTimer) { clearInterval(localMp3StopTimer); localMp3StopTimer = null; }
   player.currentTime = 0;
@@ -3506,7 +3590,7 @@ function stopPlayAllLyrics() {
   setPlayAllButtonStopped();
 
   document.getElementById("hebrewLinePopup").style.display = "none";
-  if (parshaRepositorySource === "local") audioPlaybackMode = null;
+  if (parshaRepositorySource === "local" || onlineHHCatalog) audioPlaybackMode = null;
 }
 
 async function playAllLyricsLines() {
@@ -3534,7 +3618,7 @@ audioPlaybackMode = "playAll";
 
       highlightLyricsLineForPlayAll(lineNumber);
       scrollLyricsLineIntoView(lineNumber);
-      showTropeTrainerCreditLine(lineNumber);
+      if (!onlineHHCatalog) showTropeTrainerCreditLine(lineNumber);
 
       if (parshaRepositorySource === "local") {
         const tracks = getLocalFullTracks();
@@ -3552,6 +3636,22 @@ audioPlaybackMode = "playAll";
         } else if (getLocalLineAudioFilename(lineNumber)) {
           await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
         } else { localNoAudio(); break; }
+      } else if (onlineHHCatalog) {
+        if (!onlineHHIsTimed()) {
+          onlineHHUnavailable("The " + onlineHHSource + " playback engine is not yet implemented in TropePlayer.");
+          break;
+        }
+        const track = onlineHHTracks()?.find(t => Number(t.lineNumber) === lineNumber);
+        if (!track) { onlineHHUnavailable("No " + onlineHHSource + " recording for line " + lineNumber); break; }
+        const generation = onlinePlaybackGeneration;
+        try {
+          localMp3CreditOnline(lineNumber);
+          await playLocalMp3Track(track);
+          if (generation !== onlinePlaybackGeneration) break;
+        } catch (err) {
+          onlineHHUnavailable("Online HH audio failed: " + err.message);
+          break;
+        }
       } else {
         await playTropeTrainerLineAudioAndWait(wavPath, lineNumber);
       }
