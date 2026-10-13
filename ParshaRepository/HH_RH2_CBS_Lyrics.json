@@ -1,0 +1,1313 @@
+{
+  "title": "HH_RH2_CBS-PT",
+  "lines": [
+    {
+      "lineName": "GE:22:01",
+      "words": [
+        {
+          "hebrew": "וַיְהִ֗י",
+          "translit": "vyhy"
+        },
+        {
+          "hebrew": "אַחַר֙",
+          "translit": "'chr"
+        },
+        {
+          "hebrew": "הַדְּבָרִ֣ים",
+          "translit": "hdvrym"
+        },
+        {
+          "hebrew": "הָאֵ֔לֶּה",
+          "translit": "h'lh"
+        },
+        {
+          "hebrew": "וְהָ֣אֱלֹהִ֔ים",
+          "translit": "vh'lhym"
+        },
+        {
+          "hebrew": "נִסָּ֖ה",
+          "translit": "nsh"
+        },
+        {
+          "hebrew": "אֶת־אַבְרָהָ֑ם",
+          "translit": "'t-'vrhm"
+        },
+        {
+          "hebrew": "וַיֹּ֣אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "אֵלָ֔יו",
+          "translit": "'lyv"
+        },
+        {
+          "hebrew": "אַבְרָהָ֖ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "וַיֹּ֥אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "הִנֵּֽנִי׃",
+          "translit": "hnny"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:02",
+      "words": [
+        {
+          "hebrew": "וַיֹּ֡אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "קַח־נָ֠א",
+          "translit": "kch-n'"
+        },
+        {
+          "hebrew": "אֶת־בִּנְךָ֨",
+          "translit": "'t-vnch"
+        },
+        {
+          "hebrew": "אֶת־יְחִֽידְךָ֤",
+          "translit": "'t-ychydch"
+        },
+        {
+          "hebrew": "אֲשֶׁר־אָהַ֙בְתָּ֙",
+          "translit": "'shr-'hvt"
+        },
+        {
+          "hebrew": "אֶת־יִצְחָ֔ק",
+          "translit": "'t-ytzchk"
+        },
+        {
+          "hebrew": "וְלֶ֨ךְ־לְךָ֔",
+          "translit": "vlch-lch"
+        },
+        {
+          "hebrew": "אֶל־אֶ֖רֶץ",
+          "translit": "'l-'rtz"
+        },
+        {
+          "hebrew": "הַמֹּרִיָּ֑ה",
+          "translit": "hmryh"
+        },
+        {
+          "hebrew": "וְהַעֲלֵ֤הוּ",
+          "translit": "vh'lhv"
+        },
+        {
+          "hebrew": "שָׁם֙",
+          "translit": "shm"
+        },
+        {
+          "hebrew": "לְעֹלָ֔ה",
+          "translit": "l'lh"
+        },
+        {
+          "hebrew": "עַ֚ל",
+          "translit": "'l"
+        },
+        {
+          "hebrew": "אַחַ֣ד",
+          "translit": "'chd"
+        },
+        {
+          "hebrew": "הֶֽהָרִ֔ים",
+          "translit": "hhrym"
+        },
+        {
+          "hebrew": "אֲשֶׁ֖ר",
+          "translit": "'shr"
+        },
+        {
+          "hebrew": "אֹמַ֥ר",
+          "translit": "'mr"
+        },
+        {
+          "hebrew": "אֵלֶֽיךָ׃",
+          "translit": "'lych"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:03",
+      "words": [
+        {
+          "hebrew": "וַיַּשְׁכֵּ֨ם",
+          "translit": "vyshchm"
+        },
+        {
+          "hebrew": "אַבְרָהָ֜ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "בַּבֹּ֗קֶר",
+          "translit": "vvkr"
+        },
+        {
+          "hebrew": "וַֽיַּחֲבֹשׁ֙",
+          "translit": "vychvsh"
+        },
+        {
+          "hebrew": "אֶת־חֲמֹר֔וֹ",
+          "translit": "'t-chmrv"
+        },
+        {
+          "hebrew": "וַיִּקַּ֞ח",
+          "translit": "vykch"
+        },
+        {
+          "hebrew": "אֶת־שְׁנֵ֤י",
+          "translit": "'t-shny"
+        },
+        {
+          "hebrew": "נְעָרָיו֙",
+          "translit": "n'ryv"
+        },
+        {
+          "hebrew": "אִתּ֔וֹ",
+          "translit": "'tv"
+        },
+        {
+          "hebrew": "וְאֵ֖ת",
+          "translit": "v't"
+        },
+        {
+          "hebrew": "יִצְחָ֣ק",
+          "translit": "ytzchk"
+        },
+        {
+          "hebrew": "בְּנ֑וֹ",
+          "translit": "vnv"
+        },
+        {
+          "hebrew": "וַיְבַקַּע֙",
+          "translit": "vyvk'"
+        },
+        {
+          "hebrew": "עֲצֵ֣י",
+          "translit": "'tzy"
+        },
+        {
+          "hebrew": "עֹלָ֔ה",
+          "translit": "'lh"
+        },
+        {
+          "hebrew": "וַיָּ֣קׇם",
+          "translit": "vykm"
+        },
+        {
+          "hebrew": "וַיֵּ֔לֶךְ",
+          "translit": "vylch"
+        },
+        {
+          "hebrew": "אֶל־הַמָּק֖וֹם",
+          "translit": "'l-hmkvm"
+        },
+        {
+          "hebrew": "אֲשֶׁר־אָֽמַר־ל֥וֹ",
+          "translit": "'shr-'mr-lv"
+        },
+        {
+          "hebrew": "הָאֱלֹהִֽים׃",
+          "translit": "h'lhym"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:04",
+      "words": [
+        {
+          "hebrew": "בַּיּ֣וֹם",
+          "translit": "vyvm"
+        },
+        {
+          "hebrew": "הַשְּׁלִישִׁ֗י",
+          "translit": "hshlyshy"
+        },
+        {
+          "hebrew": "וַיִּשָּׂ֨א",
+          "translit": "vysh'"
+        },
+        {
+          "hebrew": "אַבְרָהָ֧ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אֶת־עֵינָ֛יו",
+          "translit": "'t-'ynyv"
+        },
+        {
+          "hebrew": "וַיַּ֥רְא",
+          "translit": "vyr'"
+        },
+        {
+          "hebrew": "אֶת־הַמָּק֖וֹם",
+          "translit": "'t-hmkvm"
+        },
+        {
+          "hebrew": "מֵרָחֹֽק׃",
+          "translit": "mrchk"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:05",
+      "words": [
+        {
+          "hebrew": "וַיֹּ֨אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "אַבְרָהָ֜ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אֶל־נְעָרָ֗יו",
+          "translit": "'l-n'ryv"
+        },
+        {
+          "hebrew": "שְׁבוּ־לָכֶ֥ם",
+          "translit": "shvv-lchm"
+        },
+        {
+          "hebrew": "פֹּה֙",
+          "translit": "fh"
+        },
+        {
+          "hebrew": "עִֽם־הַחֲמ֔וֹר",
+          "translit": "'m-hchmvr"
+        },
+        {
+          "hebrew": "וַאֲנִ֣י",
+          "translit": "v'ny"
+        },
+        {
+          "hebrew": "וְהַנַּ֔עַר",
+          "translit": "vhn'r"
+        },
+        {
+          "hebrew": "נֵלְכָ֖ה",
+          "translit": "nlchh"
+        },
+        {
+          "hebrew": "עַד־כֹּ֑ה",
+          "translit": "'d-chh"
+        },
+        {
+          "hebrew": "וְנִֽשְׁתַּחֲוֶ֖ה",
+          "translit": "vnshtchvh"
+        },
+        {
+          "hebrew": "וְנָשׁ֥וּבָה",
+          "translit": "vnshvvh"
+        },
+        {
+          "hebrew": "אֲלֵיכֶֽם׃",
+          "translit": "'lychm"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:06",
+      "words": [
+        {
+          "hebrew": "וַיִּקַּ֨ח",
+          "translit": "vykch"
+        },
+        {
+          "hebrew": "אַבְרָהָ֜ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אֶת־עֲצֵ֣י",
+          "translit": "'t-'tzy"
+        },
+        {
+          "hebrew": "הָעֹלָ֗ה",
+          "translit": "h'lh"
+        },
+        {
+          "hebrew": "וַיָּ֙שֶׂם֙",
+          "translit": "vyshm"
+        },
+        {
+          "hebrew": "עַל־יִצְחָ֣ק",
+          "translit": "'l-ytzchk"
+        },
+        {
+          "hebrew": "בְּנ֔וֹ",
+          "translit": "vnv"
+        },
+        {
+          "hebrew": "וַיִּקַּ֣ח",
+          "translit": "vykch"
+        },
+        {
+          "hebrew": "בְּיָד֔וֹ",
+          "translit": "vydv"
+        },
+        {
+          "hebrew": "אֶת־הָאֵ֖שׁ",
+          "translit": "'t-h'sh"
+        },
+        {
+          "hebrew": "וְאֶת־הַֽמַּאֲכֶ֑לֶת",
+          "translit": "v't-hm'chlt"
+        },
+        {
+          "hebrew": "וַיֵּלְכ֥וּ",
+          "translit": "vylchv"
+        },
+        {
+          "hebrew": "שְׁנֵיהֶ֖ם",
+          "translit": "shnyhm"
+        },
+        {
+          "hebrew": "יַחְדָּֽו׃",
+          "translit": "ychdv"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:07",
+      "words": [
+        {
+          "hebrew": "וַיֹּ֨אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "יִצְחָ֜ק",
+          "translit": "ytzchk"
+        },
+        {
+          "hebrew": "אֶל־אַבְרָהָ֤ם",
+          "translit": "'l-'vrhm"
+        },
+        {
+          "hebrew": "אָבִיו֙",
+          "translit": "'vyv"
+        },
+        {
+          "hebrew": "וַיֹּ֣אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "אָבִ֔י",
+          "translit": "'vy"
+        },
+        {
+          "hebrew": "וַיֹּ֖אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "הִנֶּ֣נִּֽי",
+          "translit": "hnny"
+        },
+        {
+          "hebrew": "בְנִ֑י",
+          "translit": "vny"
+        },
+        {
+          "hebrew": "וַיֹּ֗אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "הִנֵּ֤ה",
+          "translit": "hnh"
+        },
+        {
+          "hebrew": "הָאֵשׁ֙",
+          "translit": "h'sh"
+        },
+        {
+          "hebrew": "וְהָ֣עֵצִ֔ים",
+          "translit": "vh'tzym"
+        },
+        {
+          "hebrew": "וְאַיֵּ֥ה",
+          "translit": "v'yh"
+        },
+        {
+          "hebrew": "הַשֶּׂ֖ה",
+          "translit": "hshh"
+        },
+        {
+          "hebrew": "לְעֹלָֽה׃",
+          "translit": "l'lh"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:08",
+      "words": [
+        {
+          "hebrew": "וַיֹּ֙אמֶר֙",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "אַבְרָהָ֔ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אֱלֹהִ֞ים",
+          "translit": "'lhym"
+        },
+        {
+          "hebrew": "יִרְאֶה־לּ֥וֹ",
+          "translit": "yr'h-lv"
+        },
+        {
+          "hebrew": "הַשֶּׂ֛ה",
+          "translit": "hshh"
+        },
+        {
+          "hebrew": "לְעֹלָ֖ה",
+          "translit": "l'lh"
+        },
+        {
+          "hebrew": "בְּנִ֑י",
+          "translit": "vny"
+        },
+        {
+          "hebrew": "וַיֵּלְכ֥וּ",
+          "translit": "vylchv"
+        },
+        {
+          "hebrew": "שְׁנֵיהֶ֖ם",
+          "translit": "shnyhm"
+        },
+        {
+          "hebrew": "יַחְדָּֽו׃",
+          "translit": "ychdv"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:09",
+      "words": [
+        {
+          "hebrew": "וַיָּבֹ֗אוּ",
+          "translit": "vyv'v"
+        },
+        {
+          "hebrew": "אֶֽל־הַמָּקוֹם֮",
+          "translit": "'l-hmkvm"
+        },
+        {
+          "hebrew": "אֲשֶׁ֣ר",
+          "translit": "'shr"
+        },
+        {
+          "hebrew": "אָֽמַר־ל֣וֹ",
+          "translit": "'mr-lv"
+        },
+        {
+          "hebrew": "הָאֱלֹהִים֒",
+          "translit": "h'lhym"
+        },
+        {
+          "hebrew": "וַיִּ֨בֶן",
+          "translit": "vyvn"
+        },
+        {
+          "hebrew": "שָׁ֤ם",
+          "translit": "shm"
+        },
+        {
+          "hebrew": "אַבְרָהָם֙",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אֶת־הַמִּזְבֵּ֔חַ",
+          "translit": "'t-hmzvch"
+        },
+        {
+          "hebrew": "וַֽיַּעֲרֹ֖ךְ",
+          "translit": "vy'rch"
+        },
+        {
+          "hebrew": "אֶת־הָעֵצִ֑ים",
+          "translit": "'t-h'tzym"
+        },
+        {
+          "hebrew": "וַֽיַּעֲקֹד֙",
+          "translit": "vy'kd"
+        },
+        {
+          "hebrew": "אֶת־יִצְחָ֣ק",
+          "translit": "'t-ytzchk"
+        },
+        {
+          "hebrew": "בְּנ֔וֹ",
+          "translit": "vnv"
+        },
+        {
+          "hebrew": "וַיָּ֤שֶׂם",
+          "translit": "vyshm"
+        },
+        {
+          "hebrew": "אֹתוֹ֙",
+          "translit": "'tv"
+        },
+        {
+          "hebrew": "עַל־הַמִּזְבֵּ֔חַ",
+          "translit": "'l-hmzvch"
+        },
+        {
+          "hebrew": "מִמַּ֖עַל",
+          "translit": "mm'l"
+        },
+        {
+          "hebrew": "לָעֵצִֽים׃",
+          "translit": "l'tzym"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:10",
+      "words": [
+        {
+          "hebrew": "וַיִּשְׁלַ֤ח",
+          "translit": "vyshlch"
+        },
+        {
+          "hebrew": "אַבְרָהָם֙",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אֶת־יָד֔וֹ",
+          "translit": "'t-ydv"
+        },
+        {
+          "hebrew": "וַיִּקַּ֖ח",
+          "translit": "vykch"
+        },
+        {
+          "hebrew": "אֶת־הַֽמַּאֲכֶ֑לֶת",
+          "translit": "'t-hm'chlt"
+        },
+        {
+          "hebrew": "לִשְׁחֹ֖ט",
+          "translit": "lshcht"
+        },
+        {
+          "hebrew": "אֶת־בְּנֽוֹ׃",
+          "translit": "'t-vnv"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:11",
+      "words": [
+        {
+          "hebrew": "וַיִּקְרָ֨א",
+          "translit": "vykr'"
+        },
+        {
+          "hebrew": "אֵלָ֜יו",
+          "translit": "'lyv"
+        },
+        {
+          "hebrew": "מַלְאַ֤ךְ",
+          "translit": "ml'ch"
+        },
+        {
+          "hebrew": "יְהֹוָה֙",
+          "translit": "Adonai"
+        },
+        {
+          "hebrew": "מִן־הַשָּׁמַ֔יִם",
+          "translit": "mn-hshmym"
+        },
+        {
+          "hebrew": "וַיֹּ֖אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "אַבְרָהָ֣ם׀",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אַבְרָהָ֑ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "וַיֹּ֖אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "הִנֵּֽנִי׃",
+          "translit": "hnny"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:12",
+      "words": [
+        {
+          "hebrew": "וַיֹּ֗אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "אַל־תִּשְׁלַ֤ח",
+          "translit": "'l-tshlch"
+        },
+        {
+          "hebrew": "יָֽדְךָ֙",
+          "translit": "ydch"
+        },
+        {
+          "hebrew": "אֶל־הַנַּ֔עַר",
+          "translit": "'l-hn'r"
+        },
+        {
+          "hebrew": "וְאַל־תַּ֥עַשׂ",
+          "translit": "v'l-t'sh"
+        },
+        {
+          "hebrew": "ל֖וֹ",
+          "translit": "lv"
+        },
+        {
+          "hebrew": "מְא֑וּמָה",
+          "translit": "m'vmh"
+        },
+        {
+          "hebrew": "כִּ֣י׀",
+          "translit": "chy"
+        },
+        {
+          "hebrew": "עַתָּ֣ה",
+          "translit": "'th"
+        },
+        {
+          "hebrew": "יָדַ֗עְתִּי",
+          "translit": "yd'ty"
+        },
+        {
+          "hebrew": "כִּֽי־יְרֵ֤א",
+          "translit": "chy-yr'"
+        },
+        {
+          "hebrew": "אֱלֹהִים֙",
+          "translit": "'lhym"
+        },
+        {
+          "hebrew": "אַ֔תָּה",
+          "translit": "'th"
+        },
+        {
+          "hebrew": "וְלֹ֥א",
+          "translit": "vl'"
+        },
+        {
+          "hebrew": "חָשַׂ֛כְתָּ",
+          "translit": "chshcht"
+        },
+        {
+          "hebrew": "אֶת־בִּנְךָ֥",
+          "translit": "'t-vnch"
+        },
+        {
+          "hebrew": "אֶת־יְחִידְךָ֖",
+          "translit": "'t-ychydch"
+        },
+        {
+          "hebrew": "מִמֶּֽנִּי׃",
+          "translit": "mmny"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:13",
+      "words": [
+        {
+          "hebrew": "וַיִּשָּׂ֨א",
+          "translit": "vysh'"
+        },
+        {
+          "hebrew": "אַבְרָהָ֜ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אֶת־עֵינָ֗יו",
+          "translit": "'t-'ynyv"
+        },
+        {
+          "hebrew": "וַיַּרְא֙",
+          "translit": "vyr'"
+        },
+        {
+          "hebrew": "וְהִנֵּה־אַ֔יִל",
+          "translit": "vhnh-'yl"
+        },
+        {
+          "hebrew": "אַחַ֕ר",
+          "translit": "'chr"
+        },
+        {
+          "hebrew": "נֶאֱחַ֥ז",
+          "translit": "n'chz"
+        },
+        {
+          "hebrew": "בַּסְּבַ֖ךְ",
+          "translit": "vsvch"
+        },
+        {
+          "hebrew": "בְּקַרְנָ֑יו",
+          "translit": "vkrnyv"
+        },
+        {
+          "hebrew": "וַיֵּ֤לֶךְ",
+          "translit": "vylch"
+        },
+        {
+          "hebrew": "אַבְרָהָם֙",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "וַיִּקַּ֣ח",
+          "translit": "vykch"
+        },
+        {
+          "hebrew": "אֶת־הָאַ֔יִל",
+          "translit": "'t-h'yl"
+        },
+        {
+          "hebrew": "וַיַּעֲלֵ֥הוּ",
+          "translit": "vy'lhv"
+        },
+        {
+          "hebrew": "לְעֹלָ֖ה",
+          "translit": "l'lh"
+        },
+        {
+          "hebrew": "תַּ֥חַת",
+          "translit": "tcht"
+        },
+        {
+          "hebrew": "בְּנֽוֹ׃",
+          "translit": "vnv"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:14",
+      "words": [
+        {
+          "hebrew": "וַיִּקְרָ֧א",
+          "translit": "vykr'"
+        },
+        {
+          "hebrew": "אַבְרָהָ֛ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "שֵֽׁם־הַמָּק֥וֹם",
+          "translit": "shm-hmkvm"
+        },
+        {
+          "hebrew": "הַה֖וּא",
+          "translit": "hhv'"
+        },
+        {
+          "hebrew": "יְהֹוָ֣ה׀",
+          "translit": "Adonai"
+        },
+        {
+          "hebrew": "יִרְאֶ֑ה",
+          "translit": "yr'h"
+        },
+        {
+          "hebrew": "אֲשֶׁר֙",
+          "translit": "'shr"
+        },
+        {
+          "hebrew": "יֵאָמֵ֣ר",
+          "translit": "y'mr"
+        },
+        {
+          "hebrew": "הַיּ֔וֹם",
+          "translit": "hyvm"
+        },
+        {
+          "hebrew": "בְּהַ֥ר",
+          "translit": "vhr"
+        },
+        {
+          "hebrew": "יְהֹוָ֖ה",
+          "translit": "Adonai"
+        },
+        {
+          "hebrew": "יֵרָאֶֽה׃",
+          "translit": "yr'h"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:15",
+      "words": [
+        {
+          "hebrew": "וַיִּקְרָ֛א",
+          "translit": "vykr'"
+        },
+        {
+          "hebrew": "מַלְאַ֥ךְ",
+          "translit": "ml'ch"
+        },
+        {
+          "hebrew": "יְהֹוָ֖ה",
+          "translit": "Adonai"
+        },
+        {
+          "hebrew": "אֶל־אַבְרָהָ֑ם",
+          "translit": "'l-'vrhm"
+        },
+        {
+          "hebrew": "שֵׁנִ֖ית",
+          "translit": "shnyt"
+        },
+        {
+          "hebrew": "מִן־הַשָּׁמָֽיִם׃",
+          "translit": "mn-hshmym"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:16",
+      "words": [
+        {
+          "hebrew": "וַיֹּ֕אמֶר",
+          "translit": "vy'mr"
+        },
+        {
+          "hebrew": "בִּ֥י",
+          "translit": "vy"
+        },
+        {
+          "hebrew": "נִשְׁבַּ֖עְתִּי",
+          "translit": "nshv'ty"
+        },
+        {
+          "hebrew": "נְאֻם־יְהֹוָ֑ה",
+          "translit": "Adonai"
+        },
+        {
+          "hebrew": "כִּ֗י",
+          "translit": "chy"
+        },
+        {
+          "hebrew": "יַ֚עַן",
+          "translit": "y'n"
+        },
+        {
+          "hebrew": "אֲשֶׁ֤ר",
+          "translit": "'shr"
+        },
+        {
+          "hebrew": "עָשִׂ֙יתָ֙",
+          "translit": "'shyt"
+        },
+        {
+          "hebrew": "אֶת־הַדָּבָ֣ר",
+          "translit": "'t-hdvr"
+        },
+        {
+          "hebrew": "הַזֶּ֔ה",
+          "translit": "hzh"
+        },
+        {
+          "hebrew": "וְלֹ֥א",
+          "translit": "vl'"
+        },
+        {
+          "hebrew": "חָשַׂ֖כְתָּ",
+          "translit": "chshcht"
+        },
+        {
+          "hebrew": "אֶת־בִּנְךָ֥",
+          "translit": "'t-vnch"
+        },
+        {
+          "hebrew": "אֶת־יְחִידֶֽךָ׃",
+          "translit": "'t-ychydch"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:17",
+      "words": [
+        {
+          "hebrew": "כִּֽי־בָרֵ֣ךְ",
+          "translit": "chy-vrch"
+        },
+        {
+          "hebrew": "אֲבָרֶכְךָ֗",
+          "translit": "'vrchch"
+        },
+        {
+          "hebrew": "וְהַרְבָּ֨ה",
+          "translit": "vhrvh"
+        },
+        {
+          "hebrew": "אַרְבֶּ֤ה",
+          "translit": "'rvh"
+        },
+        {
+          "hebrew": "אֶֽת־זַרְעֲךָ֙",
+          "translit": "'t-zr'ch"
+        },
+        {
+          "hebrew": "כְּכוֹכְבֵ֣י",
+          "translit": "chchvchvy"
+        },
+        {
+          "hebrew": "הַשָּׁמַ֔יִם",
+          "translit": "hshmym"
+        },
+        {
+          "hebrew": "וְכַח֕וֹל",
+          "translit": "vchchvl"
+        },
+        {
+          "hebrew": "אֲשֶׁ֖ר",
+          "translit": "'shr"
+        },
+        {
+          "hebrew": "עַל־שְׂפַ֣ת",
+          "translit": "'l-shft"
+        },
+        {
+          "hebrew": "הַיָּ֑ם",
+          "translit": "hym"
+        },
+        {
+          "hebrew": "וְיִרַ֣שׁ",
+          "translit": "vyrsh"
+        },
+        {
+          "hebrew": "זַרְעֲךָ֔",
+          "translit": "zr'ch"
+        },
+        {
+          "hebrew": "אֵ֖ת",
+          "translit": "'t"
+        },
+        {
+          "hebrew": "שַׁ֥עַר",
+          "translit": "sh'r"
+        },
+        {
+          "hebrew": "אֹיְבָֽיו׃",
+          "translit": "'yvyv"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:18",
+      "words": [
+        {
+          "hebrew": "וְהִתְבָּרְכ֣וּ",
+          "translit": "vhtvrchv"
+        },
+        {
+          "hebrew": "בְזַרְעֲךָ֔",
+          "translit": "vzr'ch"
+        },
+        {
+          "hebrew": "כֹּ֖ל",
+          "translit": "chl"
+        },
+        {
+          "hebrew": "גּוֹיֵ֣י",
+          "translit": "gvyy"
+        },
+        {
+          "hebrew": "הָאָ֑רֶץ",
+          "translit": "h'rtz"
+        },
+        {
+          "hebrew": "עֵ֕קֶב",
+          "translit": "'kv"
+        },
+        {
+          "hebrew": "אֲשֶׁ֥ר",
+          "translit": "'shr"
+        },
+        {
+          "hebrew": "שָׁמַ֖עְתָּ",
+          "translit": "shm't"
+        },
+        {
+          "hebrew": "בְּקֹלִֽי׃",
+          "translit": "vkly"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:19",
+      "words": [
+        {
+          "hebrew": "וַיָּ֤שׇׁב",
+          "translit": "vyshv"
+        },
+        {
+          "hebrew": "אַבְרָהָם֙",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "אֶל־נְעָרָ֔יו",
+          "translit": "'l-n'ryv"
+        },
+        {
+          "hebrew": "וַיָּקֻ֛מוּ",
+          "translit": "vykmv"
+        },
+        {
+          "hebrew": "וַיֵּלְכ֥וּ",
+          "translit": "vylchv"
+        },
+        {
+          "hebrew": "יַחְדָּ֖ו",
+          "translit": "ychdv"
+        },
+        {
+          "hebrew": "אֶל־בְּאֵ֣ר",
+          "translit": "'l-v'r"
+        },
+        {
+          "hebrew": "שָׁ֑בַע",
+          "translit": "shv'"
+        },
+        {
+          "hebrew": "וַיֵּ֥שֶׁב",
+          "translit": "vyshv"
+        },
+        {
+          "hebrew": "אַבְרָהָ֖ם",
+          "translit": "'vrhm"
+        },
+        {
+          "hebrew": "בִּבְאֵ֥ר",
+          "translit": "vv'r"
+        },
+        {
+          "hebrew": "שָֽׁבַע׃",
+          "translit": "shv'"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:20",
+      "words": [
+        {
+          "hebrew": "וַיְהִ֗י",
+          "translit": "vyhy"
+        },
+        {
+          "hebrew": "אַחֲרֵי֙",
+          "translit": "'chry"
+        },
+        {
+          "hebrew": "הַדְּבָרִ֣ים",
+          "translit": "hdvrym"
+        },
+        {
+          "hebrew": "הָאֵ֔לֶּה",
+          "translit": "h'lh"
+        },
+        {
+          "hebrew": "וַיֻּגַּ֥ד",
+          "translit": "vygd"
+        },
+        {
+          "hebrew": "לְאַבְרָהָ֖ם",
+          "translit": "l'vrhm"
+        },
+        {
+          "hebrew": "לֵאמֹ֑ר",
+          "translit": "l'mr"
+        },
+        {
+          "hebrew": "הִ֠נֵּ֠ה",
+          "translit": "hnh"
+        },
+        {
+          "hebrew": "יָלְדָ֨ה",
+          "translit": "yldh"
+        },
+        {
+          "hebrew": "מִלְכָּ֥ה",
+          "translit": "mlchh"
+        },
+        {
+          "hebrew": "גַם־הִ֛וא",
+          "translit": "gm-hv'"
+        },
+        {
+          "hebrew": "בָּנִ֖ים",
+          "translit": "vnym"
+        },
+        {
+          "hebrew": "לְנָח֥וֹר",
+          "translit": "lnchvr"
+        },
+        {
+          "hebrew": "אָחִֽיךָ׃",
+          "translit": "'chych"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:21",
+      "words": [
+        {
+          "hebrew": "אֶת־ע֥וּץ",
+          "translit": "'t-'vtz"
+        },
+        {
+          "hebrew": "בְּכֹר֖וֹ",
+          "translit": "vchrv"
+        },
+        {
+          "hebrew": "וְאֶת־בּ֣וּז",
+          "translit": "v't-vvz"
+        },
+        {
+          "hebrew": "אָחִ֑יו",
+          "translit": "'chyv"
+        },
+        {
+          "hebrew": "וְאֶת־קְמוּאֵ֖ל",
+          "translit": "v't-kmv'l"
+        },
+        {
+          "hebrew": "אֲבִ֥י",
+          "translit": "'vy"
+        },
+        {
+          "hebrew": "אֲרָֽם׃",
+          "translit": "'rm"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:22",
+      "words": [
+        {
+          "hebrew": "וְאֶת־כֶּ֣שֶׂד",
+          "translit": "v't-chshd"
+        },
+        {
+          "hebrew": "וְאֶת־חֲז֔וֹ",
+          "translit": "v't-chzv"
+        },
+        {
+          "hebrew": "וְאֶת־פִּלְדָּ֖שׁ",
+          "translit": "v't-fldsh"
+        },
+        {
+          "hebrew": "וְאֶת־יִדְלָ֑ף",
+          "translit": "v't-ydlf"
+        },
+        {
+          "hebrew": "וְאֵ֖ת",
+          "translit": "v't"
+        },
+        {
+          "hebrew": "בְּתוּאֵֽל׃",
+          "translit": "vtv'l"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:23",
+      "words": [
+        {
+          "hebrew": "וּבְתוּאֵ֖ל",
+          "translit": "vvtv'l"
+        },
+        {
+          "hebrew": "יָלַ֣ד",
+          "translit": "yld"
+        },
+        {
+          "hebrew": "אֶת־רִבְקָ֑ה",
+          "translit": "'t-rvkh"
+        },
+        {
+          "hebrew": "שְׁמֹנָ֥ה",
+          "translit": "shmnh"
+        },
+        {
+          "hebrew": "אֵ֙לֶּה֙",
+          "translit": "'lh"
+        },
+        {
+          "hebrew": "יָלְדָ֣ה",
+          "translit": "yldh"
+        },
+        {
+          "hebrew": "מִלְכָּ֔ה",
+          "translit": "mlchh"
+        },
+        {
+          "hebrew": "לְנָח֖וֹר",
+          "translit": "lnchvr"
+        },
+        {
+          "hebrew": "אֲחִ֥י",
+          "translit": "'chy"
+        },
+        {
+          "hebrew": "אַבְרָהָֽם׃",
+          "translit": "'vrhm"
+        }
+      ]
+    },
+    {
+      "lineName": "GE:22:24",
+      "words": [
+        {
+          "hebrew": "וּפִֽילַגְשׁ֖וֹ",
+          "translit": "vfylgshv"
+        },
+        {
+          "hebrew": "וּשְׁמָ֣הּ",
+          "translit": "vshmh"
+        },
+        {
+          "hebrew": "רְאוּמָ֑ה",
+          "translit": "r'vmh"
+        },
+        {
+          "hebrew": "וַתֵּ֤לֶד",
+          "translit": "vtld"
+        },
+        {
+          "hebrew": "גַּם־הִוא֙",
+          "translit": "gm-hv'"
+        },
+        {
+          "hebrew": "אֶת־טֶ֣בַח",
+          "translit": "'t-tvch"
+        },
+        {
+          "hebrew": "וְאֶת־גַּ֔חַם",
+          "translit": "v't-gchm"
+        },
+        {
+          "hebrew": "וְאֶת־תַּ֖חַשׁ",
+          "translit": "v't-tchsh"
+        },
+        {
+          "hebrew": "וְאֶֽת־מַעֲכָֽה׃",
+          "translit": "v't-m'chh"
+        }
+      ]
+    }
+  ]
+}
