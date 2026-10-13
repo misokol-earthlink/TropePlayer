@@ -1,0 +1,458 @@
+{
+  "name": "Genesis 21:1-34",
+  "description": "Description",
+  "lines": [
+    {
+      "lineName": "GE:21:01",
+      "tropes": [
+        "Tvir",
+        "Merchah",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Darga",
+        "Tvir",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:02",
+      "tropes": [
+        "T'LishaK'tanah",
+        "Kadma",
+        "Darga",
+        "Tvir",
+        "Tipchah",
+        "EtNachTah",
+        "ZakefGadol",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:03",
+      "tropes": [
+        "Kadma-V'azlah",
+        "Darga",
+        "Tvir",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:04",
+      "tropes": [
+        "Mapach",
+        "PashTa",
+        "Munach-Katon",
+        "Tipchah",
+        "EtNachTah",
+        "Tvir",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:05",
+      "tropes": [
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Munach-Katon",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:06",
+      "tropes": [
+        "Munach-Katon",
+        "ZakefGadol",
+        "Merchah",
+        "Tipchah",
+        "EtNachTah",
+        "SofAliyah3"
+      ]
+    },
+    {
+      "lineName": "GE:21:07",
+      "tropes": [
+        "Rvi'i",
+        "Mapach",
+        "PashTa",
+        "Katon",
+        "Merchah",
+        "Tipchah",
+        "EtNachTah",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:08",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "EtNachTah",
+        "Mapach",
+        "PashTa",
+        "Munach-Katon",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:09",
+      "tropes": [
+        "Kadma-V'azlah",
+        "Darga",
+        "Tvir",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:10",
+      "tropes": [
+        "PashTa",
+        "Katon",
+        "Tvir",
+        "Merchah",
+        "Tipchah",
+        "EtNachTah",
+        "Munach",
+        "Mapach",
+        "PashTa",
+        "Munach-Katon",
+        "SofAliyah3"
+      ]
+    },
+    {
+      "lineName": "GE:21:11",
+      "tropes": [
+        "Darga",
+        "Tvir",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:12",
+      "tropes": [
+        "Kadma-V'azlah",
+        "Rvi'i",
+        "Mapach",
+        "PashTa",
+        "Munach-Katon",
+        "T'LishaK'tanah",
+        "Kadma",
+        "Merchah",
+        "Tvir",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Munach-Katon",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:13",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:14",
+      "tropes": [
+        "Munach",
+        "Munach-L'garmeih",
+        "Pazer",
+        "T'LishaK'tanah",
+        "Kadma-V'azlah",
+        "Munach",
+        "T'LishaGadola",
+        "Darga",
+        "Tvir",
+        "Tipchah",
+        "EtNachTah",
+        "Munach-Katon",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:15",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "EtNachTah",
+        "Munach-Katon",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:16",
+      "tropes": [
+        "T'LishaK'tanah",
+        "Kadma-V'azlah",
+        "Rvi'i",
+        "PashTa",
+        "Munach-Katon",
+        "Munach-Katon",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Munach-Katon",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:17",
+      "tropes": [
+        "Munach",
+        "Zarka",
+        "Munach",
+        "Segol",
+        "T'LishaK'tanah",
+        "Kadma",
+        "Mapach",
+        "PashTa",
+        "Katon",
+        "Merchah",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Munach-Katon",
+        "Darga",
+        "Tvir",
+        "SofAliyah"
+      ]
+    },
+    {
+      "lineName": "GE:21:18",
+      "tropes": [
+        "Y'tiv",
+        "Munach-Katon",
+        "Merchah",
+        "Tipchah",
+        "EtNachTah",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:19",
+      "tropes": [
+        "Mapach",
+        "PashTa",
+        "Katon",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Geresh",
+        "Mapach",
+        "PashTa",
+        "Katon",
+        "SofAliyah3"
+      ]
+    },
+    {
+      "lineName": "GE:21:20",
+      "tropes": [
+        "Darga",
+        "Tvir",
+        "Tipchah",
+        "EtNachTah",
+        "PashTa",
+        "Katon",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:21",
+      "tropes": [
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Merchah",
+        "Tvir",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:22",
+      "tropes": [
+        "PashTa",
+        "Munach-Katon",
+        "Munach-Rvi'i",
+        "PashTa",
+        "Katon",
+        "Tipchah",
+        "EtNachTah",
+        "Munach-Katon",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:23",
+      "tropes": [
+        "Rvi'i",
+        "Kadma",
+        "Mapach",
+        "PashTa",
+        "Katon",
+        "Munach-Katon",
+        "Tipchah",
+        "EtNachTah",
+        "Geresh",
+        "Mapach",
+        "PashTa",
+        "Munach-Katon",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:24",
+      "tropes": [
+        "PashTa",
+        "Katon",
+        "SofAliyah3"
+      ]
+    },
+    {
+      "lineName": "GE:21:25",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "EtNachTah",
+        "PashTa",
+        "Munach-Katon",
+        "SofAliyah"
+      ]
+    },
+    {
+      "lineName": "GE:21:26",
+      "tropes": [
+        "Munach-Katon",
+        "Munach-Katon",
+        "Merchah",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Gershayim",
+        "Munach-Rvi'i",
+        "Darga",
+        "Tvir",
+        "SofAliyah"
+      ]
+    },
+    {
+      "lineName": "GE:21:27",
+      "tropes": [
+        "Mapach",
+        "PashTa",
+        "Munach-Katon",
+        "Tipchah",
+        "EtNachTah",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:28",
+      "tropes": [
+        "Munach-Rvi'i",
+        "Tvir",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:29",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "EtNachTah",
+        "Munach-Rvi'i",
+        "Mapach",
+        "PashTa",
+        "Katon",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:30",
+      "tropes": [
+        "ZakefGadol",
+        "Y'tiv",
+        "Munach-Katon",
+        "Tipchah",
+        "EtNachTah",
+        "PashTa",
+        "Munach-Katon",
+        "SofAliyah"
+      ]
+    },
+    {
+      "lineName": "GE:21:31",
+      "tropes": [
+        "Rvi'i",
+        "Tvir",
+        "Merchah",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Tvir",
+        "SofAliyah2"
+      ]
+    },
+    {
+      "lineName": "GE:21:32",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Munach-Rvi'i",
+        "PashTa",
+        "Katon",
+        "Tipchah",
+        "Merchah",
+        "SofPaSuk"
+      ]
+    },
+    {
+      "lineName": "GE:21:33",
+      "tropes": [
+        "Merchah",
+        "Tipchah",
+        "Munach",
+        "EtNachTah",
+        "Kadma",
+        "Katon",
+        "SofAliyah"
+      ]
+    },
+    {
+      "lineName": "GE:21:34",
+      "tropes": [
+        "Darga",
+        "Tvir",
+        "SofAliyah"
+      ]
+    }
+  ]
+}
