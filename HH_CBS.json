@@ -5,6 +5,7 @@
   "readings": [
     {
       "id": "rh2",
+      "aliases": ["HH_RH2_CBS"],
       "name": "Rosh Hashanah Day 2",
       "book": "Genesis",
       "aliyot": [
@@ -47,23 +48,23 @@
               "aliyah": "2",
               "lineNumber": 4,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
-              "start": 13.6,
-              "end": 29.5
+              "start": 12.9,
+              "end": 28.5
             },
             {
               "ref": "Genesis 22:5",
               "aliyah": "2",
               "lineNumber": 5,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
-              "start": 31.0,
-              "end": 54.2
+              "start": 29.0,
+              "end": 52
             },
             {
               "ref": "Genesis 22:6",
               "aliyah": "2",
               "lineNumber": 6,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
-              "start": 55.3,
+              "start": 53,
               "end": 77.0
             },
             {
@@ -72,15 +73,15 @@
               "lineNumber": 7,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
               "start": 78.1,
-              "end": 109.0
+              "end": 104.0
             },
             {
               "ref": "Genesis 22:8",
               "aliyah": "2",
               "lineNumber": 8,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
-              "start": 111.0,
-              "end": 131.0
+              "start": 105.0,
+              "end": 128.0
             }
           ]
         },
@@ -263,23 +264,23 @@
               "aliyah": "2",
               "lineNumber": 4,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
-              "start": 13.6,
-              "end": 29.5
+              "start": 12.9,
+              "end": 28.5
             },
             {
               "ref": "Genesis 22:5",
               "aliyah": "2",
               "lineNumber": 5,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
-              "start": 31.0,
-              "end": 54.2
+              "start": 29.0,
+              "end": 52.0
             },
             {
               "ref": "Genesis 22:6",
               "aliyah": "2",
               "lineNumber": 6,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
-              "start": 55.3,
+              "start": 53.0,
               "end": 77.0
             },
             {
@@ -288,15 +289,15 @@
               "lineNumber": 7,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
               "start": 78.1,
-              "end": 109.0
+              "end": 104.0
             },
             {
               "ref": "Genesis 22:8",
               "aliyah": "2",
               "lineNumber": 8,
               "audioUrl": "https://images.shulcloud.com/13447/299812.mp3",
-              "start": 111.0,
-              "end": 131.0
+              "start": 105.0,
+              "end": 128.0
             },
             {
               "ref": "Genesis 22:9",

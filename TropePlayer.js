@@ -1792,7 +1792,14 @@ async function loadOnlineHHForPortion(portionName) {
   const catalog = await response.json();
   if (String(catalog.source || "").toUpperCase() !== source || !Array.isArray(catalog.readings))
     throw new Error("Invalid HH catalog for " + source);
-  const reading = catalog.readings.find(r => String(r.id || r.name || "").toLowerCase() === portionName.toLowerCase());
+  //const reading = catalog.readings.find(r => String(r.id || r.name || "").toLowerCase() === portionName.toLowerCase());
+const reading = catalog.readings.find(r =>
+  String(r.id || r.name || "").toLowerCase() === portionName.toLowerCase()
+  || (r.aliases || []).some(alias =>
+    alias.toLowerCase() === portionName.toLowerCase()
+  )
+);
+
   if (!reading) throw new Error("Reading " + portionName + " not found in HH_" + source + ".json");
   onlineHHSource = source;
   onlineHHDisplayName = String(pointer.sourceName || catalog.sourceName || source).trim();
