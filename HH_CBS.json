@@ -434,6 +434,7 @@
     },
     {
       "id": "rh1Shabbat",
+      "aliases": ["HH_RH1Shabbat_CBS"],
       "name": "Rosh Hashanah Day 1 - Shabbat",
       "book": "Genesis",
       "aliyot": [
@@ -1034,6 +1035,7 @@
     },
     {
       "id": "rh1Weekday",
+      "aliases": ["HH_RH1Weekday_CBS"],
       "name": "Rosh Hashanah Day 1 - Weekday",
       "book": "Genesis",
       "aliyot": [
