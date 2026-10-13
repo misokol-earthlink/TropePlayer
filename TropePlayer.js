@@ -1640,7 +1640,10 @@ async function setLocalPortionFiles(portionHandle, knownMap = null) {
 function getLocalFullTracks() {
   if (parshaRepositorySource !== "local" || !localSourceCatalog || !localSelectedPortion) return null;
   const reading = localSourceCatalog.readings.find(r =>
-    String(r.id || r.name).toLowerCase() === localSelectedPortion.toLowerCase());
+    String(r.id || r.name || "").toLowerCase() === localSelectedPortion.toLowerCase() ||
+    (Array.isArray(r.aliases) && r.aliases.some(alias =>
+      String(alias).toLowerCase() === localSelectedPortion.toLowerCase()))
+  );
   const full = reading?.aliyot?.find(a => String(a.num).toLowerCase() === "full");
   return Array.isArray(full?.tracks) && full.tracks.length ? full.tracks : null;
 }
@@ -1680,8 +1683,19 @@ function sourceCredit(sourceId, fallback) {
 }
 function setSourcePlaybackCredit(lineNumber, sourceId, fallback) {
   const box = document.getElementById("hebrewLineText");
-  if (box) box.textContent = "Audio playback for line " + lineNumber + " — " + sourceCredit(sourceId, fallback);
   const popup = document.getElementById("hebrewLinePopup");
+  // This routine is used for source MP3 playback, not WAV or Pocket Torah.
+  const portionName = document.getElementById("activeFileViewerTitle")?.textContent.trim() || "";
+  const isHHTrope = /^HH_/i.test(portionName) && !usePocketTorah;
+  const renderCredit = () => {
+    if (!box) return;
+    box.textContent = "Audio playback for line " + lineNumber + " — " + sourceCredit(sourceId, fallback);
+    if (isHHTrope) {
+      box.appendChild(document.createElement("br"));
+      box.appendChild(document.createTextNode("High Holiday Trope"));
+    }
+  };
+  renderCredit();
   if (popup) {
     // Match the established Pocket Torah/WAV credit placement.
     popup.style.top = lineNumber === 1 ? "420px" : "200px";
@@ -1689,9 +1703,7 @@ function setSourcePlaybackCredit(lineNumber, sourceId, fallback) {
   }
   // Refresh if the asynchronous shared catalog has not yet arrived.
   if (!lyricsSourcesCatalog) lyricsSourcesReady.then(() => {
-    if (popup?.style.display === "block") {
-      if (box) box.textContent = "Audio playback for line " + lineNumber + " — " + sourceCredit(sourceId, fallback);
-    }
+    if (popup?.style.display === "block") renderCredit();
   });
 }
 function localMp3Credit(lineNumber) {
@@ -1792,14 +1804,11 @@ async function loadOnlineHHForPortion(portionName) {
   const catalog = await response.json();
   if (String(catalog.source || "").toUpperCase() !== source || !Array.isArray(catalog.readings))
     throw new Error("Invalid HH catalog for " + source);
-  //const reading = catalog.readings.find(r => String(r.id || r.name || "").toLowerCase() === portionName.toLowerCase());
-const reading = catalog.readings.find(r =>
-  String(r.id || r.name || "").toLowerCase() === portionName.toLowerCase()
-  || (r.aliases || []).some(alias =>
-    alias.toLowerCase() === portionName.toLowerCase()
-  )
-);
-
+  const reading = catalog.readings.find(r =>
+    String(r.id || r.name || "").toLowerCase() === portionName.toLowerCase() ||
+    (Array.isArray(r.aliases) && r.aliases.some(alias =>
+      String(alias).toLowerCase() === portionName.toLowerCase()))
+  );
   if (!reading) throw new Error("Reading " + portionName + " not found in HH_" + source + ".json");
   onlineHHSource = source;
   onlineHHDisplayName = String(pointer.sourceName || catalog.sourceName || source).trim();
