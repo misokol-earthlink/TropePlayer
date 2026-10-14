@@ -1689,30 +1689,41 @@ function positionLyricsAttribution(lineNumber) {
   const row = document.querySelector('.active-file-lyrics-row[data-line-number="' + lineNumber + '"]');
   if (!popup || !row || popup.style.display === "none") return;
   attributionAnchorLine = lineNumber;
-  // Fixed coordinates and viewport rectangles both account for current scrolling.
   popup.style.position = "fixed";
+  popup.style.visibility = "hidden"; // Measure even if a prior position was hidden.
   const rect = row.getBoundingClientRect();
   const height = popup.getBoundingClientRect().height;
   const gap = 10;
   const margin = 8;
-  const above = rect.top - gap - height;
-  const below = rect.bottom + gap;
-  const fitsAbove = above >= margin;
-  const fitsBelow = below + height <= window.innerHeight - margin;
-  let top;
-  if (fitsAbove) top = above;
-  else if (fitsBelow) top = below;
-  else if (rect.top - margin >= window.innerHeight - rect.bottom - margin)
-    top = Math.max(margin, above);
-  else top = Math.min(window.innerHeight - height - margin, below);
-  // In a viewport too small to fit on either side, avoid covering the active line.
-  if ((!fitsAbove && !fitsBelow) &&
-      (top < rect.bottom && top + height > rect.top)) {
-    popup.style.visibility = "hidden";
-    return;
+  const button = document.getElementById("playAllLyricsBtn");
+  const buttonRect = button?.getBoundingClientRect();
+  // Protect the Stop/Play All button, as well as the playing verse.
+  // Only a visible button can obstruct a viewport-fixed popup.
+  const protectedRects = [rect];
+  if (buttonRect && buttonRect.width && buttonRect.height &&
+      buttonRect.bottom > 0 && buttonRect.top < window.innerHeight) {
+    protectedRects.push(buttonRect);
   }
+  const intersects = (top, protectedRect) =>
+    top < protectedRect.bottom + gap && top + height > protectedRect.top - gap;
+  const clear = top =>
+    top >= margin && top + height <= window.innerHeight - margin &&
+    protectedRects.every(r => !intersects(top, r));
+
+  // Prefer above the verse, unless this obscures the Play All/Stop control.
+  // When that happens, put the credit below the verse AND the control.
+  const above = rect.top - gap - height;
+  const below = Math.max(rect.bottom, buttonRect && protectedRects.includes(buttonRect)
+    ? buttonRect.bottom : rect.bottom) + gap;
+  let top = clear(above) ? above : clear(below) ? below : null;
+  if (top === null) {
+    // Try the remaining available space above both protected elements.
+    const upper = Math.min(...protectedRects.map(r => r.top)) - gap - height;
+    if (clear(upper)) top = upper;
+  }
+  if (top === null) return; // Never cover the active verse or Stop button.
+  popup.style.top = top + "px";
   popup.style.visibility = "visible";
-  popup.style.top = Math.max(margin, top) + "px";
 }
 function queueLyricsAttributionPosition() {
   if (attributionPositionQueued) return;
