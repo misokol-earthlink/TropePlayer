@@ -5,7 +5,9 @@
   "readings": [
     {
       "id": "rh2",
-      "aliases": ["HH_RH2_CBS"],
+      "aliases": [
+        "HH_RH2_CBS"
+      ],
       "name": "Rosh Hashanah Day 2",
       "book": "Genesis",
       "aliyot": [
@@ -95,47 +97,47 @@
               "lineNumber": 9,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
               "start": 15.6,
-              "end": 26.8
+              "end": 53
             },
             {
               "ref": "Genesis 22:10",
               "aliyah": "3",
               "lineNumber": 10,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 28.6,
-              "end": 53.4
+              "start": 53.5,
+              "end": 68
             },
             {
               "ref": "Genesis 22:11",
               "aliyah": "3",
               "lineNumber": 11,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 55.3,
-              "end": 71.0
+              "start": 69,
+              "end": 86.5
             },
             {
               "ref": "Genesis 22:12",
               "aliyah": "3",
               "lineNumber": 12,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 73.0,
-              "end": 100.8
+              "start": 88,
+              "end": 121
             },
             {
               "ref": "Genesis 22:13",
               "aliyah": "3",
               "lineNumber": 13,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 102.2,
-              "end": 122.0
+              "start": 122.5,
+              "end": 154
             },
             {
               "ref": "Genesis 22:14",
               "aliyah": "3",
               "lineNumber": 14,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 123.5,
-              "end": 140.0
+              "start": 155,
+              "end": 180
             }
           ]
         },
@@ -149,39 +151,39 @@
               "lineNumber": 15,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
               "start": 13.5,
-              "end": 28.5
+              "end": 24.5
             },
             {
               "ref": "Genesis 22:16",
               "aliyah": "4",
               "lineNumber": 16,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
-              "start": 30.0,
-              "end": 54.0
+              "start": 26,
+              "end": 51.5
             },
             {
               "ref": "Genesis 22:17",
               "aliyah": "4",
               "lineNumber": 17,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
-              "start": 55.6,
-              "end": 80.5
+              "start": 53,
+              "end": 81
             },
             {
               "ref": "Genesis 22:18",
               "aliyah": "4",
               "lineNumber": 18,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
-              "start": 82.0,
-              "end": 102.0
+              "start": 84,
+              "end": 99
             },
             {
               "ref": "Genesis 22:19",
               "aliyah": "4",
               "lineNumber": 19,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
-              "start": 104.2,
-              "end": 129.2
+              "start": 100.8,
+              "end": 124
             }
           ]
         },
@@ -195,39 +197,39 @@
               "lineNumber": 20,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
               "start": 17.4,
-              "end": 34.0
+              "end": 42
             },
             {
               "ref": "Genesis 22:21",
               "aliyah": "5",
               "lineNumber": 21,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
-              "start": 35.5,
-              "end": 77.5
+              "start": 43.5,
+              "end": 54.5
             },
             {
               "ref": "Genesis 22:22",
               "aliyah": "5",
               "lineNumber": 22,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
-              "start": 79.2,
-              "end": 94.0
+              "start": 56.5,
+              "end": 70
             },
             {
               "ref": "Genesis 22:23",
               "aliyah": "5",
               "lineNumber": 23,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
-              "start": 95.3,
-              "end": 121.0
+              "start": 71.6,
+              "end": 87
             },
             {
               "ref": "Genesis 22:24",
               "aliyah": "5",
               "lineNumber": 24,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
-              "start": 122.5,
-              "end": 145.0
+              "start": 91,
+              "end": 112
             }
           ]
         },
@@ -305,47 +307,47 @@
               "lineNumber": 9,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
               "start": 15.6,
-              "end": 26.8
+              "end": 53
             },
             {
               "ref": "Genesis 22:10",
               "aliyah": "3",
               "lineNumber": 10,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 28.6,
-              "end": 53.4
+              "start": 53.5,
+              "end": 68
             },
             {
               "ref": "Genesis 22:11",
               "aliyah": "3",
               "lineNumber": 11,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 55.3,
-              "end": 71.0
+              "start": 69,
+              "end": 86.5
             },
             {
               "ref": "Genesis 22:12",
               "aliyah": "3",
               "lineNumber": 12,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 73.0,
-              "end": 100.8
+              "start": 88,
+              "end": 121
             },
             {
               "ref": "Genesis 22:13",
               "aliyah": "3",
               "lineNumber": 13,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 102.2,
-              "end": 122.0
+              "start": 122.5,
+              "end": 154
             },
             {
               "ref": "Genesis 22:14",
               "aliyah": "3",
               "lineNumber": 14,
               "audioUrl": "https://images.shulcloud.com/13447/299813.mp3",
-              "start": 123.5,
-              "end": 140.0
+              "start": 155,
+              "end": 180
             },
             {
               "ref": "Genesis 22:15",
@@ -353,39 +355,39 @@
               "lineNumber": 15,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
               "start": 13.5,
-              "end": 28.5
+              "end": 24.5
             },
             {
               "ref": "Genesis 22:16",
               "aliyah": "4",
               "lineNumber": 16,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
-              "start": 30.0,
-              "end": 54.0
+              "start": 26,
+              "end": 51.5
             },
             {
               "ref": "Genesis 22:17",
               "aliyah": "4",
               "lineNumber": 17,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
-              "start": 55.6,
-              "end": 80.5
+              "start": 53,
+              "end": 81
             },
             {
               "ref": "Genesis 22:18",
               "aliyah": "4",
               "lineNumber": 18,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
-              "start": 82.0,
-              "end": 102.0
+              "start": 84,
+              "end": 99
             },
             {
               "ref": "Genesis 22:19",
               "aliyah": "4",
               "lineNumber": 19,
               "audioUrl": "https://images.shulcloud.com/13447/299809.mp3",
-              "start": 104.2,
-              "end": 129.2
+              "start": 100.8,
+              "end": 124
             },
             {
               "ref": "Genesis 22:20",
@@ -393,39 +395,39 @@
               "lineNumber": 20,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
               "start": 17.4,
-              "end": 34.0
+              "end": 42
             },
             {
               "ref": "Genesis 22:21",
               "aliyah": "5",
               "lineNumber": 21,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
-              "start": 35.5,
-              "end": 77.5
+              "start": 43.5,
+              "end": 54.5
             },
             {
               "ref": "Genesis 22:22",
               "aliyah": "5",
               "lineNumber": 22,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
-              "start": 79.2,
-              "end": 94.0
+              "start": 56.5,
+              "end": 70
             },
             {
               "ref": "Genesis 22:23",
               "aliyah": "5",
               "lineNumber": 23,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
-              "start": 95.3,
-              "end": 121.0
+              "start": 71.6,
+              "end": 87
             },
             {
               "ref": "Genesis 22:24",
               "aliyah": "5",
               "lineNumber": 24,
               "audioUrl": "https://images.shulcloud.com/13447/299811.mp3",
-              "start": 122.5,
-              "end": 145.0
+              "start": 91,
+              "end": 112
             }
           ]
         }
@@ -434,7 +436,9 @@
     },
     {
       "id": "rh1Shabbat",
-      "aliases": ["HH_RH1Shabbat_CBS"],
+      "aliases": [
+        "HH_RH1Shabbat_CBS"
+      ],
       "name": "Rosh Hashanah Day 1 - Shabbat",
       "book": "Genesis",
       "aliyot": [
@@ -1035,7 +1039,9 @@
     },
     {
       "id": "rh1Weekday",
-      "aliases": ["HH_RH1Weekday_CBS"],
+      "aliases": [
+        "HH_RH1Weekday_CBS"
+      ],
       "name": "Rosh Hashanah Day 1 - Weekday",
       "book": "Genesis",
       "aliyot": [
