@@ -173,6 +173,39 @@ const tropeNames = [
   "Zarka"
 ];
 
+// High Holiday Builder catalog: canonical names only, independent of Shabbat.
+const hhTropeNames = [
+  "Darga",
+  "EtNachTah",
+  "Geresh",
+  "Gershayim",
+  "Kadma",
+  "Kadma-V'azlah",
+  "Katon",
+  "Mapach",
+  "Merchah",
+  "Munach",
+  "Munach-Katon",
+  "Munach-Rvi'i",
+  "PashTa",
+  "Rvi'i",
+  "Segol",
+  "SofAliyah",
+  "SofAliyah2",
+  "SofAliyah3",
+  "SofAliyah4",
+  "SofPaSuk",
+  "T'LishaGadola",
+  "T'LishaK'tanah",
+  "Tipchah",
+  "Tvir",
+  "V'azlah",
+  "Y'tiv",
+  "ZakefGadol",
+  "Zarka"
+];
+let BuilderTrope = "Shabbat";
+
 const hebrewTropeNames = {
   Darga:             "דַּרְגָּ֧א",
   EtNachTah:         "אֶתְנַחְתָּ֑א",
@@ -616,7 +649,10 @@ function buildTropeUnicodeDisplay(tropeName) {
     String.fromCharCode(parseInt(tropeInfo.unicode, 16));
 }
 
-function buildTropeTable() {tropeNames.forEach((name, index) => {
+function buildTropeTable() {
+  table.replaceChildren();
+  const builderNames = BuilderTrope === "HighHoliday" ? hhTropeNames : tropeNames;
+  builderNames.forEach((name, index) => {
   const row = document.createElement("tr");
 
   /* Index column */
@@ -1375,9 +1411,35 @@ function selectMunachFollowingTrope(followingTropeName) {
   }
 }
 
+// Builder-only tradition checkbox. Does not affect lyrics playback.
+function initializeBuilderTropeSelector() {
+  const licenseLink = document.getElementById("licenseInformationLink");
+  if (!licenseLink || document.getElementById("builderHighHolidayCheckbox")) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.id = "builderTropeSelector";
+  wrapper.style.cssText = "margin:12px 0 14px; font-family:sans-serif; font-size:18px;";
+  const label = document.createElement("label");
+  label.style.cssText = "display:inline-flex; align-items:center; gap:10px; cursor:pointer; font-weight:600;";
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.id = "builderHighHolidayCheckbox";
+  checkbox.checked = false;
+  checkbox.style.cssText = "width:21px; height:21px; cursor:pointer; margin:0;";
+  label.append(checkbox, document.createTextNode("High Holiday Trope"));
+  wrapper.appendChild(label);
+  licenseLink.insertAdjacentElement("afterend", wrapper);
+
+  checkbox.addEventListener("change", function() {
+    BuilderTrope = checkbox.checked ? "HighHoliday" : "Shabbat";
+    buildTropeTable();
+  });
+}
+
 document.addEventListener("DOMContentLoaded", function() {
 
 console.log("DOMContentLoaded reached for edit button test");
+  initializeBuilderTropeSelector();
 const editExistingBtn =    document.getElementById("editExistingBtn");
 
 if (editExistingBtn) {
