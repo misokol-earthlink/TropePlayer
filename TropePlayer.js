@@ -964,19 +964,21 @@ if (comboTropeNames.includes(tropeName)) {
 }
 
 
-// Munach-only explanatory paragraph, placed immediately above the Close button.
-// Reuse the element across popup openings; hide it for every other trope.
-const munachCloseButton = document.getElementById("modalCloseButton");
-if (munachCloseButton) {
+// Munach explanation occupies its own full-width row above the bottom controls.
+// Keep the Close button and the two icons together in the controls row.
+const munachControlsRow = document.getElementById("modalBottomControls");
+if (munachControlsRow) {
   let munachExplanation = document.getElementById("munachVariationExplanation");
   if (!munachExplanation) {
     munachExplanation = document.createElement("p");
     munachExplanation.id = "munachVariationExplanation";
     munachExplanation.style.cssText =
-      "margin:12px 10px 10px; font-size:13px; line-height:1.4; " +
-      "text-align:left; font-weight:normal; white-space:normal;";
-    munachCloseButton.insertAdjacentElement("beforebegin", munachExplanation);
+      "display:block; width:100%; box-sizing:border-box; margin:12px 0 8px; " +
+      "font-size:13px; line-height:1.4; text-align:left; " +
+      "font-weight:normal; white-space:normal;";
   }
+  // Move an explanation inserted by an older version out of the flex controls.
+  munachControlsRow.insertAdjacentElement("beforebegin", munachExplanation);
   munachExplanation.textContent =
     "Munach has several melodic variations depending on the trope that follows it. " +
     "The examples provided are representative approximations rather than fixed renditions for every occurrence. " +
