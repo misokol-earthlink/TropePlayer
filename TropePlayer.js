@@ -224,6 +224,7 @@ const hhTropeNames = [
   "Munach-Katon",
   "Munach-Rvi'i",
   "PashTa",
+  "Pazer",
   "Rvi'i",
   "Segol",
   "SofAliyah",
@@ -870,10 +871,13 @@ async function openTropeModal(tropeName) {
   if (currentMunachFollowingTrope === "Segol") {
     noteImageName = "Munach4S.jpg";
   }
-  // The Munach choice resolves to a specific variant before applying HH.
+  // For HH, use the explicit JPG and WAV mapping, not a derived stem.
   if (isHighHolidayTrope) {
-    tropeWave = tropeWave.replace(/(?:HH)?\.wav$/i, "HH.wav");
-    noteImageName = noteImageName.replace(/(?:HH)?\.jpg$/i, "HH.jpg");
+    const media = hhMunachMedia[currentMunachFollowingTrope];
+    if (media) {
+      tropeWave = media.wav;
+      noteImageName = media.jpg;
+    }
   }
 }
 
@@ -1400,6 +1404,18 @@ const munachFollowingTropeMap = {
   Zarka: "Munach3.wav"
 };
 
+const hhMunachChoices = ["Mapach", "EtNachTah", "Segol", "T'LishaGadola", "T'LishaK'tanah", "Pazer", "Zarka"];
+// HH WAV and JPG names are intentionally independent.
+const hhMunachMedia = {
+  Mapach: { wav: "Munach4HH.wav", jpg: "Munch4HH.jpg" },
+  EtNachTah: { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" },
+  Segol: { wav: "Munach4SHH.wav", jpg: "Munch4SHH.jpg" },
+  "T'LishaGadola": { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" },
+  "T'LishaK'tanah": { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" },
+  Pazer: { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" },
+  Zarka: { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" }
+};
+
 let pendingMunachTropeInfo = null;
 
 function buildMunachChoiceButtons() {
@@ -1412,7 +1428,7 @@ function buildMunachChoiceButtons() {
 
   buttonContainer.innerHTML = "";
 
-  munachChoices.forEach(function(tropeName) {
+  (BuilderTrope === "HighHoliday" ? hhMunachChoices : munachChoices).forEach(function(tropeName) {
     const btn = document.createElement("button");
 
     btn.type = "button";
@@ -1443,6 +1459,15 @@ function closeMunachChoiceModal() {
 
 function selectMunachFollowingTrope(followingTropeName) {
   currentMunachFollowingTrope = followingTropeName;
+  if (BuilderTrope === "HighHoliday") {
+    const media = hhMunachMedia[followingTropeName];
+    document.getElementById("munachChoiceOverlay").style.display = "none";
+    if (resolveMunachChoice) {
+      resolveMunachChoice(media ? media.wav : null);
+      resolveMunachChoice = null;
+    }
+    return;
+  }
   let selectedWav;
   if (followingTropeName === "Darga" || followingTropeName === "Mapach") {
     selectedWav = "Munach4.wav";
