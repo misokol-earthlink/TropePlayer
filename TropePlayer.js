@@ -813,8 +813,14 @@ async function openTropeModal(tropeName) {
 
   const tropeInfo = findTropeInfo(tropeName);
 
-  let tropeWave = tropeName + ".wav";
-let noteImageName = tropeName + ".jpg";
+  // Use the existing BuilderTrope tradition selector, not lyrics playback mode.
+  const isHighHolidayTrope = BuilderTrope === "HighHoliday";
+  const suffix = isHighHolidayTrope ? "HH" : "";
+  document.getElementById("modalTropeModeLabel").textContent =
+    isHighHolidayTrope ? "High Holiday Trope" : "Shabbat Trope";
+
+  let tropeWave = tropeName + suffix + ".wav";
+  let noteImageName = tropeName + suffix + ".jpg";
 
  if (tropeName === "Munach") {
   tropeWave = await openMunachChoiceModal();
@@ -827,6 +833,11 @@ let noteImageName = tropeName + ".jpg";
 
   if (currentMunachFollowingTrope === "Segol") {
     noteImageName = "Munach4S.jpg";
+  }
+  // The Munach choice resolves to a specific variant before applying HH.
+  if (isHighHolidayTrope) {
+    tropeWave = tropeWave.replace(/(?:HH)?\.wav$/i, "HH.wav");
+    noteImageName = noteImageName.replace(/(?:HH)?\.jpg$/i, "HH.jpg");
   }
 }
 
