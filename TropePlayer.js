@@ -8,6 +8,42 @@ let dummyvar ;
 let playAllEnable = false;
 let playAllResolve = null;
 let audioPlaybackMode = null;
+// Standalone note playback tradition; loaded lyrics take precedence.
+let manualHighHolidayPlayback = false;
+let playbackLyricsLoaded = false;
+let highHolidayNotePlayback = false;
+
+function resetNotePlaybackTradition() {
+  manualHighHolidayPlayback = false;
+  playbackLyricsLoaded = false;
+  highHolidayNotePlayback = false;
+  const box = document.getElementById("playbackHighHolidayCheckbox");
+  if (box) {
+    box.checked = false;
+    box.disabled = false;
+  }
+}
+
+function setNotePlaybackTraditionFromLyrics(lyricsData, selectedFile) {
+  playbackLyricsLoaded = !!lyricsData;
+  if (playbackLyricsLoaded) {
+    const name = String(selectedFile || "").replace(/\.json$/i, "");
+    const title = String(lyricsData.title || "");
+    highHolidayNotePlayback = /^HH_/i.test(name) || /^HH_/i.test(title);
+  } else {
+    highHolidayNotePlayback = manualHighHolidayPlayback;
+  }
+  const box = document.getElementById("playbackHighHolidayCheckbox");
+  if (box) {
+    box.checked = highHolidayNotePlayback;
+    box.disabled = playbackLyricsLoaded;
+  }
+}
+
+function notePlaybackFilename(playbackName) {
+  return playbackName + (highHolidayNotePlayback ? "HH" : "") + ".wav";
+}
+
 //alert("SCRIPT START");
 function ipadLog(msg) {
   const box = document.getElementById("ipadDebugBox");
@@ -1451,6 +1487,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
 console.log("DOMContentLoaded reached for edit button test");
   initializeBuilderTropeSelector();
+  const playbackTraditionCheckbox = document.getElementById("playbackHighHolidayCheckbox");
+  if (playbackTraditionCheckbox) {
+    playbackTraditionCheckbox.addEventListener("change", function() {
+      if (playbackLyricsLoaded) return;
+      manualHighHolidayPlayback = playbackTraditionCheckbox.checked;
+      highHolidayNotePlayback = manualHighHolidayPlayback;
+    });
+  }
 const editExistingBtn =    document.getElementById("editExistingBtn");
 
 if (editExistingBtn) {
@@ -2033,6 +2077,7 @@ async function openActiveFilesSelector(
 ) {
 
   editExistingMode = useEditMode;
+  resetNotePlaybackTradition();
 
   if (!startupModeSelected) {
     return;
@@ -2247,6 +2292,7 @@ if (
 }
 
 buildActiveLyricsLines(lyricsData);
+setNotePlaybackTraditionFromLyrics(lyricsData, selectedFile);
 if (editExistingMode) {
 
   populateBluePanelFromFile(data);
@@ -2709,6 +2755,8 @@ setPlayAllButtonRunning();
   );
 }
 function closeActiveFileViewer() {
+  resetNotePlaybackTradition();
+  activeLyricsLines = [];
 
   // Stop any playback using the normal audio player.
   stopPlayAllLyrics();
@@ -2880,7 +2928,7 @@ async function playTropeSequence(tropes) {
 
    const wavFile =
   audioPath +
-  encodeURIComponent(playbackName + ".wav") +
+  encodeURIComponent(notePlaybackFilename(playbackName)) +
   "?v=" +
   Date.now();
 
@@ -3141,7 +3189,7 @@ ipadTrace("ENTER playSmooth");
 
     const wavPath =
       audioPath +
-      encodeURIComponent(playbackName + ".wav");
+      encodeURIComponent(notePlaybackFilename(playbackName));
 
     const response = await fetch(
   wavPath + "?v=" + Date.now(),
