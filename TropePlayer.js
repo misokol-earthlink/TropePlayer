@@ -222,6 +222,7 @@ const hhTropeNames = [
   "Merchah",
   "Munach",
   "Munach-Katon",
+  "Munach-l'garmeih",
   "Munach-Rvi'i",
   "PashTa",
   "Pazer",
