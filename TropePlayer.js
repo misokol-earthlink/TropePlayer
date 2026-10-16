@@ -964,6 +964,27 @@ if (comboTropeNames.includes(tropeName)) {
 }
 
 
+// Munach-only explanatory paragraph, placed immediately above the Close button.
+// Reuse the element across popup openings; hide it for every other trope.
+const munachCloseButton = document.getElementById("modalCloseButton");
+if (munachCloseButton) {
+  let munachExplanation = document.getElementById("munachVariationExplanation");
+  if (!munachExplanation) {
+    munachExplanation = document.createElement("p");
+    munachExplanation.id = "munachVariationExplanation";
+    munachExplanation.style.cssText =
+      "margin:12px 10px 10px; font-size:13px; line-height:1.4; " +
+      "text-align:left; font-weight:normal; white-space:normal;";
+    munachCloseButton.insertAdjacentElement("beforebegin", munachExplanation);
+  }
+  munachExplanation.textContent =
+    "Munach has several melodic variations depending on the trope that follows it. " +
+    "The examples provided are representative approximations rather than fixed renditions for every occurrence. " +
+    "As with all trope melodies, note durations must be adapted to the syllables and phrasing of the Hebrew text, " +
+    "and pitches may vary to blend naturally with the following trope.";
+  munachExplanation.style.display = tropeName === "Munach" ? "block" : "none";
+}
+
 document.querySelector(".tropeModalBox")
   .classList.remove("modalExpanded");
 
@@ -2399,6 +2420,23 @@ function normalizeHebrewDisplayWord(hebrew) {
     .replace(/\s*\u05C0/g, " \u05C0");   // pasik
 }
 
+// Shown once per application page load, not each time the lyrics viewer reopens.
+let lyricsPlaybackNoticeShown = false;
+
+function showLyricsPlaybackNoticeOnce() {
+  if (lyricsPlaybackNoticeShown) return;
+  const notice = document.getElementById("lyricsPlaybackNotice");
+  if (!notice) return;
+  lyricsPlaybackNoticeShown = true;
+  notice.style.display = "flex";
+  document.getElementById("lyricsPlaybackNoticeClose")?.focus();
+}
+
+function closeLyricsPlaybackNotice() {
+  const notice = document.getElementById("lyricsPlaybackNotice");
+  if (notice) notice.style.display = "none";
+}
+
 function openActiveFileViewer(fileName, data) {
   viewLyricsMode = false;
   const overlay =
@@ -2655,6 +2693,7 @@ linesContainer.appendChild(lyricsRow);
   }
 toggleLyricsDisplayRows();
   overlay.style.display = "block";
+  showLyricsPlaybackNoticeOnce();
 }
 
 function playPocketTorahAll() {
@@ -2842,6 +2881,7 @@ function closeActiveFileViewer() {
 
   lineCount = 0;
 
+  closeLyricsPlaybackNotice();
   document.getElementById(
     "activeFileViewerOverlay"
   ).style.display = "none";

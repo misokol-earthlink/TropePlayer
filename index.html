@@ -643,7 +643,55 @@ background:white;
     opacity: 1;
     pointer-events: auto;
 }
-  </style>
+  
+/* One-time playback explanation, layered above the lyrics viewer. */
+#lyricsPlaybackNotice {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100003;
+  background: rgba(0, 0, 0, 0.48);
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  box-sizing: border-box;
+}
+.lyrics-playback-notice-box {
+  width: min(680px, 94vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  background: #e6f2fc;
+  border: 3px solid maroon;
+  border-radius: 9px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+  padding: 22px 26px;
+  color: #17243a;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.48;
+}
+.lyrics-playback-notice-box h2 {
+  margin: 0 0 14px;
+  color: maroon;
+  text-align: center;
+  font-size: 21px;
+}
+.lyrics-playback-notice-box p { margin: 0 0 12px; }
+.lyrics-playback-notice-actions { text-align: center; margin-top: 20px; }
+#lyricsPlaybackNoticeClose {
+  border: 2px solid maroon;
+  border-radius: 6px;
+  background: white;
+  color: maroon;
+  padding: 8px 25px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#lyricsPlaybackNoticeClose:focus-visible { outline: 3px solid #184e9d; outline-offset: 2px; }
+
+</style>
 </head>
 <body>
 <div id="main-app-dom">
@@ -1050,6 +1098,22 @@ background:white;
   </div>
 
 </div>
+
+<!-- One-time explanation of the two playback choices, shown over the lyrics viewer. -->
+<div id="lyricsPlaybackNotice" role="dialog" aria-modal="true" aria-labelledby="lyricsPlaybackNoticeTitle">
+  <div class="lyrics-playback-notice-box">
+    <h2 id="lyricsPlaybackNoticeTitle">About Lyrics and Trope Playback</h2>
+    <p>Two types of playback are available: the recorded lyrics associated with the selected portion, and the melodies of the successive trope notes displayed for each line.</p>
+    <p>Lyrics playback uses existing audio recordings and therefore reflects the individual reader's interpretation of the portion. The recording may not correspond exactly to the displayed trope-note sequence.</p>
+    <p>The trope-note sequence can also be played independently. Each trope is represented by a melodic pattern based on its musical notation. Some tropes, particularly Munach, have multiple melodic variations depending on the notes that follow. To make playback more consistent, the application treats certain sequences as named combinations, such as Munach-Rvi'i, and uses a dedicated recording for the combined phrase. Similar combinations are defined for several aliyah-ending and sof pasuk phrases.</p>
+    <p>In High Holiday trope, the sequence corresponding to Shabbat Munach-l'garmeih retains that name primarily to identify the presence of a paseq in the phrase. Although the Shabbat l'garmeih melody is not used, the High Holiday combination has its own distinct audio pattern.</p>
+    <p>All Shabbat and High Holiday trope patterns are based on <em>The Art of Torah Cantillation</em> by Marshall Portnoy and Josée Wolff, using Avery-Binder notation as practiced in Reform Jewish traditions in the United States.</p>
+    <div class="lyrics-playback-notice-actions">
+      <button id="lyricsPlaybackNoticeClose" type="button" onclick="closeLyricsPlaybackNotice()">CLOSE</button>
+    </div>
+  </div>
+</div>
+
 <div id="activeFileInfoPopup" class="active-file-info-popup">
   <div class="active-file-info-textbox">
     <div style="font-weight:bold; color:maroon; margin-bottom:10px;">
