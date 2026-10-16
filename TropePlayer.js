@@ -861,25 +861,11 @@ async function openTropeModal(tropeName) {
   let noteImageName = tropeName + suffix + ".jpg";
 
  if (tropeName === "Munach") {
-  tropeWave = await openMunachChoiceModal();
-
-  if (!tropeWave) {
-    return;
-  }
-
-  noteImageName = tropeWave.replace(".wav", ".jpg");
-
-  if (currentMunachFollowingTrope === "Segol") {
-    noteImageName = "Munach4S.jpg";
-  }
-  // For HH, use the explicit JPG and WAV mapping, not a derived stem.
-  if (isHighHolidayTrope) {
-    const media = hhMunachMedia[currentMunachFollowingTrope];
-    if (media) {
-      tropeWave = media.wav;
-      noteImageName = media.jpg;
-    }
-  }
+  const selectedWav = await openMunachChoiceModal();
+  if (!selectedWav) return;
+  const media = resolveMunachMedia(currentMunachFollowingTrope, isHighHolidayTrope);
+  tropeWave = media.wav;
+  noteImageName = media.jpg;
 }
 
  currentModalTrope = tropeName;
@@ -1417,6 +1403,41 @@ const hhMunachMedia = {
   Zarka: { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" }
 };
 
+// Shared Munach media resolver for Note Info and canonical note-name playback.
+// Combo names are intentionally not resolved as ordinary Munach.
+function resolveMunachMedia(followingTropeName, isHighHoliday) {
+  if (isHighHoliday) {
+    return hhMunachMedia[followingTropeName] ||
+      { wav: "MunachHH.wav", jpg: "MunachHH.jpg" };
+  }
+  const wav = munachFollowingTropeMap[followingTropeName] || "Munach.wav";
+  const jpg = followingTropeName === "Segol"
+    ? "Munach4S.jpg" : wav.replace(/\.wav$/i, ".jpg");
+  return { wav, jpg };
+}
+
+// A Paseq is punctuation, not a successor trope. Skip it when represented
+// separately in the canonical note-name sequence.
+function nextMunachSuccessor(items, index) {
+  for (let j = index + 1; j < items.length; j++) {
+    const next = items[j] && items[j].playbackName;
+    if (!next) continue;
+    if (next === "Paseq" || next === "Pasek" || next === "׀") continue;
+    return next;
+  }
+  return null;
+}
+
+function resolveNoteNameWav(items, index) {
+  const name = items[index].playbackName;
+  if (name === "Munach") {
+    return resolveMunachMedia(
+      nextMunachSuccessor(items, index), highHolidayNotePlayback
+    ).wav;
+  }
+  return notePlaybackFilename(name);
+}
+
 let pendingMunachTropeInfo = null;
 
 function buildMunachChoiceButtons() {
@@ -1460,26 +1481,10 @@ function closeMunachChoiceModal() {
 
 function selectMunachFollowingTrope(followingTropeName) {
   currentMunachFollowingTrope = followingTropeName;
-  if (BuilderTrope === "HighHoliday") {
-    const media = hhMunachMedia[followingTropeName];
-    document.getElementById("munachChoiceOverlay").style.display = "none";
-    if (resolveMunachChoice) {
-      resolveMunachChoice(media ? media.wav : null);
-      resolveMunachChoice = null;
-    }
-    return;
-  }
-  let selectedWav;
-  if (followingTropeName === "Darga" || followingTropeName === "Mapach") {
-    selectedWav = "Munach4.wav";
-  } else {
-    selectedWav = "Munach3.wav";
-  }
-
+  const media = resolveMunachMedia(followingTropeName, BuilderTrope === "HighHoliday");
   document.getElementById("munachChoiceOverlay").style.display = "none";
-
   if (resolveMunachChoice) {
-    resolveMunachChoice(selectedWav);
+    resolveMunachChoice(media.wav);
     resolveMunachChoice = null;
   }
 }
@@ -2957,7 +2962,7 @@ async function playTropeSequence(tropes) {
 
    const wavFile =
   audioPath +
-  encodeURIComponent(notePlaybackFilename(playbackName)) +
+  encodeURIComponent(resolveNoteNameWav(tropes, i)) +
   "?v=" +
   Date.now();
 
@@ -3270,7 +3275,7 @@ ipadTrace("ENTER playSmooth");
 
     const wavPath =
       audioPath +
-      encodeURIComponent(notePlaybackFilename(playbackName));
+      encodeURIComponent(resolveNoteNameWav(lineItems, i));
 
     const response = await fetch(
   wavPath + "?v=" + Date.now(),
