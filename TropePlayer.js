@@ -2941,6 +2941,9 @@ audioPlaybackMode = null;
 }
 
 async function playTropeSequence(tropes) {
+  previousTropeWavEndedAt = null;
+  previousTropeWavName = null;
+  console.log("[Trope WAV] Starting note-name sequence timing diagnostics");
 
   console.log("Starting trope sequence. Count:", tropes.length);
   console.log("Tropes array:", tropes);
@@ -2982,32 +2985,84 @@ async function playTropeSequence(tropes) {
   highlightHebrewTrope(-1);
 }
 
+// Temporary diagnostic state for note-name sequential WAV playback only.
+// Uses performance.now() so elapsed intervals are accurate within a session.
+let previousTropeWavEndedAt = null;
+let previousTropeWavName = null;
+let tropeWavDiagnosticSequence = 0;
+
 function playOneWav(wavFile) {
   return new Promise(function(resolve) {
+    const attempt = ++tropeWavDiagnosticSequence;
+    const fileName = decodeURIComponent(wavFile.split("/").pop().split("?")[0]);
+    const requestedAt = performance.now();
+    let settled = false;
+    let started = false;
+    const previousEndedAt = previousTropeWavEndedAt;
+    const previousName = previousTropeWavName;
+    const ms = value => Math.round(value) + " ms";
+    const log = (event, detail = "") => console.log(
+      `[Trope WAV #${attempt}] ${event}: ${fileName}` +
+      ` | +${ms(performance.now() - requestedAt)}` +
+      (detail ? ` | ${detail}` : "")
+    );
+
+    const listeners = [
+      ["loadstart", () => log("LOADSTART")],
+      ["loadedmetadata", () => log("METADATA", `duration=${player.duration.toFixed(3)} s`)],
+      ["canplay", () => log("CANPLAY")],
+      ["waiting", () => log("WAITING")],
+      ["stalled", () => log("STALLED")],
+      ["playing", () => {
+        if (started) return;
+        started = true;
+        const now = performance.now();
+        log("PLAYING", `startup=${ms(now - requestedAt)}`);
+        if (previousEndedAt !== null) {
+          console.log(
+            `[Trope WAV #${attempt}] GAP: ${previousName} -> ${fileName}` +
+            ` | ended-to-playing=${ms(now - previousEndedAt)}`
+          );
+        }
+      }]
+    ];
+    function cleanup() {
+      listeners.forEach(([event, handler]) => player.removeEventListener(event, handler));
+    }
+    function finish(kind) {
+      if (settled) return;
+      settled = true;
+      if (kind === "ENDED") {
+        previousTropeWavEndedAt = performance.now();
+        previousTropeWavName = fileName;
+      } else {
+        previousTropeWavEndedAt = null;
+        previousTropeWavName = null;
+      }
+      log(kind);
+      cleanup();
+      resolve();
+    }
 
     player.pause();
-
     player.onended = null;
     player.onerror = null;
-
+    listeners.forEach(([event, handler]) => player.addEventListener(event, handler));
+    log("LOAD", previousName ? `previous=${previousName}` : "first WAV or previous playback ended");
     player.src = wavFile;
     player.load();
 
-    player.onended = function() {
-      resolve();
-    };
-
+    player.onended = function() { finish("ENDED"); };
     player.onerror = function() {
       console.error("Could not play:", wavFile, player.error);
-      resolve();
+      finish("ERROR");
     };
 
     const playPromise = player.play();
-
     if (playPromise && typeof playPromise.catch === "function") {
       playPromise.catch(function(err) {
         console.error("player.play() failed:", wavFile, err);
-        resolve();
+        finish("PLAY FAILED");
       });
     }
   });
