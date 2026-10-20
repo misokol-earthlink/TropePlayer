@@ -8,42 +8,6 @@ let dummyvar ;
 let playAllEnable = false;
 let playAllResolve = null;
 let audioPlaybackMode = null;
-// Standalone note playback tradition; loaded lyrics take precedence.
-let manualHighHolidayPlayback = false;
-let playbackLyricsLoaded = false;
-let highHolidayNotePlayback = false;
-
-function resetNotePlaybackTradition() {
-  manualHighHolidayPlayback = false;
-  playbackLyricsLoaded = false;
-  highHolidayNotePlayback = false;
-  const box = document.getElementById("playbackHighHolidayCheckbox");
-  if (box) {
-    box.checked = false;
-    box.disabled = false;
-  }
-}
-
-function setNotePlaybackTraditionFromLyrics(lyricsData, selectedFile) {
-  playbackLyricsLoaded = !!lyricsData;
-  if (playbackLyricsLoaded) {
-    const name = String(selectedFile || "").replace(/\.json$/i, "");
-    const title = String(lyricsData.title || "");
-    highHolidayNotePlayback = /^HH_/i.test(name) || /^HH_/i.test(title);
-  } else {
-    highHolidayNotePlayback = manualHighHolidayPlayback;
-  }
-  const box = document.getElementById("playbackHighHolidayCheckbox");
-  if (box) {
-    box.checked = highHolidayNotePlayback;
-    box.disabled = playbackLyricsLoaded;
-  }
-}
-
-function notePlaybackFilename(playbackName) {
-  return playbackName + (highHolidayNotePlayback ? "HH" : "") + ".wav";
-}
-
 //alert("SCRIPT START");
 function ipadLog(msg) {
   const box = document.getElementById("ipadDebugBox");
@@ -208,41 +172,6 @@ const tropeNames = [
   "ZakefGadol",
   "Zarka"
 ];
-
-// High Holiday Builder catalog: canonical names only, independent of Shabbat.
-const hhTropeNames = [
-  "Darga",
-  "EtNachTah",
-  "Geresh",
-  "Gershayim",
-  "Kadma",
-  "Kadma-V'azlah",
-  "Katon",
-  "Mapach",
-  "Merchah",
-  "Munach",
-  "Munach-Katon",
-  "Munach-l'garmeih",
-  "Munach-Rvi'i",
-  "PashTa",
-  "Pazer",
-  "Rvi'i",
-  "Segol",
-  "SofAliyah",
-  "SofAliyah2",
-  "SofAliyah3",
-  "SofAliyah4",
-  "SofPaSuk",
-  "T'LishaGadola",
-  "T'LishaK'tanah",
-  "Tipchah",
-  "Tvir",
-  "V'azlah",
-  "Y'tiv",
-  "ZakefGadol",
-  "Zarka"
-];
-let BuilderTrope = "Shabbat";
 
 const hebrewTropeNames = {
   Darga:             "דַּרְגָּ֧א",
@@ -687,10 +616,7 @@ function buildTropeUnicodeDisplay(tropeName) {
     String.fromCharCode(parseInt(tropeInfo.unicode, 16));
 }
 
-function buildTropeTable() {
-  table.replaceChildren();
-  const builderNames = BuilderTrope === "HighHoliday" ? hhTropeNames : tropeNames;
-  builderNames.forEach((name, index) => {
+function buildTropeTable() {tropeNames.forEach((name, index) => {
   const row = document.createElement("tr");
 
   /* Index column */
@@ -851,21 +777,21 @@ async function openTropeModal(tropeName) {
 
   const tropeInfo = findTropeInfo(tropeName);
 
-  // Use the existing BuilderTrope tradition selector, not lyrics playback mode.
-  const isHighHolidayTrope = BuilderTrope === "HighHoliday";
-  const suffix = isHighHolidayTrope ? "HH" : "";
-  document.getElementById("modalTropeModeLabel").textContent =
-    isHighHolidayTrope ? "High Holiday Trope" : "Shabbat Trope";
-
-  let tropeWave = tropeName + suffix + ".wav";
-  let noteImageName = tropeName + suffix + ".jpg";
+  let tropeWave = tropeName + ".wav";
+let noteImageName = tropeName + ".jpg";
 
  if (tropeName === "Munach") {
-  const selectedWav = await openMunachChoiceModal();
-  if (!selectedWav) return;
-  const media = resolveMunachMedia(currentMunachFollowingTrope, isHighHolidayTrope);
-  tropeWave = media.wav;
-  noteImageName = media.jpg;
+  tropeWave = await openMunachChoiceModal();
+
+  if (!tropeWave) {
+    return;
+  }
+
+  noteImageName = tropeWave.replace(".wav", ".jpg");
+
+  if (currentMunachFollowingTrope === "Segol") {
+    noteImageName = "Munach4S.jpg";
+  }
 }
 
  currentModalTrope = tropeName;
@@ -963,29 +889,6 @@ if (comboTropeNames.includes(tropeName)) {
 
 }
 
-
-// Munach explanation occupies its own full-width row above the bottom controls.
-// Keep the Close button and the two icons together in the controls row.
-const munachControlsRow = document.getElementById("modalBottomControls");
-if (munachControlsRow) {
-  let munachExplanation = document.getElementById("munachVariationExplanation");
-  if (!munachExplanation) {
-    munachExplanation = document.createElement("p");
-    munachExplanation.id = "munachVariationExplanation";
-    munachExplanation.style.cssText =
-      "display:block; width:100%; box-sizing:border-box; margin:12px 0 8px; " +
-      "font-size:13px; line-height:1.4; text-align:left; " +
-      "font-weight:normal; white-space:normal;";
-  }
-  // Move an explanation inserted by an older version out of the flex controls.
-  munachControlsRow.insertAdjacentElement("beforebegin", munachExplanation);
-  munachExplanation.textContent =
-    "Munach has several melodic variations depending on the trope that follows it. " +
-    "The examples provided are representative approximations rather than fixed renditions for every occurrence. " +
-    "As with all trope melodies, note durations must be adapted to the syllables and phrasing of the Hebrew text, " +
-    "and pitches may vary to blend naturally with the following trope.";
-  munachExplanation.style.display = tropeName === "Munach" ? "block" : "none";
-}
 
 document.querySelector(".tropeModalBox")
   .classList.remove("modalExpanded");
@@ -1414,53 +1317,6 @@ const munachFollowingTropeMap = {
   Zarka: "Munach3.wav"
 };
 
-const hhMunachChoices = ["Mapach", "EtNachTah", "Segol", "T'LishaGadola", "T'LishaK'tanah", "Pazer", "Zarka"];
-// HH WAV and JPG names are intentionally independent.
-const hhMunachMedia = {
-  Mapach: { wav: "Munach4HH.wav", jpg: "Munch4HH.jpg" },
-  EtNachTah: { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" },
-  Segol: { wav: "Munach4SHH.wav", jpg: "Munch4SHH.jpg" },
-  "T'LishaGadola": { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" },
-  "T'LishaK'tanah": { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" },
-  Pazer: { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" },
-  Zarka: { wav: "Munach3HH.wav", jpg: "Munch3HH.jpg" }
-};
-
-// Shared Munach media resolver for Note Info and canonical note-name playback.
-// Combo names are intentionally not resolved as ordinary Munach.
-function resolveMunachMedia(followingTropeName, isHighHoliday) {
-  if (isHighHoliday) {
-    return hhMunachMedia[followingTropeName] ||
-      { wav: "MunachHH.wav", jpg: "MunachHH.jpg" };
-  }
-  const wav = munachFollowingTropeMap[followingTropeName] || "Munach.wav";
-  const jpg = followingTropeName === "Segol"
-    ? "Munach4S.jpg" : wav.replace(/\.wav$/i, ".jpg");
-  return { wav, jpg };
-}
-
-// A Paseq is punctuation, not a successor trope. Skip it when represented
-// separately in the canonical note-name sequence.
-function nextMunachSuccessor(items, index) {
-  for (let j = index + 1; j < items.length; j++) {
-    const next = items[j] && items[j].playbackName;
-    if (!next) continue;
-    if (next === "Paseq" || next === "Pasek" || next === "׀") continue;
-    return next;
-  }
-  return null;
-}
-
-function resolveNoteNameWav(items, index) {
-  const name = items[index].playbackName;
-  if (name === "Munach") {
-    return resolveMunachMedia(
-      nextMunachSuccessor(items, index), highHolidayNotePlayback
-    ).wav;
-  }
-  return notePlaybackFilename(name);
-}
-
 let pendingMunachTropeInfo = null;
 
 function buildMunachChoiceButtons() {
@@ -1473,7 +1329,7 @@ function buildMunachChoiceButtons() {
 
   buttonContainer.innerHTML = "";
 
-  (BuilderTrope === "HighHoliday" ? hhMunachChoices : munachChoices).forEach(function(tropeName) {
+  munachChoices.forEach(function(tropeName) {
     const btn = document.createElement("button");
 
     btn.type = "button";
@@ -1504,51 +1360,24 @@ function closeMunachChoiceModal() {
 
 function selectMunachFollowingTrope(followingTropeName) {
   currentMunachFollowingTrope = followingTropeName;
-  const media = resolveMunachMedia(followingTropeName, BuilderTrope === "HighHoliday");
+  let selectedWav;
+  if (followingTropeName === "Darga" || followingTropeName === "Mapach") {
+    selectedWav = "Munach4.wav";
+  } else {
+    selectedWav = "Munach3.wav";
+  }
+
   document.getElementById("munachChoiceOverlay").style.display = "none";
+
   if (resolveMunachChoice) {
-    resolveMunachChoice(media.wav);
+    resolveMunachChoice(selectedWav);
     resolveMunachChoice = null;
   }
-}
-
-// Builder-only tradition checkbox. Does not affect lyrics playback.
-function initializeBuilderTropeSelector() {
-  const licenseLink = document.getElementById("licenseInformationLink");
-  if (!licenseLink || document.getElementById("builderHighHolidayCheckbox")) return;
-
-  const wrapper = document.createElement("div");
-  wrapper.id = "builderTropeSelector";
-  wrapper.style.cssText = "margin:12px 0 14px; font-family:sans-serif; font-size:18px;";
-  const label = document.createElement("label");
-  label.style.cssText = "display:inline-flex; align-items:center; gap:10px; cursor:pointer; font-weight:600;";
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.id = "builderHighHolidayCheckbox";
-  checkbox.checked = false;
-  checkbox.style.cssText = "width:21px; height:21px; cursor:pointer; margin:0;";
-  label.append(checkbox, document.createTextNode("High Holiday Trope"));
-  wrapper.appendChild(label);
-  licenseLink.insertAdjacentElement("afterend", wrapper);
-
-  checkbox.addEventListener("change", function() {
-    BuilderTrope = checkbox.checked ? "HighHoliday" : "Shabbat";
-    buildTropeTable();
-  });
 }
 
 document.addEventListener("DOMContentLoaded", function() {
 
 console.log("DOMContentLoaded reached for edit button test");
-  initializeBuilderTropeSelector();
-  const playbackTraditionCheckbox = document.getElementById("playbackHighHolidayCheckbox");
-  if (playbackTraditionCheckbox) {
-    playbackTraditionCheckbox.addEventListener("change", function() {
-      if (playbackLyricsLoaded) return;
-      manualHighHolidayPlayback = playbackTraditionCheckbox.checked;
-      highHolidayNotePlayback = manualHighHolidayPlayback;
-    });
-  }
 const editExistingBtn =    document.getElementById("editExistingBtn");
 
 if (editExistingBtn) {
@@ -2131,7 +1960,6 @@ async function openActiveFilesSelector(
 ) {
 
   editExistingMode = useEditMode;
-  resetNotePlaybackTradition();
 
   if (!startupModeSelected) {
     return;
@@ -2346,7 +2174,6 @@ if (
 }
 
 buildActiveLyricsLines(lyricsData);
-setNotePlaybackTraditionFromLyrics(lyricsData, selectedFile);
 if (editExistingMode) {
 
   populateBluePanelFromFile(data);
@@ -2398,8 +2225,77 @@ console.log("lyricsFile =", lyricsFile);
   }
 }
 
+// World ORT direct, source-hosted individual verse playback (Alt+Click).
+// Keep explicit biblical references separate from the display's sequential line numbers.
+const ortVerseBase = "https://scrollscraper.adatshalom.net/ORT_MP3s.recoded";
+let ortLyricsVerseReferences = [];
+const ortBookNumbers = {
+  GE: 1, GEN: 1, GENESIS: 1, BERESHIT: 1,
+  EX: 2, EXO: 2, EXODUS: 2, SHEMOT: 2,
+  LE: 3, LEV: 3, LEVITICUS: 3, VAYIKRA: 3,
+  NU: 4, NUM: 4, NUMBERS: 4, BAMIDBAR: 4,
+  DE: 5, DEU: 5, DEUT: 5, DEUTERONOMY: 5, DEVARIM: 5
+};
+function parseOrtVerseReference(value) {
+  if (typeof value !== "string") return null;
+  const match = value.trim().match(/^([A-Za-z]+)\s*[:. ]\s*(\d+)\s*[:.]\s*(\d+)$/);
+  if (!match) return null;
+  const book = ortBookNumbers[match[1].toUpperCase()];
+  const chapter = Number(match[2]);
+  const verse = Number(match[3]);
+  if (!book || chapter < 1 || chapter > 99 || verse < 1 || verse > 99) return null;
+  return { book, chapter, verse };
+}
+function getOrtVerseUrl(lineNumber) {
+  const ref = ortLyricsVerseReferences[lineNumber];
+  if (!ref) return null;
+  return ortVerseBase + "/t" + ref.book + "/" +
+    String(ref.chapter).padStart(2, "0") + String(ref.verse).padStart(2, "0") + ".mp3";
+}
+function playOrtLyricsVerse(lineNumber) {
+  const url = getOrtVerseUrl(lineNumber);
+  if (!url) {
+    alert("World ORT playback requires a biblical reference (for example EX:20:03) in this lyrics line's JSON. The display line number is not a verse reference.");
+    return;
+  }
+  audioPlaybackMode = "lyrics";
+  clearLyricsPlayingHighlight();
+  const row = document.querySelector('.active-file-lyrics-row[data-line-number="' + lineNumber + '"]');
+  row?.querySelector(".active-file-lyrics-box")?.classList.add("lyrics-playing");
+  const popup = document.getElementById("hebrewLinePopup");
+  const message = document.getElementById("hebrewLineText");
+  message.style.fontSize = "24px";
+  message.textContent = "Audio playback for line " + lineNumber + " — World ORT © 1997";
+  popup.style.display = "block";
+  positionLyricsAttribution(lineNumber);
+  player.pause();
+  player.onended = null;
+  player.onerror = null;
+  player.src = url;
+  player.onended = () => {
+    clearLyricsPlayingHighlight();
+    popup.style.display = "none";
+    audioPlaybackMode = null;
+  };
+  player.onerror = () => {
+    console.error("World ORT MP3 unavailable:", url, player.error);
+    alert("World ORT recording unavailable for this verse.");
+    clearLyricsPlayingHighlight();
+    popup.style.display = "none";
+    audioPlaybackMode = null;
+  };
+  player.play().catch(err => {
+    console.error("World ORT playback failed:", err);
+    alert("World ORT playback could not start.");
+    clearLyricsPlayingHighlight();
+    popup.style.display = "none";
+    audioPlaybackMode = null;
+  });
+}
+
 function buildActiveLyricsLines(lyricsData) {
   activeLyricsLines = [];
+  ortLyricsVerseReferences = [];
 
   if (!lyricsData || !lyricsData.lines) {
     return;
@@ -2410,6 +2306,11 @@ function buildActiveLyricsLines(lyricsData) {
 
     activeLyricsLines[lineNumber] =
       lineItem.words || [];
+    // Only explicit, unambiguous verse references qualify; never assume Line-N = verse N.
+    ortLyricsVerseReferences[lineIndex + 1] =
+      parseOrtVerseReference(lineItem.ref) ||
+      parseOrtVerseReference(lineItem.verseRef) ||
+      parseOrtVerseReference(lineItem.lineName);
   });
 }
 
@@ -2420,23 +2321,6 @@ function normalizeHebrewDisplayWord(hebrew) {
   return String(hebrew)
     .trim()
     .replace(/\s*\u05C0/g, " \u05C0");   // pasik
-}
-
-// Shown once per application page load, not each time the lyrics viewer reopens.
-let lyricsPlaybackNoticeShown = false;
-
-function showLyricsPlaybackNoticeOnce() {
-  if (lyricsPlaybackNoticeShown) return;
-  const notice = document.getElementById("lyricsPlaybackNotice");
-  if (!notice) return;
-  lyricsPlaybackNoticeShown = true;
-  notice.style.display = "flex";
-  document.getElementById("lyricsPlaybackNoticeClose")?.focus();
-}
-
-function closeLyricsPlaybackNotice() {
-  const notice = document.getElementById("lyricsPlaybackNotice");
-  if (notice) notice.style.display = "none";
 }
 
 function openActiveFileViewer(fileName, data) {
@@ -2527,6 +2411,13 @@ lyricsRow.onclick = function(event) {
 
   event.stopPropagation();
   if (audioPlaybackMode !== null) {
+    return;
+  }
+
+  // Alt+Click plays the source-hosted World ORT MP3 for this biblical verse.
+  // Ctrl takes precedence if both modifiers are pressed.
+  if (event.altKey && !event.ctrlKey) {
+    playOrtLyricsVerse(lineNumber);
     return;
   }
 
@@ -2695,7 +2586,6 @@ linesContainer.appendChild(lyricsRow);
   }
 toggleLyricsDisplayRows();
   overlay.style.display = "block";
-  showLyricsPlaybackNoticeOnce();
 }
 
 function playPocketTorahAll() {
@@ -2827,8 +2717,6 @@ setPlayAllButtonRunning();
   );
 }
 function closeActiveFileViewer() {
-  resetNotePlaybackTradition();
-  activeLyricsLines = [];
 
   // Stop any playback using the normal audio player.
   stopPlayAllLyrics();
@@ -2883,7 +2771,6 @@ function closeActiveFileViewer() {
 
   lineCount = 0;
 
-  closeLyricsPlaybackNotice();
   document.getElementById(
     "activeFileViewerOverlay"
   ).style.display = "none";
@@ -2988,9 +2875,6 @@ audioPlaybackMode = null;
 }
 
 async function playTropeSequence(tropes) {
-  previousTropeWavEndedAt = null;
-  previousTropeWavName = null;
-  console.log("[Trope WAV] Starting note-name sequence timing diagnostics");
 
   console.log("Starting trope sequence. Count:", tropes.length);
   console.log("Tropes array:", tropes);
@@ -3004,7 +2888,7 @@ async function playTropeSequence(tropes) {
 
    const wavFile =
   audioPath +
-  encodeURIComponent(resolveNoteNameWav(tropes, i)) +
+  encodeURIComponent(playbackName + ".wav") +
   "?v=" +
   Date.now();
 
@@ -3032,84 +2916,32 @@ async function playTropeSequence(tropes) {
   highlightHebrewTrope(-1);
 }
 
-// Temporary diagnostic state for note-name sequential WAV playback only.
-// Uses performance.now() so elapsed intervals are accurate within a session.
-let previousTropeWavEndedAt = null;
-let previousTropeWavName = null;
-let tropeWavDiagnosticSequence = 0;
-
 function playOneWav(wavFile) {
   return new Promise(function(resolve) {
-    const attempt = ++tropeWavDiagnosticSequence;
-    const fileName = decodeURIComponent(wavFile.split("/").pop().split("?")[0]);
-    const requestedAt = performance.now();
-    let settled = false;
-    let started = false;
-    const previousEndedAt = previousTropeWavEndedAt;
-    const previousName = previousTropeWavName;
-    const ms = value => Math.round(value) + " ms";
-    const log = (event, detail = "") => console.log(
-      `[Trope WAV #${attempt}] ${event}: ${fileName}` +
-      ` | +${ms(performance.now() - requestedAt)}` +
-      (detail ? ` | ${detail}` : "")
-    );
-
-    const listeners = [
-      ["loadstart", () => log("LOADSTART")],
-      ["loadedmetadata", () => log("METADATA", `duration=${player.duration.toFixed(3)} s`)],
-      ["canplay", () => log("CANPLAY")],
-      ["waiting", () => log("WAITING")],
-      ["stalled", () => log("STALLED")],
-      ["playing", () => {
-        if (started) return;
-        started = true;
-        const now = performance.now();
-        log("PLAYING", `startup=${ms(now - requestedAt)}`);
-        if (previousEndedAt !== null) {
-          console.log(
-            `[Trope WAV #${attempt}] GAP: ${previousName} -> ${fileName}` +
-            ` | ended-to-playing=${ms(now - previousEndedAt)}`
-          );
-        }
-      }]
-    ];
-    function cleanup() {
-      listeners.forEach(([event, handler]) => player.removeEventListener(event, handler));
-    }
-    function finish(kind) {
-      if (settled) return;
-      settled = true;
-      if (kind === "ENDED") {
-        previousTropeWavEndedAt = performance.now();
-        previousTropeWavName = fileName;
-      } else {
-        previousTropeWavEndedAt = null;
-        previousTropeWavName = null;
-      }
-      log(kind);
-      cleanup();
-      resolve();
-    }
 
     player.pause();
+
     player.onended = null;
     player.onerror = null;
-    listeners.forEach(([event, handler]) => player.addEventListener(event, handler));
-    log("LOAD", previousName ? `previous=${previousName}` : "first WAV or previous playback ended");
+
     player.src = wavFile;
     player.load();
 
-    player.onended = function() { finish("ENDED"); };
+    player.onended = function() {
+      resolve();
+    };
+
     player.onerror = function() {
       console.error("Could not play:", wavFile, player.error);
-      finish("ERROR");
+      resolve();
     };
 
     const playPromise = player.play();
+
     if (playPromise && typeof playPromise.catch === "function") {
       playPromise.catch(function(err) {
         console.error("player.play() failed:", wavFile, err);
-        finish("PLAY FAILED");
+        resolve();
       });
     }
   });
@@ -3317,7 +3149,7 @@ ipadTrace("ENTER playSmooth");
 
     const wavPath =
       audioPath +
-      encodeURIComponent(resolveNoteNameWav(lineItems, i));
+      encodeURIComponent(playbackName + ".wav");
 
     const response = await fetch(
   wavPath + "?v=" + Date.now(),
