@@ -2249,8 +2249,17 @@ function parseOrtVerseReference(value) {
 function getOrtVerseUrl(lineNumber) {
   const ref = ortLyricsVerseReferences[lineNumber];
   if (!ref) return null;
-  return ortVerseBase + "/t" + ref.book + "/" +
-    String(ref.chapter).padStart(2, "0") + String(ref.verse).padStart(2, "0") + ".mp3";
+
+  const filename = String(ref.chapter).padStart(2, "0") +
+    String(ref.verse).padStart(2, "0") + ".mp3";
+
+  // Exodus chapter 40 is hosted in this TropePlayer repository.
+  // Other verses retain the existing World ORT source URL.
+  if (ref.book === 2 && ref.chapter === 40) {
+    return "https://trope.isokie.com/Exodus40/" + filename;
+  }
+
+  return ortVerseBase + "/t" + ref.book + "/" + filename;
 }
 function playOrtLyricsVerse(lineNumber) {
   const url = getOrtVerseUrl(lineNumber);
